@@ -26,7 +26,8 @@ export const AuthProvider = ({children}: any)=> {
 
     const [state, dispatch] = useReducer(authReducer, AuthInicialState)
 
-    const signUp = async({email,password}:LoginData) =>{
+    const signUp = () => {};
+    const signIn = async({email,password}:LoginData) =>{
         try{
             const resp = await API.post<LoginResponse>("/auth/login",{email,password}) // el authlogin revisa lo que sigue despues de la URl base
             console.log(resp.data) 
@@ -34,7 +35,6 @@ export const AuthProvider = ({children}: any)=> {
 
         }
     }
-    const signIn = () =>{}
     const logOut = () =>{}
     const removeError = () =>{}
     return(

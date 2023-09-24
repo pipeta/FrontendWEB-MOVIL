@@ -19,10 +19,9 @@ export const LoginScreen = ({navigation}:Props) => {
     })
 
     const onLogin = () =>{
-        console.log({email,password})
         Keyboard.dismiss();
 
-        signIn({email,password})
+        signIn({email,password});
     }
 
   return (
