@@ -12,6 +12,7 @@ type AuthAction =  | {type:'signUp',payload:{token:string,user:Usuario}}
 | {type:'removeError'}
 | {type:'notAuthenticated'}
 | {type:'logout'}
+| {type:'resetPassword'}
 
 export const authReducer = ( state: AuthState, action: AuthAction ): AuthState => {
 
@@ -39,6 +40,13 @@ export const authReducer = ( state: AuthState, action: AuthAction ): AuthState =
                 token: action.payload.token,
                 user: action.payload.user
             }
+        // case 'resetPassword':
+        //     return {
+        //         ...state,
+        //         status: 'not-authenticated', // Cambia el estado a no autenticado para redirigir a la pantalla de inicio de sesión
+        //         token: null,
+        //         user: null,
+        //     };
 
         case 'logout':
         case 'notAuthenticated':

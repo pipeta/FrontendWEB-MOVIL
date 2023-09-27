@@ -13,7 +13,9 @@ export const loginStyles = StyleSheet.create({
         color: 'white',
         fontSize: 30,
         fontWeight: 'bold',
-        marginTop: 20
+        marginTop: 20,
+        textAlign: 'center', 
+        alignSelf: 'center'
     },
     label: {
         marginTop: 25,

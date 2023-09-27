@@ -1,5 +1,5 @@
-import React, { useContext } from 'react'
-import { Keyboard, KeyboardAvoidingView, Platform, Text, TextInput, View } from 'react-native'
+import React, { useContext, useEffect } from 'react'
+import { Alert, Keyboard, KeyboardAvoidingView, Platform, Text, TextInput, View } from 'react-native'
 import { Background } from '../components/Background'
 import { loginStyles } from '../theme/loginTheme'
 import { TouchableOpacity } from 'react-native-gesture-handler'
@@ -11,7 +11,7 @@ interface Props extends StackScreenProps<any,any>{}
 
 export const LoginScreen = ({navigation}:Props) => {
 
-    const {signIn} = useContext(AuthContext)
+    const {signIn,errorMessage,removeError} = useContext(AuthContext)
 
     const {email,password,onChange} = useForm({
         email:'',
@@ -23,6 +23,20 @@ export const LoginScreen = ({navigation}:Props) => {
 
         signIn({email,password});
     }
+    useEffect(() => {
+      
+        if(errorMessage.length===0) return;
+        console.log(errorMessage)
+        Alert.alert('OLAS', errorMessage,
+        [
+            {
+                text:'ok',
+                onPress:removeError
+            }
+        ])
+      
+    }, [errorMessage])
+    
 
   return (
     <>
@@ -97,6 +111,15 @@ export const LoginScreen = ({navigation}:Props) => {
                     onPress={()=> navigation.replace('RegisterScreen')}
                     >
                         <Text style={loginStyles.buttonText}>Nueva cuenta</Text>
+                    </TouchableOpacity>
+                    
+                </View>
+                <View style={loginStyles.newUserContainer}>
+                    <TouchableOpacity 
+                    activeOpacity={0.8}
+                    onPress={()=> navigation.replace('ResetPasswordScreen')}
+                    >
+                        <Text style={loginStyles.buttonText}>Recuperar contrasena</Text>
                     </TouchableOpacity>
                     
                 </View>
