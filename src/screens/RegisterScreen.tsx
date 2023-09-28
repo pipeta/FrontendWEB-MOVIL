@@ -1,13 +1,29 @@
-import React from 'react'
-import { Keyboard, KeyboardAvoidingView, Platform, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import React, { useContext, useEffect } from 'react'
+import { Alert, Keyboard, KeyboardAvoidingView, Platform, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import { Background } from '../components/Background'
 import { loginStyles } from '../theme/loginTheme'
 import { useForm } from '../hooks/useForm'
 import { StackScreenProps } from '@react-navigation/stack'
+import { AuthContext } from '../context/AuthContext'
 
 interface Props extends StackScreenProps<any,any>{}
 
 export const RegisterScreen = ({navigation}:Props) => {
+    
+    const {signUp,errorMessage,removeError} = useContext(AuthContext)
+    useEffect(() => {
+      
+        if(errorMessage.length===0) return;
+        console.log(errorMessage)
+        Alert.alert('Registro incorrecto', errorMessage,
+        [
+            {
+                text:'ok',
+                onPress:removeError
+            }
+        ])
+      
+    }, [errorMessage])
     const {email,name,password,onChange} = useForm({
         email:'',
         password:'',
@@ -18,6 +34,11 @@ export const RegisterScreen = ({navigation}:Props) => {
     const onRegister = () =>{
         console.log({email,password,name})
         Keyboard.dismiss();
+        signUp({
+            nombre:name,
+            email:email,
+            password: password,
+        })
     }
     return (
         <>
@@ -46,8 +67,8 @@ export const RegisterScreen = ({navigation}:Props) => {
                                     ]}
                                     selectionColor="white"
                                     
-                                    onChangeText={(value)=> onChange(value,'email')}
-                                    value={email}
+                                    onChangeText={(value)=> onChange(value,'name')}
+                                    value={name}
                                     onSubmitEditing={onRegister}
                                     autoCapitalize="words"
                                     autoCorrect={ false }

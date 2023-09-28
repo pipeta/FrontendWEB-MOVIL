@@ -1,5 +1,5 @@
 import { Children, createContext, useContext, useEffect, useReducer } from "react";
-import { LoginData, LoginResponse, ResetPasswordData, Usuario } from "../interfaces/appInterfaces";
+import { LoginData, LoginResponse, RegisterData, ResetPasswordData, Usuario } from "../interfaces/appInterfaces";
 import { AuthState, authReducer } from "./AuthReducer";
 import API from "../api/nestApi";
 import axios, { AxiosError } from 'axios';
@@ -10,7 +10,7 @@ type AuthContextProps = {
     token: string|null;
     user: Usuario|null;
     status:'checking'|'authenticated' |'not-authenticated'
-    signUp:() => void;
+    signUp:(RegisterData:RegisterData) => void;
     signIn:(LoginData:LoginData) => void;
     logOut:() => void;
     removeError:() => void;
@@ -90,7 +90,33 @@ export const AuthProvider = ({children}: any)=> {
       
     
 
-    const signUp = () => {};
+    const signUp = async({email,password,nombre}:RegisterData) =>{
+        try{
+            const resp = await API.post<LoginResponse>("/auth/register",{email,password,nombre}) // el authlogin revisa lo que sigue despues de la URl base
+            console.log(resp)
+            dispatch({
+                type:'signUp',
+                payload:{
+                    token:  resp.data.access_token,
+                    user:   resp.data.userData
+
+                }
+            });
+            await AsyncStorage.setItem('token', resp.data.access_token)
+            
+        }catch(error){
+            console.log(JSON.stringify(error))
+
+            if(error instanceof AxiosError){
+                console.log(error.response?.data.message)
+                dispatch({
+                type: 'addError',
+                payload: error.response?.data.message  || 'Informacion incorrecta'
+                })
+            }
+            
+        }
+    };
     const signIn = async({email,password}:LoginData) =>{
         try{
             const resp = await API.post<LoginResponse>("/auth/login",{email,password}) // el authlogin revisa lo que sigue despues de la URl base

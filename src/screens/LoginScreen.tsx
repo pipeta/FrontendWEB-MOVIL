@@ -50,7 +50,7 @@ export const LoginScreen = ({navigation}:Props) => {
 
             <View style={loginStyles.formContainer}>
 
-                <Text style={ loginStyles.title}>Login</Text>
+                <Text style={ loginStyles.title}>Inicio de sesión</Text>
 
                 <Text style={ loginStyles.label}>Email:</Text>
                 <TextInput 

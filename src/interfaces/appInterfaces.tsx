@@ -4,13 +4,9 @@ export interface LoginResponse{
 }
 
 export interface Usuario {
-    // rol:string;
-    // estado:boolean;
-    // google:boolean;
     userName:string;
     email:string;
-    // uid:string;
-    // img?:string;
+    
     
 }
 
@@ -22,4 +18,9 @@ export interface LoginData {
 export interface ResetPasswordData {
     email:string;
     
+}
+export interface RegisterData {
+    nombre:string;
+    email:string;
+    password: string;
 }
