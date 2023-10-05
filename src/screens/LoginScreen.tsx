@@ -50,11 +50,11 @@ export const LoginScreen = ({navigation}:Props) => {
 
             <View style={loginStyles.formContainer}>
 
-                <Text style={ loginStyles.title}>Inicio de sesión</Text>
-
-                <Text style={ loginStyles.label}>Email:</Text>
+                <Text style={ loginStyles.title}>Bienvenido!</Text>
+                <Text style={ loginStyles.subtitle}>Ingrese credenciales</Text>
+                {/* <Text style={ loginStyles.label}>Email:</Text> */}
                 <TextInput 
-                                placeholder="Ingrese su email:"
+                                placeholder="Email"
                                 placeholderTextColor="rgba(255,255,255,0.4)"
                                 keyboardType="email-address"
                                 underlineColorAndroid="white"
@@ -72,9 +72,9 @@ export const LoginScreen = ({navigation}:Props) => {
                             />
 
 
-                <Text style={ loginStyles.label }>Contraseña:</Text>
+                {/* <Text style={ loginStyles.label }>Contraseña:</Text> */}
                 <TextInput 
-                    placeholder="******"
+                    placeholder="Contrasena"
                     placeholderTextColor="rgba(255,255,255,0.4)"
                     underlineColorAndroid="white"
                     secureTextEntry
@@ -90,6 +90,15 @@ export const LoginScreen = ({navigation}:Props) => {
                     autoCapitalize="none"
                     autoCorrect={ false }
                     />
+                <View style={loginStyles.resetButtonContainer}>
+                    <TouchableOpacity 
+                        activeOpacity={0.8}
+                        onPress={()=> navigation.replace('ResetPasswordScreen')}
+                        style={loginStyles.resetButton}
+                    >
+                        <Text style={loginStyles.resetButtonText}>Recuperar cuenta</Text>
+                    </TouchableOpacity>
+                </View>
 
                 <View style={loginStyles.buttonContainer}>
                     <TouchableOpacity 
@@ -104,25 +113,23 @@ export const LoginScreen = ({navigation}:Props) => {
 
 
                 </View>
+                
+                <View style={loginStyles.newUserContainer}>
+                    <Text style={loginStyles.createAccountText}>
+                        Quieres crear una nueva cuenta?
+                    </Text>
+                    <TouchableOpacity 
+                        activeOpacity={0.8}
+                        onPress={()=> navigation.replace('RegisterScreen')}
+                    >
+                        
+                            <Text style={loginStyles.signUpButtonText}>Nueva cuenta</Text>
+                        
+                    </TouchableOpacity>
+                    
+                
+            </View>
 
-                <View style={loginStyles.newUserContainer}>
-                    <TouchableOpacity 
-                    activeOpacity={0.8}
-                    onPress={()=> navigation.replace('RegisterScreen')}
-                    >
-                        <Text style={loginStyles.buttonText}>Nueva cuenta</Text>
-                    </TouchableOpacity>
-                    
-                </View>
-                <View style={loginStyles.newUserContainer}>
-                    <TouchableOpacity 
-                    activeOpacity={0.8}
-                    onPress={()=> navigation.replace('ResetPasswordScreen')}
-                    >
-                        <Text style={loginStyles.buttonText}>Recuperar contrasena</Text>
-                    </TouchableOpacity>
-                    
-                </View>
             
             </View>
 
