@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import { LoginScreen } from '../screens/LoginScreen';
 import { RegisterScreen } from '../screens/RegisterScreen';
-import { ProtectedScreen } from '../screens/ProtectedScreen';
+import { ProtectedScreen } from '../screens/WaitingScreen';
 import { ResetPasswordScreen } from '../screens/RecoveryScreen';
 import { AuthContext } from '../context/AuthContext';
 import { LoadingScreen } from '../screens/LoadingScreen';
@@ -14,6 +14,7 @@ export const  Navigator= ()=> {
     const {status} = useContext(AuthContext);
 
     if (status==='checking')return <LoadingScreen></LoadingScreen>
+    
   return (
     <Stack.Navigator
         screenOptions={{
