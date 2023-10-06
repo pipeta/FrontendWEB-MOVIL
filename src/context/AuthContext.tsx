@@ -38,8 +38,7 @@ export const AuthProvider = ({children}: any)=> {
         const token = await AsyncStorage.getItem('token');
         const resp = JSON.parse(await AsyncStorage.getItem('user') ?? "{}")
         
-        console.log(resp)
-        console.log(token)
+        
         if(!token) return dispatch({type:'notAuthenticated'});
 
         // dispatch({
@@ -58,7 +57,7 @@ export const AuthProvider = ({children}: any)=> {
         try{
 
             const resp = await API.post<LoginResponse>("/auth/register",{email,password,userName:nombre}) 
-            console.log(resp)
+            
             dispatch({
                 type:'signUp',
                 payload:{
@@ -87,7 +86,7 @@ export const AuthProvider = ({children}: any)=> {
     const signIn = async({email,password}:LoginData) =>{
         try{
             const resp = await API.post<LoginResponse>("/auth/login",{email,password}) 
-            console.log(resp)
+            
             dispatch({
                 type:'signUp',
                 payload:{
