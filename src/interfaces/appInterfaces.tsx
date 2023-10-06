@@ -1,5 +1,5 @@
 export interface LoginResponse{
-    userData: Usuario;
+    userName: Usuario;
     access_token: string;
 }
 
