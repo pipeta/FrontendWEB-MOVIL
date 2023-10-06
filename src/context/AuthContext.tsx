@@ -85,8 +85,9 @@ export const AuthProvider = ({children}: any)=> {
     };
     const signIn = async({email,password}:LoginData) =>{
         try{
+            console.log('aaa')
             const resp = await API.post<LoginResponse>("/auth/login",{email,password}) 
-            
+            console.log(resp)
             dispatch({
                 type:'signUp',
                 payload:{
@@ -96,6 +97,7 @@ export const AuthProvider = ({children}: any)=> {
                 }
             });
             await AsyncStorage.setItem('token', resp.data.access_token)
+            await AsyncStorage.setItem('user', JSON.stringify(email))
             
         }catch(error){
             

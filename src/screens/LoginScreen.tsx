@@ -20,14 +20,14 @@ export const LoginScreen = ({navigation}:Props) => {
 
     const onLogin = () =>{
         Keyboard.dismiss();
-
+        console.log('voy entrar aca')
         signIn({email,password});
     }
     useEffect(() => {
       
         if(errorMessage.length===0) return;
         console.log(errorMessage)
-        Alert.alert('OLAS', errorMessage,
+        Alert.alert('Error', errorMessage,
         [
             {
                 text:'ok',
@@ -72,7 +72,7 @@ export const LoginScreen = ({navigation}:Props) => {
                             />
 
 
-                {/* <Text style={ loginStyles.label }>Contraseña:</Text> */}
+                
                 <TextInput 
                     placeholder="Contraseña"
                     placeholderTextColor="rgba(255,255,255,0.4)"

@@ -32,7 +32,7 @@ export const ResetPasswordScreen = ({ navigation }: Props) => {
         <View style={loginStyles.formContainer}>
           <Text style={loginStyles.title}>Recuperar Contraseña</Text>
 
-          <Text style={loginStyles.label}>Email:</Text>
+          
           <TextInput
             placeholder="Ingrese su email"
             placeholderTextColor="rgba(255,255,255,0.4)"
