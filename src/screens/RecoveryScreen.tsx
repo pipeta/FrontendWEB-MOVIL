@@ -56,7 +56,7 @@ export const ResetPasswordScreen = ({ navigation }: Props) => {
               style={loginStyles.button}
               onPress={onResetPassword}
             >
-              <Text style={loginStyles.buttonText}>Recuperar Contraseña</Text>
+              <Text style={loginStyles.buttonText}>Enviar</Text>
             </TouchableOpacity>
           </View>
 

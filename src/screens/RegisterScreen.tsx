@@ -12,18 +12,14 @@ export const RegisterScreen = ({navigation}:Props) => {
     
     const {signUp,errorMessage,removeError} = useContext(AuthContext)
     useEffect(() => {
-      
-        if(errorMessage.length===0) return;
-        console.log(errorMessage)
-        Alert.alert('Registro incorrecto', errorMessage,
-        [
-            {
-                text:'ok',
-                onPress:removeError
-            }
-        ])
-      
-    }, [errorMessage])
+        if( errorMessage.length === 0 ) return;
+
+        Alert.alert( 'Registro incorrecto', errorMessage,[{
+            text: 'Ok',
+            onPress: removeError
+        }]);
+
+    }, [ errorMessage ])
     const {email,name,password,onChange} = useForm({
         email:'',
         password:'',

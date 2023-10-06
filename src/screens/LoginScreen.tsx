@@ -52,7 +52,7 @@ export const LoginScreen = ({navigation}:Props) => {
 
                 <Text style={ loginStyles.title}>Bienvenido!</Text>
                 <Text style={ loginStyles.subtitle}>Ingrese credenciales</Text>
-                {/* <Text style={ loginStyles.label}>Email:</Text> */}
+               
                 <TextInput 
                                 placeholder="Email"
                                 placeholderTextColor="rgba(255,255,255,0.4)"
@@ -74,7 +74,7 @@ export const LoginScreen = ({navigation}:Props) => {
 
                 {/* <Text style={ loginStyles.label }>Contraseña:</Text> */}
                 <TextInput 
-                    placeholder="Contrasena"
+                    placeholder="Contraseña"
                     placeholderTextColor="rgba(255,255,255,0.4)"
                     underlineColorAndroid="white"
                     secureTextEntry
