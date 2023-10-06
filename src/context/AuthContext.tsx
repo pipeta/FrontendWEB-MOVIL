@@ -31,81 +31,48 @@ export const AuthProvider = ({children}: any)=> {
 
     useEffect(() => {
        validarToken()
-      
+       
     }, [])
     
-    // const checkToken = async() => {
-    //     const token = await AsyncStorage.getItem('token');
-
+    const validarToken = async() => {
+        const token = await AsyncStorage.getItem('token');
+        const resp = JSON.parse(await AsyncStorage.getItem('user') ?? "{}")
         
-        
-    //     if(!token) return dispatch({type:'notAuthenticated'});
+        console.log(resp)
+        console.log(token)
+        if(!token) return dispatch({type:'notAuthenticated'});
 
-    //     const resp = await API.get("/auth/validate-token");
-    //     console.log(resp)
-    //     if(resp.status !== 200){
-    //         return dispatch({type:'notAuthenticated'})
-    //     }
-    //     dispatch({
-    //         type:'signUp',
-    //         payload: {
-    //             token:  resp.data.access_token,
-    //             user:   resp.data.userData
-    //         }
-    //     })
-    // }
-    async function validarToken() {
-        try {
-          const token = await AsyncStorage.getItem('token');
-          const resp = await API.post('/auth/validate-token',{token});
-          
-          const data = resp.data; // Aquí puedes acceder a la respuesta del servidor
-            console.log('acaca')
-            console.log(data)
-            console.log('acaca')
-          if (data.valid) {
-            // El token es válido
-            console.log('El token es válido');
-            console.log(token)
-            // await AsyncStorage.setItem('token',resp.data.token)
-
-            dispatch({
-                        type:'signUp',
-                        payload: {
-                            token:  resp.data.access_token,
-                            user:   resp.data.userData
-                        }
-                    })
-          } else {
-            // El token no es válido
-            console.log('El token no es válido');
-            return dispatch({type:'notAuthenticated'});
-
-          }
-        } catch (error) {
-          // Maneja errores aquí
-          console.error('Error al validar el token:', error);
-        }
-      }
+        // dispatch({
+        //     type:'signUp',
+        //     payload: {
+        //         token:  token,
+        //         user: {nombre: '',email:''}
+        //     }
+        // })
+    }
+   
       
     
 
     const signUp = async({email,password,nombre}:RegisterData) =>{
         try{
-            const resp = await API.post<LoginResponse>("/auth/register",{email,password,nombre}) // el authlogin revisa lo que sigue despues de la URl base
+
+            const resp = await API.post<LoginResponse>("/auth/register",{email,password,userName:nombre}) 
             console.log(resp)
             dispatch({
                 type:'signUp',
                 payload:{
                     token:  resp.data.access_token,
-                    user:   resp.data.userData
+                    user:   resp.data.userName
 
                 }
             });
             await AsyncStorage.setItem('token', resp.data.access_token)
+            await AsyncStorage.setItem('user', JSON.stringify(resp.data.userName))
+            
             
         }catch(error){
-            console.log(JSON.stringify(error))
+            
 
             if(error instanceof AxiosError){
                 console.log(error.response?.data.message)
@@ -119,20 +86,20 @@ export const AuthProvider = ({children}: any)=> {
     };
     const signIn = async({email,password}:LoginData) =>{
         try{
-            const resp = await API.post<LoginResponse>("/auth/login",{email,password}) // el authlogin revisa lo que sigue despues de la URl base
+            const resp = await API.post<LoginResponse>("/auth/login",{email,password}) 
             console.log(resp)
             dispatch({
                 type:'signUp',
                 payload:{
                     token:  resp.data.access_token,
-                    user:   resp.data.userData
+                    user:   resp.data.userName
 
                 }
             });
             await AsyncStorage.setItem('token', resp.data.access_token)
             
         }catch(error){
-            console.log(JSON.stringify(error))
+            
 
             if(error instanceof AxiosError){
                 console.log(error.response?.data.message)
@@ -146,16 +113,26 @@ export const AuthProvider = ({children}: any)=> {
     }
     const resetPassword = async({email}:ResetPasswordData) => {
         try{
-            const resp = await API.post<LoginResponse>("/auth/recovery",{email}) // el authlogin revisa lo que sigue despues de la URl base
+            const resp = await API.post<LoginResponse>("/auth/recovery",{email}) 
             console.log(resp.data) 
             
             
         }catch(error){
-            console.log(error)
+            
+
+            if(error instanceof AxiosError){
+                console.log(error.response?.data.message)
+                dispatch({
+                type: 'addError',
+                payload: error.response?.data.message  || 'Informacion incorrecta'
+                })
+            }
+            
         }
     };
     const logOut = async() =>{
         await AsyncStorage.removeItem('token')
+        await AsyncStorage.removeItem('user')
         dispatch({type:'logout'})
     }
     const removeError = () =>{
