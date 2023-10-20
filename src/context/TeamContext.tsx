@@ -12,6 +12,7 @@ type TeamsContextProps = {
     updateTeam: ( name:string ,teamId:string) => Promise<void>
     deleteTeam: ( name:string) => Promise<void>
     loadTeamById: ( id:string) => Promise<Usuario>
+    removeTeam: (uniqueCode: string) => Promise<void>
 }
 interface TeamData {
     _id: string;
@@ -58,21 +59,22 @@ const fetchTeams = async (): Promise<TeamData[]> => {
         return teamsData;
     } catch (error) {
         console.error(error);
-        throw error; // Puedes manejar el error en tu componente si es necesario
+        throw error; 
     }
 };
 
   const removeTeam = async (uniqueCode: string) => {
+    console.log(`/teams/${uniqueCode}`)
     try {
-      const accessToken = 'tu-token-aqui'; // Reemplaza esto con tu token real
+      const accessToken = await AsyncStorage.getItem("token");
       const config = {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
       };
 
-      const response = await APIteam.delete(`/api/teams/${uniqueCode}`, config);
-      // Puedes manejar la respuesta o simplemente completar la solicitud con éxito
+      const response = await APIteam.delete(`/teams/${uniqueCode}`, config);
+      console.log(response);
     } catch (error) {
       console.error(error);
     }
@@ -92,7 +94,8 @@ const  loadTeamById= async ( id:string) => {
             fetchTeams,
             updateTeam,
             deleteTeam,
-            loadTeamById, 
+            loadTeamById,
+            removeTeam
         }}>
             {children}
         </TeamContext.Provider>

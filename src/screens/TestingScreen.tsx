@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import { TeamContext } from '../context/TeamContext';
 import { View, FlatList, Text, StyleSheet} from 'react-native';
 import { Card } from 'react-native-paper';
+import { Button } from 'react-native';
 
 interface TeamData {
     _id: string;
@@ -17,6 +18,7 @@ interface TeamData {
 
 export const TestingScreen = () => {
     const { fetchTeams } = useContext(TeamContext);
+    const { removeTeam } = useContext(TeamContext);
     const [teams, setTeams] = useState<TeamData[]>([]);
 
     useEffect(() => {
@@ -55,6 +57,10 @@ export const TestingScreen = () => {
                 )}
               />
             </Card.Content>
+            <Button
+              title="Eliminar Equipo"
+              onPress={async () => await removeTeam(team.uniqueCode)} // Reemplaza someTeamId con el ID del equipo que deseas eliminar
+            />
           </Card>
         )}
       />
