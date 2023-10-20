@@ -80,7 +80,7 @@ const fetchTeams = async (): Promise<TeamData[]> => {
 };
 
   const removeTeam = async (uniqueCode: string) => {
-    console.log(`/teams/${uniqueCode}`)
+    console.log(`/team/${uniqueCode}`)
     try {
       const accessToken = await AsyncStorage.getItem("token");
       const config = {
@@ -89,7 +89,7 @@ const fetchTeams = async (): Promise<TeamData[]> => {
         },
       };
 
-      const response = await APIteam.delete(`/teams/${uniqueCode}`, config);
+      const response = await APIteam.delete(`/team/${uniqueCode}`, config);
       console.log(response);
     } catch (error) {
       console.error(error);
