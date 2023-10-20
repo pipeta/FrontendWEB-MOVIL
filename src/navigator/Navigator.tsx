@@ -11,6 +11,7 @@ import DefaultScreen from '../screens/DefaultScree';
 import { SettingsScreen } from '../screens/SettingsScreen';
 import ManageTeam from '../screens/ManageTeam';
 import Home from '../screens/Home';
+import { TestingScreen } from '../screens/TestingScreen';
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
 
@@ -21,6 +22,7 @@ const Sidebar = () => {
       <Drawer.Screen name="Home" component={DefaultScreen} />
       <Drawer.Screen name="Editar perfil" component={SettingsScreen}/>
       <Drawer.Screen name="Editar equipo" component={ManageTeam}/>
+      <Drawer.Screen name="Testing" component={TestingScreen}/>
     </Drawer.Navigator>
   );
 };

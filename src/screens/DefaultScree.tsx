@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import {
   View,
   Text,
@@ -8,6 +8,7 @@ import {
   ImageBackground,
 } from "react-native";
 import { loginStyles } from "../theme/loginTheme";
+import { TeamContext } from "../context/TeamContext";
 
 const DefaultScreen = () => {
   const [nombreEquipo, setNombreEquipo] = useState("");
@@ -15,6 +16,8 @@ const DefaultScreen = () => {
   const crearEquipo = () => {
     // Lógica para crear un equipo
   };
+
+  const {fetchTeams} = useContext(TeamContext);
 
   return (
     <ImageBackground
@@ -36,6 +39,7 @@ const DefaultScreen = () => {
         <View style={styles.buttonContainer}>
           <Button title="Crear Equipo" onPress={crearEquipo} color={'transparent'}/>
         </View>
+        
       </View>
     </ImageBackground>
   );

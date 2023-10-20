@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import {
   Text,
   FlatList,
@@ -12,6 +12,7 @@ import {
 } from "react-native"; // Asegúrate de importar Text de react-native
 import { Card } from "react-native-paper";
 import { StyleSheet } from "react-native";
+import { TeamContext } from "../context/TeamContext";
 
 export interface Equipo {
   id: number;
@@ -25,7 +26,8 @@ export const ManageTeam = () => {
   const [nuevoIntegrante, setNuevoIntegrante] = useState("");
   const [integranteActual, setIntegranteActual] = useState<Equipo | null>(null);
   const [modalVisible, setModalVisible] = useState(false);
-
+  const {fetchTeams} = useContext(TeamContext);
+  
   const [equipos, setEquipos] = useState<Equipo[]>([
     {
       id: 1,
@@ -82,6 +84,7 @@ export const ManageTeam = () => {
   const eliminarEquipo = (id: any) => {
     setEquipos(equipos.filter((equipo) => equipo.id !== id));
   };
+  
 
   return (
     <ImageBackground

@@ -8,12 +8,22 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 type TeamsContextProps = {
     createTeam: (createTeamDto: CreateTeamDto)=> Promise<Team|undefined>
-    fetchTeams: () => Promise<void>
+    fetchTeams: () => Promise<TeamData[]>;
     updateTeam: ( name:string ,teamId:string) => Promise<void>
     deleteTeam: ( name:string) => Promise<void>
     loadTeamById: ( id:string) => Promise<Usuario>
 }
-
+interface TeamData {
+    _id: string;
+    name: string;
+    autor: string;
+    uniqueCode: string;
+    listUser: {
+        userName: string;
+        email: string;
+        _id: string;
+    }[];
+}
 
 export const TeamContext = createContext({} as TeamsContextProps);
 
@@ -30,20 +40,27 @@ const createTeam = async (createTeamDto: CreateTeamDto) => {
     }
 };
 
-const fetchTeams = async () => {
+const fetchTeams = async (): Promise<TeamData[]> => {
     try {
         const accessToken = await AsyncStorage.getItem("token");
+        console.log(accessToken)
         const config = {
             headers: {
-            Authorization: `Bearer ${accessToken}`,
+                Authorization: `Bearer ${accessToken}`,
             },
         };
-        const response = await APIteam.get('/api/teams', config);
-        setTeams(response.data);
+        const response = await APIteam.get('/team', config);
+        console.log(response);
+
+        const teamsData: TeamData[] = response.data;
+        
+        return teamsData;
     } catch (error) {
         console.error(error);
+        throw error; // Puedes manejar el error en tu componente si es necesario
     }
-  };
+};
+
   const removeTeam = async (uniqueCode: string) => {
     try {
       const accessToken = 'tu-token-aqui'; // Reemplaza esto con tu token real

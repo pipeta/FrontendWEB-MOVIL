@@ -1,10 +1,11 @@
 import React, { useContext } from 'react';
 import { View, Text, StyleSheet, ImageBackground, TouchableOpacity } from 'react-native';
 import { AuthContext } from '../context/AuthContext';
+import { TeamContext } from '../context/TeamContext';
 
 const Home = () => {
     const {status, update,user, logOut} = useContext(AuthContext);
-    
+    const {fetchTeams} = useContext(TeamContext);
   return (
     <ImageBackground
       source={require('../theme/pngtree-simple-lights-on-black-background-image_556934.jpg')}
@@ -17,6 +18,10 @@ const Home = () => {
           <Text style={styles.buttonText}>Mostrar Estado</Text>
         </TouchableOpacity> */}
         <TouchableOpacity onPress={logOut} style={styles.button}>
+          <Text style={styles.buttonText}>Logout</Text>
+        </TouchableOpacity>
+        <div>aaa</div>
+        <TouchableOpacity onPress={fetchTeams} style={styles.button}>
           <Text style={styles.buttonText}>Logout</Text>
         </TouchableOpacity>
       </View>
