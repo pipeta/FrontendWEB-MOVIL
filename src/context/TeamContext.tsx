@@ -33,6 +33,7 @@ export const TeamProvider = ({children}: any) => {
 const  [teams,setTeams] = useState<Team[]>([])
 const createTeam = async (createTeamDto: CreateTeamDto) => {
     try {
+      const accessToken = await AsyncStorage.getItem("token");
       const response: Team = await APIteam.post('/api/teams', createTeamDto);
       return response
     } catch (error) {
