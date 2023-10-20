@@ -6,9 +6,12 @@ import {
   Button,
   StyleSheet,
   ImageBackground,
+  Alert,
+  Keyboard,
 } from "react-native";
 import { loginStyles } from "../theme/loginTheme";
 import { TeamContext } from "../context/TeamContext";
+import { useForm } from "../hooks/useForm";
 
 const DefaultScreen = () => {
   const [nombreEquipo, setNombreEquipo] = useState("");
@@ -17,7 +20,27 @@ const DefaultScreen = () => {
     // Lógica para crear un equipo
   };
 
-  const {fetchTeams} = useContext(TeamContext);
+  const { fetchTeams ,createTeam} = useContext(TeamContext);
+  const { createTeamDto, onChange } = useForm({
+    createTeamDto: "",
+    
+  });
+
+  const onCreate = () => {
+    // Validar los datos aquí si es necesario antes de llamar a signUp
+    if (
+      
+      createTeamDto.trim() === "" 
+    
+    ) {
+      Alert.alert("Campos requeridos", "Por favor, complete todos los campos.");
+      return;
+    }
+
+    console.log({ createTeamDto});
+    Keyboard.dismiss();
+    createTeam( createTeamDto );
+  };
 
   return (
     <ImageBackground
@@ -25,21 +48,27 @@ const DefaultScreen = () => {
       style={styles.background}
     >
       <View style={styles.container}>
-        <Text style={[styles.title, loginStyles.title]}>Gestión de Equipos</Text>
+        <Text style={[styles.title, loginStyles.title]}>
+          Gestión de Equipos
+        </Text>
 
         {/* Formulario para Crear Equipos */}
         <TextInput
           style={[styles.input, loginStyles.inputField]}
           placeholder="Nombre del Equipo"
-          value={nombreEquipo}
-          onChangeText={(text) => setNombreEquipo(text)}
+          onChangeText={(value) => onChange(value, "createTeamDto")}
+          value={createTeamDto}
+          onSubmitEditing={onCreate}
         />
 
         {/* Botón para Crear Equipo */}
         <View style={styles.buttonContainer}>
-          <Button title="Crear Equipo" onPress={crearEquipo} color={'transparent'}/>
+          <Button
+            title="Crear Equipo"
+            onPress={onCreate}
+            color={"transparent"}
+          />
         </View>
-        
       </View>
     </ImageBackground>
   );
