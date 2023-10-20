@@ -7,7 +7,7 @@ import { CreateTeamDto, Team } from "../interfaces/teamInterfaces";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 type TeamsContextProps = {
-    createTeam: (createTeamDto: CreateTeamDto)=> Promise<Team|undefined>
+    createTeam: (createTeamDto: string)=> Promise<void>
     fetchTeams: () => Promise<TeamData[]>;
     updateTeam: ( name:string ,teamId:string) => Promise<void>
     deleteTeam: ( name:string) => Promise<void>
@@ -31,15 +31,31 @@ export const TeamProvider = ({children}: any) => {
 
 
 const  [teams,setTeams] = useState<Team[]>([])
-const createTeam = async (createTeamDto: CreateTeamDto) => {
+
+const createTeam = async (name: string): Promise<void> => {
     try {
       const accessToken = await AsyncStorage.getItem("token");
-      const response: Team = await APIteam.post('/api/teams', createTeamDto);
-      return response
+      const config = {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      };
+  
+      const resp = await APIteam.post('/team', {
+        name
+        
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`, // Agrega el token al encabezado de la solicitud
+        },
+      });
+      console.log(resp)
     } catch (error) {
       console.error(error);
+      throw error;
     }
-};
+  };
 
 const fetchTeams = async (): Promise<TeamData[]> => {
     try {
