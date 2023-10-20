@@ -1,13 +1,18 @@
 
 import React from 'react'
-import { Navigator } from './src/navigator/Navigator';
+import { Navigator } from './src/navigator/Navigator'; // Asegúrate de proporcionar la ruta correcta al archivo del Navigator
+
 import { NavigationContainer } from '@react-navigation/native';
 import { AuthProvider } from './src/context/AuthContext';
+import { TeamProvider } from './src/context/TeamContext';
 
 const AppState = ({children}: any) => {
   return (
     <AuthProvider>
-      {children}
+      <TeamProvider>
+        {children}
+
+      </TeamProvider>
     </AuthProvider>
   )
 }
@@ -16,6 +21,7 @@ export const App = () => {
     <NavigationContainer>
       <AppState>
         <Navigator/>
+        
       </AppState>
     </NavigationContainer>
   )
