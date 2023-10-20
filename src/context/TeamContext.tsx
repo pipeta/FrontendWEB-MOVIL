@@ -61,7 +61,7 @@ const createTeam = async (name: string): Promise<void> => {
 const fetchTeams = async (): Promise<TeamData[]> => {
     try {
         const accessToken = await AsyncStorage.getItem("token");
-        console.log(accessToken)
+       
         const config = {
             headers: {
                 Authorization: `Bearer ${accessToken}`,
@@ -80,7 +80,7 @@ const fetchTeams = async (): Promise<TeamData[]> => {
 };
 
   const removeTeam = async (uniqueCode: string) => {
-    console.log(`/team/${uniqueCode}`)
+    
     try {
       const accessToken = await AsyncStorage.getItem("token");
       const config = {

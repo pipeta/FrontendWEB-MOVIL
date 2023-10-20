@@ -37,7 +37,7 @@ const DefaultScreen = () => {
       return;
     }
 
-    console.log({ createTeamDto});
+    
     Keyboard.dismiss();
     createTeam( createTeamDto );
   };

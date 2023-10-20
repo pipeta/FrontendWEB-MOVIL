@@ -18,11 +18,12 @@ const Drawer = createDrawerNavigator();
 const Sidebar = () => {
   return (
     <Drawer.Navigator>
-      <Drawer.Screen name="Test" component={Home}></Drawer.Screen>
-      <Drawer.Screen name="Home" component={DefaultScreen} />
+      <Drawer.Screen name="Home" component={Home}></Drawer.Screen>
+      <Drawer.Screen name="Crear Equipo" component={DefaultScreen} />
       <Drawer.Screen name="Editar perfil" component={SettingsScreen}/>
-      <Drawer.Screen name="Editar equipo" component={ManageTeam}/>
-      <Drawer.Screen name="Testing" component={TestingScreen}/>
+      <Drawer.Screen name="Editar equipo" component={TestingScreen}/>
+      {/* <Drawer.Screen name="Editar equipo" component={ManageTeam}/> */}
+      
     </Drawer.Navigator>
   );
 };

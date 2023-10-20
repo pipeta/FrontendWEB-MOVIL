@@ -20,10 +20,7 @@ const Home = () => {
         <TouchableOpacity onPress={logOut} style={styles.button}>
           <Text style={styles.buttonText}>Logout</Text>
         </TouchableOpacity>
-        <div>aaa</div>
-        <TouchableOpacity onPress={fetchTeams} style={styles.button}>
-          <Text style={styles.buttonText}>Logout</Text>
-        </TouchableOpacity>
+        
       </View>
     </ImageBackground>
   );
