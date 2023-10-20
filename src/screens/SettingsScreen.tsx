@@ -5,45 +5,32 @@ import { AuthContext } from '../context/AuthContext';
 import { useForm } from '../hooks/useForm';
 
 export const SettingsScreen = () => {
-  const {user,update} = useContext(AuthContext)
-  const onSaveChanges = () => {
-    console.log(email,password,userName)
-    Keyboard.dismiss();
-    update({
-      email,
-      password,
-      userName,
-    })
-  };
-
-  const { email, password,userName, onChange } = useForm({
-    email: "",
+  const { user, update } = useContext(AuthContext);
+  const { email, password, userName, onChange } = useForm({
+    email: user?.email || "",
     password: "",
-    userName: "",
+    userName: user?.userName || "",
   });
 
-  // const onSubmit= () => {
-  //   Keyboard.dismiss();
-  //   console.log("voy entrar aca");
-  //   // signIn({ email, password });
-  // };
-  // useEffect(() => {
-  //   if (errorMessage.length === 0) return;
-  //   console.log(errorMessage);
-  //   Alert.alert("Error", errorMessage, [
-  //     {
-  //       text: "ok",
-  //       onPress: removeError,
-  //     },
-  //   ]);
-  // }, [errorMessage]);
+  const onSaveChanges = () => {
+    Keyboard.dismiss();
+    
+    if (password.trim() === "") {
+      // Mostrar un mensaje de error si la contraseña está vacía
+      Alert.alert("Error", "La contraseña no puede estar vacía");
+    } else {
+      // Llamar a la función update solo si la contraseña no está vacía
+      update({
+        email,
+        password,
+        userName,
+      });
+    }
+  };
 
-  
-  console.log('User from SettingsScreen:', user);
-  
   return (
     <ImageBackground
-    source={require("../theme/pngtree-simple-lights-on-black-background-image_556934.jpg")} // Asegúrate de proporcionar la ruta correcta de tu imagen
+      source={require("../theme/pngtree-simple-lights-on-black-background-image_556934.jpg")}
       style={styles.background}
     >
       <View style={styles.container}>
@@ -51,7 +38,7 @@ export const SettingsScreen = () => {
 
         <Text style={[loginStyles.label, styles.label]}>Nombre:</Text>
         <TextInput
-          placeholder= {user?.userName}
+          placeholder={user?.userName}
           placeholderTextColor="rgba(0,0,0,0.4)"
           style={[loginStyles.inputField, styles.inputField]}
           selectionColor="white"
@@ -89,12 +76,10 @@ export const SettingsScreen = () => {
           value={password}
           onSubmitEditing={onSaveChanges}
         />
-        <View>
 
-        </View>
         <TouchableOpacity
           activeOpacity={0.8}
-          style={[loginStyles.button, styles.button, {marginTop:20}]}
+          style={[loginStyles.button, styles.button, { marginTop: 20 }]}
           onPress={onSaveChanges}
         >
           <Text style={[loginStyles.buttonText, styles.buttonText]}>Editar</Text>
@@ -116,21 +101,18 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   title: {
-    color: 'white', // Cambia el color del título si lo deseas
+    color: 'white',
   },
   label: {
-    color: 'white', // Cambia el color del texto de las etiquetas si lo deseas
+    color: 'white',
   },
   inputField: {
-    color: 'black', // Cambia el color del texto de los campos de entrada si lo deseas
-    // Otros estilos específicos si es necesario
+    color: 'black',
   },
   buttonText: {
-    color: 'black', // Cambia el color del texto del botón si lo deseas
+    color: 'black',
   },
-  button: {
-    // Otros estilos específicos del botón si es necesario
-  },
+  button: {},
 });
 
 export default SettingsScreen;

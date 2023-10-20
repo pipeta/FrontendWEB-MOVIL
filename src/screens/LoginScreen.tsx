@@ -27,12 +27,12 @@ export const LoginScreen = ({ navigation }: Props) => {
 
   const onLogin = () => {
     Keyboard.dismiss();
-    console.log("voy entrar aca");
+    
     signIn({ email, password });
   };
   useEffect(() => {
     if (errorMessage.length === 0) return;
-    console.log(errorMessage);
+    
     Alert.alert("Error", errorMessage, [
       {
         text: "ok",

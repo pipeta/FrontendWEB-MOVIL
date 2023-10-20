@@ -8,14 +8,25 @@ import {
   Alert,
   Modal,
   Pressable,
+  TextInput,
 } from "react-native"; // Asegúrate de importar Text de react-native
 import { Card } from "react-native-paper";
 import { StyleSheet } from "react-native";
+
+export interface Equipo {
+  id: number;
+  nombre: string;
+  integrantes: string[];
+}
+
 export const ManageTeam = () => {
   const [nombreEquipo, setNombreEquipo] = useState("");
   const [integrantes, setIntegrantes] = useState("");
+  const [nuevoIntegrante, setNuevoIntegrante] = useState("");
+  const [integranteActual, setIntegranteActual] = useState<Equipo | null>(null);
   const [modalVisible, setModalVisible] = useState(false);
-  const [equipos, setEquipos] = useState([
+
+  const [equipos, setEquipos] = useState<Equipo[]>([
     {
       id: 1,
       nombre: "Equipo 1",
@@ -26,18 +37,34 @@ export const ManageTeam = () => {
       nombre: "Equipo 2",
       integrantes: ["Integrante 4", "Integrante 5"],
     },
-    // ...otros equipos
     {
-      id: 1,
+      id: 3,
       nombre: "Equipo 1",
       integrantes: ["Integrante 1", "Integrante 2", "Integrante 3"],
     },
     {
-      id: 1,
+      id: 4,
       nombre: "Equipo 1",
       integrantes: ["Integrante 1", "Integrante 2", "Integrante 3"],
     },
   ]);
+  const agregarIntegranteAlEquipo = () => {
+    if (integranteActual && nuevoIntegrante.trim() !== "") {
+      const nuevoEquipo = equipos.map((equipo) =>
+        equipo.id === integranteActual.id
+          ? {
+              ...equipo,
+              integrantes: [...equipo.integrantes, nuevoIntegrante],
+            }
+          : equipo
+      );
+      console.log("Equipo antes de la actualización:", equipos);
+      console.log("Nuevo equipo:", nuevoEquipo);
+      setEquipos(nuevoEquipo);
+    }
+    setModalVisible(false);
+    setNuevoIntegrante("");
+  };
 
   const crearEquipo = () => {
     const nuevoEquipo = {
@@ -82,7 +109,7 @@ export const ManageTeam = () => {
                 <TouchableOpacity onPress={() => eliminarEquipo(item.id)}>
                   <Text style={styles.deleteButton}>Eliminar</Text>
                 </TouchableOpacity>
-                <View style={styles.centeredView}>
+                <View>
                   <Modal
                     animationType="slide"
                     transparent={true}
@@ -94,21 +121,36 @@ export const ManageTeam = () => {
                   >
                     <View style={styles.centeredView}>
                       <View style={styles.modalView}>
-                        <Text style={styles.modalText}>Hello World!</Text>
+                        <Text style={styles.modalText}>Agregar Integrante</Text>
+                        <TextInput
+                          style={styles.input}
+                          placeholder="Nombre del Integrante"
+                          onChangeText={(text) => setNuevoIntegrante(text)}
+                          value={nuevoIntegrante}
+                        />
+                        <Pressable
+                          style={[styles.button, styles.buttonClose]}
+                          onPress={agregarIntegranteAlEquipo}
+                        >
+                          <Text style={styles.textStyle}>Agregar</Text>
+                        </Pressable>
                         <Pressable
                           style={[styles.button, styles.buttonClose]}
                           onPress={() => setModalVisible(!modalVisible)}
                         >
-                          <Text style={styles.textStyle}>Hide Modal</Text>
+                          <Text style={styles.textStyle}>Cerrar</Text>
                         </Pressable>
                       </View>
                     </View>
                   </Modal>
                   <Pressable
                     style={[styles.button, styles.buttonOpen]}
-                    onPress={() => setModalVisible(true)}
+                    onPress={() => {
+                      setIntegranteActual(item); // Establece integranteActual al equipo actual
+                      setModalVisible(true);
+                    }}
                   >
-                    <Text style={styles.textStyle}>Show Modal</Text>
+                    <Text style={styles.textStyle}>Editar</Text>
                   </Pressable>
                 </View>
               </View>
@@ -234,6 +276,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     padding: 10,
     elevation: 2,
+    color: "red",
   },
   buttonOpen: {
     backgroundColor: "#F194FF",

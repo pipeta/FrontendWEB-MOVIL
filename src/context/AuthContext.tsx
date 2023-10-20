@@ -124,7 +124,7 @@ export const AuthProvider = ({ children }: any) => {
         const userEmail = email ? email : "";
         const userPassword = password ? password : "";
 
-        console.log(resp.data.access_token);
+        
         dispatch({
           type: "update",
           payload: {
@@ -143,10 +143,13 @@ export const AuthProvider = ({ children }: any) => {
     } catch (error) {
       if (error instanceof AxiosError) {
         console.log(error.response?.data.message);
+       
         dispatch({
           type: "addError",
           payload: error.response?.data.message || "Informacion incorrecta",
         });
+       
+        
       }
     }
   };

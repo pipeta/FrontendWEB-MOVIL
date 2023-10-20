@@ -11,6 +11,7 @@ type AuthAction =
   | { type: "signUp"; payload: { token: string; user: Usuario } }
   | { type: "update"; payload: { token: string; user: Usuario , email:string, password:string} }
   | { type: "addError"; payload: string }
+  | { type: "addErrorUpdate"; payload: { error: string,token: string; user: Usuario , email:string, password:string} }
   | { type: "removeError" }
   | { type: "notAuthenticated" }
   | { type: "logout" }
@@ -29,6 +30,16 @@ export const authReducer = (
         token: null,
         errorMessage: action.payload,
       };
+    case "addErrorUpdate":
+        return {
+            ...state,
+            errorMessage: action.payload.error,
+            status: "authenticated",
+            token: action.payload.token,
+            user: action.payload.user,
+            
+    
+    };
 
     case "removeError":
       return {
@@ -63,6 +74,7 @@ export const authReducer = (
         
 
       };
+      
     // case 'resetPassword':
     //     return {
     //         ...state,
