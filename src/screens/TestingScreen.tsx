@@ -1,9 +1,9 @@
-import React, { useContext, useState, useEffect } from 'react';
-import { TeamContext } from '../context/TeamContext';
-import { View, FlatList, Text, StyleSheet } from 'react-native';
-import { Card } from 'react-native-paper';
-import { Button } from 'react-native';
-import { useFocusEffect } from '@react-navigation/native';
+import React, { useContext, useState, useEffect } from "react";
+import { TeamContext } from "../context/TeamContext";
+import { View, FlatList, Text, StyleSheet } from "react-native";
+import { Card } from "react-native-paper";
+import { Button } from "react-native";
+import { useFocusEffect } from "@react-navigation/native";
 
 interface TeamData {
   _id: string;
@@ -34,7 +34,6 @@ export const TestingScreen = () => {
     React.useCallback(() => {
       fetchData();
 
-      // Limpia el estado cuando la pantalla se desenfoca
       return () => {
         setTeams([]);
       };
@@ -43,7 +42,7 @@ export const TestingScreen = () => {
 
   const handleRemoveTeam = async (uniqueCode: string) => {
     await removeTeam(uniqueCode);
-    fetchData(); // Recarga la lista de equipos después de eliminar un equipo
+    fetchData();
   };
 
   return (
@@ -87,7 +86,7 @@ const styles = StyleSheet.create({
   },
   heading: {
     fontSize: 24,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: 16,
   },
   card: {
@@ -95,7 +94,7 @@ const styles = StyleSheet.create({
   },
   teamName: {
     fontSize: 18,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: 8,
   },
 });

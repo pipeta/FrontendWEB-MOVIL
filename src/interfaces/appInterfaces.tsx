@@ -1,7 +1,7 @@
 export interface LoginResponse {
-    access_token: string;
-    userName: string;
-    email: string;
+  access_token: string;
+  userName: string;
+  email: string;
 }
 export interface RegisterResponse {
   access_token: string;
@@ -9,11 +9,11 @@ export interface RegisterResponse {
   email: string;
 }
 export interface UpdateResponse {
-    access_token: string;
-    password: string;
-    userName: string;
-    email: string;
-  }
+  access_token: string;
+  password: string;
+  userName: string;
+  email: string;
+}
 export interface Usuario {
   userName: string;
   email: string;
@@ -44,7 +44,3 @@ export interface TeamsResponse {
   name: string;
   teams: Usuario[];
 }
-
-// export interface Teams{
-
-// }

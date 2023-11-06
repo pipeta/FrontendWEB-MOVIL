@@ -9,9 +9,26 @@ export interface AuthState {
 
 type AuthAction =
   | { type: "signUp"; payload: { token: string; user: Usuario } }
-  | { type: "update"; payload: { token: string; user: Usuario , email:string, password:string} }
+  | {
+      type: "update";
+      payload: {
+        token: string;
+        user: Usuario;
+        email: string;
+        password: string;
+      };
+    }
   | { type: "addError"; payload: string }
-  | { type: "addErrorUpdate"; payload: { error: string,token: string; user: Usuario , email:string, password:string} }
+  | {
+      type: "addErrorUpdate";
+      payload: {
+        error: string;
+        token: string;
+        user: Usuario;
+        email: string;
+        password: string;
+      };
+    }
   | { type: "removeError" }
   | { type: "notAuthenticated" }
   | { type: "logout" }
@@ -31,15 +48,13 @@ export const authReducer = (
         errorMessage: action.payload,
       };
     case "addErrorUpdate":
-        return {
-            ...state,
-            errorMessage: action.payload.error,
-            status: "authenticated",
-            token: action.payload.token,
-            user: action.payload.user,
-            
-    
-    };
+      return {
+        ...state,
+        errorMessage: action.payload.error,
+        status: "authenticated",
+        token: action.payload.token,
+        user: action.payload.user,
+      };
 
     case "removeError":
       return {
@@ -55,7 +70,7 @@ export const authReducer = (
         token: action.payload.token,
         user: action.payload.user,
       };
-      case "signUp":
+    case "signUp":
       return {
         ...state,
         errorMessage: "",
@@ -71,17 +86,7 @@ export const authReducer = (
         status: "authenticated",
         token: action.payload.token,
         user: action.payload.user,
-        
-
       };
-      
-    // case 'resetPassword':
-    //     return {
-    //         ...state,
-    //         status: 'not-authenticated', // Cambia el estado a no autenticado para redirigir a la pantalla de inicio de sesión
-    //         token: null,
-    //         user: null,
-    //     };
 
     case "logout":
       return {

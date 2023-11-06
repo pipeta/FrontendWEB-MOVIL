@@ -1,8 +1,18 @@
-import React, { useContext, useEffect } from 'react';
-import { View, Text, StyleSheet, TextInput, TouchableOpacity, Alert, Platform, ImageBackground, Keyboard } from 'react-native';
-import { loginStyles } from '../theme/loginTheme';
-import { AuthContext } from '../context/AuthContext';
-import { useForm } from '../hooks/useForm';
+import React, { useContext, useEffect } from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TextInput,
+  TouchableOpacity,
+  Alert,
+  Platform,
+  ImageBackground,
+  Keyboard,
+} from "react-native";
+import { loginStyles } from "../theme/loginTheme";
+import { AuthContext } from "../context/AuthContext";
+import { useForm } from "../hooks/useForm";
 
 export const SettingsScreen = () => {
   const { user, update } = useContext(AuthContext);
@@ -14,12 +24,10 @@ export const SettingsScreen = () => {
 
   const onSaveChanges = () => {
     Keyboard.dismiss();
-    
+
     if (password.trim() === "") {
-      // Mostrar un mensaje de error si la contraseña está vacía
       Alert.alert("Error", "La contraseña no puede estar vacía");
     } else {
-      // Llamar a la función update solo si la contraseña no está vacía
       update({
         email,
         password,
@@ -82,7 +90,9 @@ export const SettingsScreen = () => {
           style={[loginStyles.button, styles.button, { marginTop: 20 }]}
           onPress={onSaveChanges}
         >
-          <Text style={[loginStyles.buttonText, styles.buttonText]}>Editar</Text>
+          <Text style={[loginStyles.buttonText, styles.buttonText]}>
+            Editar
+          </Text>
         </TouchableOpacity>
       </View>
     </ImageBackground>
@@ -92,25 +102,25 @@ export const SettingsScreen = () => {
 const styles = StyleSheet.create({
   background: {
     flex: 1,
-    resizeMode: 'cover',
-    justifyContent: 'center',
+    resizeMode: "cover",
+    justifyContent: "center",
   },
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   title: {
-    color: 'white',
+    color: "white",
   },
   label: {
-    color: 'white',
+    color: "white",
   },
   inputField: {
-    color: 'black',
+    color: "black",
   },
   buttonText: {
-    color: 'black',
+    color: "black",
   },
   button: {},
 });

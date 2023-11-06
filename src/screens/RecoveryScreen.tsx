@@ -1,11 +1,19 @@
-import React, { useContext } from 'react';
-import { Keyboard, KeyboardAvoidingView, Platform, Text, TextInput, View,TouchableOpacity  } from 'react-native';
-import { Background } from '../components/Background';
-import { loginStyles } from '../theme/loginTheme';
+import React, { useContext } from "react";
+import {
+  Keyboard,
+  KeyboardAvoidingView,
+  Platform,
+  Text,
+  TextInput,
+  View,
+  TouchableOpacity,
+} from "react-native";
+import { Background } from "../components/Background";
+import { loginStyles } from "../theme/loginTheme";
 
-import { useForm } from '../hooks/useForm';
-import { StackScreenProps } from '@react-navigation/stack';
-import { AuthContext } from '../context/AuthContext';
+import { useForm } from "../hooks/useForm";
+import { StackScreenProps } from "@react-navigation/stack";
+import { AuthContext } from "../context/AuthContext";
 
 interface Props extends StackScreenProps<any, any> {}
 
@@ -13,7 +21,7 @@ export const ResetPasswordScreen = ({ navigation }: Props) => {
   const { resetPassword } = useContext(AuthContext);
 
   const { email, onChange } = useForm({
-    email: '',
+    email: "",
   });
 
   const onResetPassword = () => {
@@ -27,12 +35,11 @@ export const ResetPasswordScreen = ({ navigation }: Props) => {
 
       <KeyboardAvoidingView
         style={{ flex: 1 }}
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
       >
         <View style={loginStyles.formContainer}>
           <Text style={loginStyles.title}>Recuperar Contraseña</Text>
 
-          
           <TextInput
             placeholder="Ingrese su email"
             placeholderTextColor="rgba(255,255,255,0.4)"
@@ -40,10 +47,10 @@ export const ResetPasswordScreen = ({ navigation }: Props) => {
             underlineColorAndroid="white"
             style={[
               loginStyles.inputField,
-              Platform.OS === 'ios' && loginStyles.inputFieldIOS,
+              Platform.OS === "ios" && loginStyles.inputFieldIOS,
             ]}
             selectionColor="white"
-            onChangeText={(value) => onChange(value, 'email')}
+            onChangeText={(value) => onChange(value, "email")}
             value={email}
             onSubmitEditing={onResetPassword}
             autoCapitalize="none"
@@ -61,11 +68,11 @@ export const ResetPasswordScreen = ({ navigation }: Props) => {
           </View>
 
           <TouchableOpacity
-            onPress={() => navigation.replace('LoginScreen')}
+            onPress={() => navigation.replace("LoginScreen")}
             activeOpacity={0.8}
             style={loginStyles.buttonReturn}
           >
-             <Text style={loginStyles.buttonText}>Volver</Text>
+            <Text style={loginStyles.buttonText}>Volver</Text>
           </TouchableOpacity>
         </View>
       </KeyboardAvoidingView>

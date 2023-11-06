@@ -16,30 +16,21 @@ import { useForm } from "../hooks/useForm";
 const DefaultScreen = () => {
   const [nombreEquipo, setNombreEquipo] = useState("");
 
-  const crearEquipo = () => {
-    // Lógica para crear un equipo
-  };
+  const crearEquipo = () => {};
 
-  const { fetchTeams ,createTeam} = useContext(TeamContext);
+  const { fetchTeams, createTeam } = useContext(TeamContext);
   const { createTeamDto, onChange } = useForm({
     createTeamDto: "",
-    
   });
 
   const onCreate = () => {
-    // Validar los datos aquí si es necesario antes de llamar a signUp
-    if (
-      
-      createTeamDto.trim() === "" 
-    
-    ) {
+    if (createTeamDto.trim() === "") {
       Alert.alert("Campos requeridos", "Por favor, complete todos los campos.");
       return;
     }
 
-    
     Keyboard.dismiss();
-    createTeam( createTeamDto );
+    createTeam(createTeamDto);
   };
 
   return (
@@ -52,7 +43,6 @@ const DefaultScreen = () => {
           Gestión de Equipos
         </Text>
 
-        {/* Formulario para Crear Equipos */}
         <TextInput
           style={[styles.input, loginStyles.inputField]}
           placeholder="Nombre del Equipo"
@@ -61,7 +51,6 @@ const DefaultScreen = () => {
           onSubmitEditing={onCreate}
         />
 
-        {/* Botón para Crear Equipo */}
         <View style={styles.buttonContainer}>
           <Button
             title="Crear Equipo"
@@ -83,7 +72,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
-    alignItems: "center", // Alinea los elementos al centro del contenedor
+    alignItems: "center",
   },
   title: {
     fontSize: 24,
@@ -104,7 +93,7 @@ const styles = StyleSheet.create({
   buttonContainer: {
     flexDirection: "row",
     justifyContent: "center",
-    alignItems: "center", // Alinea el botón al centro horizontalmente
+    alignItems: "center",
     borderRadius: 20,
     paddingVertical: "3%",
     width: "40%",

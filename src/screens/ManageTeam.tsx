@@ -9,7 +9,7 @@ import {
   Modal,
   Pressable,
   TextInput,
-} from "react-native"; // Asegúrate de importar Text de react-native
+} from "react-native";
 import { Card } from "react-native-paper";
 import { StyleSheet } from "react-native";
 import { TeamContext } from "../context/TeamContext";
@@ -26,8 +26,8 @@ export const ManageTeam = () => {
   const [nuevoIntegrante, setNuevoIntegrante] = useState("");
   const [integranteActual, setIntegranteActual] = useState<Equipo | null>(null);
   const [modalVisible, setModalVisible] = useState(false);
-  const {fetchTeams} = useContext(TeamContext);
-  
+  const { fetchTeams } = useContext(TeamContext);
+
   const [equipos, setEquipos] = useState<Equipo[]>([
     {
       id: 1,
@@ -84,7 +84,6 @@ export const ManageTeam = () => {
   const eliminarEquipo = (id: any) => {
     setEquipos(equipos.filter((equipo) => equipo.id !== id));
   };
-  
 
   return (
     <ImageBackground
@@ -149,7 +148,7 @@ export const ManageTeam = () => {
                   <Pressable
                     style={[styles.button, styles.buttonOpen]}
                     onPress={() => {
-                      setIntegranteActual(item); // Establece integranteActual al equipo actual
+                      setIntegranteActual(item);
                       setModalVisible(true);
                     }}
                   >
@@ -161,7 +160,6 @@ export const ManageTeam = () => {
           )}
         />
       </Card>
-      {/* </View> */}
     </ImageBackground>
   );
 };
@@ -179,9 +177,7 @@ const styles = StyleSheet.create({
   containerTeams: {
     flex: 1,
 
-    borderColor: "rgba(255, 255, 255, 0.2)", // Color del borde (un poco más claro que el fondo)
-    // borderRadius: 10,
-    // marginBottom: 100,
+    borderColor: "rgba(255, 255, 255, 0.2)",
     margin: 8,
   },
   title: {
@@ -201,9 +197,8 @@ const styles = StyleSheet.create({
   },
   itemContainerTeams: {
     marginBottom: 16,
-    // Color del borde de las secciones de equipos
-    // Ancho del borde de las secciones de equipos
-    borderRadius: 10, // Radio de borde de las secciones de equipos
+
+    borderRadius: 10,
     padding: 10,
     shadowColor: "#000",
     shadowOffset: {
@@ -216,9 +211,9 @@ const styles = StyleSheet.create({
     elevation: 12,
   },
   buttonContainer: {
-    flexDirection: "row", // Esto coloca los botones en una fila
-    justifyContent: "space-between", // Esto distribuye el espacio entre los botones
-    marginTop: 8, // Puedes ajustar el espacio entre los botones y el texto
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginTop: 8,
   },
   deleteButton: {
     color: "red",
@@ -244,10 +239,10 @@ const styles = StyleSheet.create({
   itemIntegrante: {
     fontSize: 16,
     marginBottom: 4,
-    borderColor: "#2196F3", // Color del borde de los integrantes
-    borderWidth: 1, // Ancho del borde de los integrantes
-    borderRadius: 5, // Radio de borde de los integrantes
-    padding: 5, // Espaciado interno de los integrantes
+    borderColor: "#2196F3",
+    borderWidth: 1,
+    borderRadius: 5,
+    padding: 5,
   },
   deleteButton2: {
     color: "red",

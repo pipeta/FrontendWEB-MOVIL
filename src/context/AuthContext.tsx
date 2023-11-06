@@ -53,54 +53,8 @@ export const AuthProvider = ({ children }: any) => {
     const resp = JSON.parse((await AsyncStorage.getItem("user")) ?? "{}");
 
     if (!token) return dispatch({ type: "notAuthenticated" });
-
-    // dispatch({
-    //     type:'signUp',
-    //     payload: {
-    //         token:  token,
-    //         user: {nombre: '',email:''}
-    //     }
-    // })
   };
 
-  //   const update = async ({ email, password, userName }: Update) => {
-  //     try {
-  //         const token2 = await AsyncStorage.getItem("token");
-  //       const resp = await API.put<UpdateResponse>("/user/update", {
-  //         email,
-  //         password,
-  //         userName,
-  //       }, {
-  //         headers: {
-  //           'Authorization': `Bearer ${token2}`, // Agrega el token al encabezado de la solicitud
-  //         },
-  //       });
-
-  //       // Verificar si email no es undefined antes de asignarlo
-  //       const userEmail = email ? email : '';
-  //       const userPassword = password ? password : '';
-  //       console.log(resp.data.access_token);
-  //       dispatch({
-  //         type: "update",
-  //         payload: {
-  //           token: resp.data.access_token,
-  //           user: { userName: resp.data.userName, email: resp.data.email },
-  //           email: userEmail,  // Asignar userEmail en lugar de email directamente
-  //           password: userPassword,
-  //         },
-  //       });
-  //       await AsyncStorage.setItem("token", resp.data.access_token);
-  //       await AsyncStorage.setItem("user", JSON.stringify(resp.data.userName));
-  //     } catch (error) {
-  //       if (error instanceof AxiosError) {
-  //         console.log(error.response?.data.message);
-  //         dispatch({
-  //           type: "addError",
-  //           payload: error.response?.data.message || "Informacion incorrecta",
-  //         });
-  //       }
-  //     }
-  //   };
   const update = async ({ email, password, userName }: Update) => {
     try {
       const token2 = await AsyncStorage.getItem("token");
@@ -115,41 +69,35 @@ export const AuthProvider = ({ children }: any) => {
           },
           {
             headers: {
-              Authorization: `Bearer ${token2}`, // Agrega el token al encabezado de la solicitud
+              Authorization: `Bearer ${token2}`,
             },
           }
         );
 
-        // Verificar si email no es undefined antes de asignarlo
         const userEmail = email ? email : "";
         const userPassword = password ? password : "";
 
-        
         dispatch({
           type: "update",
           payload: {
             token: token2,
             user: { userName: resp.data.userName, email: resp.data.email },
-            email: userEmail, // Asignar userEmail en lugar de email directamente
+            email: userEmail,
             password: userPassword,
           },
         });
         await AsyncStorage.setItem("token", token2);
         await AsyncStorage.setItem("user", JSON.stringify(resp.data.userName));
       } else {
-        // Handle the case when token2 is null (for example, user is not logged in)
-        // ...
       }
     } catch (error) {
       if (error instanceof AxiosError) {
         console.log(error.response?.data.message);
-       
+
         dispatch({
           type: "addError",
           payload: error.response?.data.message || "Informacion incorrecta",
         });
-       
-        
       }
     }
   };
@@ -161,10 +109,6 @@ export const AuthProvider = ({ children }: any) => {
         password,
         userName,
       });
-      // dispatch({
-      //                 type:'removeError',
-
-      //             });
 
       console.log("SignUp Response:", resp.data);
       dispatch({
@@ -190,7 +134,6 @@ export const AuthProvider = ({ children }: any) => {
   };
   const signIn = async ({ email, password }: LoginData) => {
     try {
-    
       const resp = await API.post<LoginResponse>("/auth/login", {
         email,
         password,
@@ -199,8 +142,8 @@ export const AuthProvider = ({ children }: any) => {
       dispatch({
         type: "signUp",
         payload: {
-        token: resp.data.access_token,
-          user:  { userName: resp.data.userName, email: resp.data.email }
+          token: resp.data.access_token,
+          user: { userName: resp.data.userName, email: resp.data.email },
         },
       });
       await AsyncStorage.setItem("token", resp.data.access_token);
