@@ -13,7 +13,7 @@ import {
 import { loginStyles } from "../theme/loginTheme";
 import { AuthContext } from "../context/AuthContext";
 import { useForm } from "../hooks/useForm";
-
+import { PricingCard, lightColors } from '@rneui/themed';
 export const SettingsScreen = () => {
   const { user, update } = useContext(AuthContext);
   const { email, password, userName, onChange } = useForm({

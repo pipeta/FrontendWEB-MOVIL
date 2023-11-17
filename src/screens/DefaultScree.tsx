@@ -13,7 +13,7 @@ import { loginStyles } from "../theme/loginTheme";
 import { TeamContext } from "../context/TeamContext";
 import { useForm } from "../hooks/useForm";
 
-const DefaultScreen = () => {
+export const DefaultScreen = () => {
   const [nombreEquipo, setNombreEquipo] = useState("");
 
   const crearEquipo = () => {};
@@ -101,4 +101,3 @@ const styles = StyleSheet.create({
   },
 });
 
-export default DefaultScreen;

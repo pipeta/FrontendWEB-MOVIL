@@ -127,7 +127,7 @@ export const RegisterScreen = ({ navigation }: Props) => {
             activeOpacity={0.8}
             style={loginStyles.buttonReturn}
           >
-            <Text style={loginStyles.buttonText}>Volver</Text>
+            
           </TouchableOpacity>
         </View>
       </KeyboardAvoidingView>

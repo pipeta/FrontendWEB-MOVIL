@@ -1,7 +1,7 @@
-import React, { useContext, useState, useEffect } from "react";
+import React, { useContext, useState } from "react";
 import { TeamContext } from "../context/TeamContext";
-import { View, FlatList, Text, StyleSheet } from "react-native";
-import { Card } from "react-native-paper";
+import { View, FlatList, Text, StyleSheet, ImageBackground } from "react-native";
+import { PricingCard, lightColors } from '@rneui/themed';
 import { Button } from "react-native";
 import { useFocusEffect } from "@react-navigation/native";
 
@@ -44,38 +44,43 @@ export const TestingScreen = () => {
     await removeTeam(uniqueCode);
     fetchData();
   };
+  const handleEditTeam = async (uniqueCode: string) => {
+    // await removeTeam(uniqueCode);
+    // fetchData();
+    console.log('hola')
+  };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.heading}>Lista de Equipos:</Text>
-      <FlatList
-        data={teams}
-        keyExtractor={(team) => team._id}
-        renderItem={({ item: team }) => (
-          <Card style={styles.card}>
-            <Card.Content>
-              <Text style={styles.teamName}>Nombre: {team.name}</Text>
-              <Text>Autor: {team.autor}</Text>
-              <Text>Código Único: {team.uniqueCode}</Text>
-              <Text>Usuarios:</Text>
-              <FlatList
-                data={team.listUser}
-                keyExtractor={(user) => user._id}
-                renderItem={({ item: user }) => (
-                  <Text key={user._id}>
-                    {user.userName} - {user.email}
-                  </Text>
-                )}
-              />
-            </Card.Content>
-            <Button
-              title="Eliminar Equipo"
-              onPress={() => handleRemoveTeam(team.uniqueCode)}
+    <ImageBackground
+      source={require("../theme/pngtree-simple-lights-on-black-background-image_556934.jpg")}
+      style={styles.background}
+    >
+      <View style={styles.container}>
+        {/* <Text style={styles.heading}>Lista de Equipos:</Text> */}
+        <FlatList
+          data={teams}
+          keyExtractor={(team) => team._id}
+          renderItem={({ item: team }) => (
+            <PricingCard
+              color={'white'}
+              containerStyle={{ backgroundColor:  "#474747" ,  borderRadius: 10, borderWidth: 0, borderColor: 'transparent'}}
+              price={team.name}
+              pricingStyle={{color:'white'}}
+              
+              // title={`Autor: ${team.autor}`}
+              info={[`Código Único: ${team.uniqueCode}`, 'Usuarios:']}
+              infoStyle={{color:'white'}}
+              button={
+                <View style={styles.buttonContainer}>
+                  <Button color='#ad1457' title="Editar Equipo" onPress={() => handleEditTeam(team.uniqueCode)} />
+                  <Button color='#ad1457' title="Eliminar Equipo" onPress={() => handleRemoveTeam(team.uniqueCode)} />
+                </View>
+              }
             />
-          </Card>
-        )}
-      />
-    </View>
+          )}
+        />
+      </View>
+    </ImageBackground>
   );
 };
 
@@ -88,13 +93,22 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: "bold",
     marginBottom: 16,
+    color: 'white',
   },
-  card: {
-    marginBottom: 16,
+  background: {
+    flex: 1,
+    resizeMode: "cover",
+    justifyContent: "center",
   },
-  teamName: {
-    fontSize: 18,
-    fontWeight: "bold",
-    marginBottom: 8,
-  },
+  buttonContainer:{
+    flexDirection:'row',
+    justifyContent:'space-between',
+    marginTop:10,
+    color: '#ad1457',
+    borderRadius:10
+
+
+  }
 });
+
+export default TestingScreen;

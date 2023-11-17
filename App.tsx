@@ -5,6 +5,7 @@ import { Navigator } from './src/navigator/Navigator';
 import { NavigationContainer } from '@react-navigation/native';
 import { AuthProvider } from './src/context/AuthContext';
 import { TeamProvider } from './src/context/TeamContext';
+// import { TeamsNavigator } from './src/navigator/TeamsNavigator';
 
 const AppState = ({children}: any) => {
   return (
@@ -21,7 +22,8 @@ export const App = () => {
     <NavigationContainer>
       <AppState>
         <Navigator/>
-        
+        {/* <TeamsNavigator/>
+         */}
       </AppState>
     </NavigationContainer>
   )

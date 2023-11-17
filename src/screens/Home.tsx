@@ -18,7 +18,7 @@ const Home = () => {
       style={styles.background}
     >
       <View style={styles.container}>
-        <Text style={styles.welcomeText}>Bienvenido a capstone+1</Text>
+        <Text style={styles.welcomeText}>Bienvenido a capstone +1</Text>
         <Text style={styles.infoText}>
           Navegue por el sidebar para más opciones
         </Text>
