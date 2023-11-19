@@ -21,7 +21,8 @@ import { TeamsStackParams } from "./navigatorTypes";
 import { PantallaPrueba } from "../screens/PantallaPrueba";
 import PantallaPrueba2 from "../screens/PantallaPrueba2";
 import AddMembersScreen from "../screens/AddMembersScreen";
-import CreateProjectScreen from "../screens/CreateProjectScreen";
+import { CreateProjectScreen } from "../screens/CreateProjectScreen";
+
 
 
 const Stack = createStackNavigator<TeamsStackParams>();
@@ -40,13 +41,13 @@ const Sidebar = () => {
         },
       }}
     >
-      <Drawer.Screen name="CreateProjectScreen" component={CreateProjectScreen} />
+      <Drawer.Screen name="Crear Equipo" component={DefaultScreen} />
+      <Drawer.Screen name="PantallaPrueba" component={PantallaPrueba} />
+      <Drawer.Screen name="Crear Proyecto" component={CreateProjectScreen} />
       <Drawer.Screen name="Editar equipo" component={TestingScreen} />
       <Drawer.Screen name="Testing2Screen" component={Testing2Screen} />
       <Drawer.Screen name="Home" component={Home}></Drawer.Screen>
-      <Drawer.Screen name="Crear Equipo" component={DefaultScreen} />
       <Drawer.Screen name="Editar perfil" component={SettingsScreen} />
-      <Drawer.Screen name="PantallaPrueba" component={PantallaPrueba} />
       <Drawer.Screen name="PantallaPrueba2" component={PantallaPrueba2} />
       <Drawer.Screen name="AddMembers" component={AddMembersScreen} />
 

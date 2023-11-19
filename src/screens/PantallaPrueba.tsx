@@ -7,10 +7,13 @@ import {
   Image,
   ActivityIndicator,
 } from "react-native";
-import { Icon } from "@rneui/themed";
+import { FAB, Icon } from "@rneui/themed";
 import { StackScreenProps } from "@react-navigation/stack";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { ArrowLeftOutlined } from "@ant-design/icons";
+import { Equipos } from "../components/Equipos";
+import { loginStyles } from "../theme/loginTheme";
+import { Divider } from "@rneui/base";
 
 interface Props extends StackScreenProps<any, any> {}
 
@@ -44,14 +47,51 @@ export const PantallaPrueba = ({ navigation }: Props) => {
             top: top + 40,
           }}
         >
-          {"Placeholder\n#Placeholder"}
+          {"Nombre del Proyecto"}
+        </Text>
+        <Text
+          style={{
+            ...styles.subName,
+            top: top + 40,
+          }}
+        >
+          {"Descripcion proyecto"}
+        </Text>
+        <Text
+          style={{
+            ...styles.subName,
+            top: top + 40,
+          }}
+        >
+          {"Creador:"}
         </Text>
       </View>
 
-      {/* Detalles y Loading */}
-      <View style={styles.loadingIndicator}>
-        <ActivityIndicator color="red" size={50} />
+      <View
+        style={{
+          alignItems: "center",
+          paddingHorizontal: 10,
+          paddingBottom: 10,
+          paddingTop: 10,
+        }}
+      >
+        <Text style={styles.Title}>{"Equipos"}</Text>
       </View>
+      <View style={{ flex: 1, paddingHorizontal: 10, paddingBottom: 10 }}>
+        <Equipos />
+      </View>
+      <Divider></Divider>
+      <FAB
+        style={{
+          position: "absolute",
+          bottom: 20,
+          right: 20,
+          backgroundColor: "#007bff", // Cambia el color según tus necesidades
+        }}
+        title={"+"}
+        size="large"
+        
+      />
     </View>
   );
 };
@@ -68,7 +108,7 @@ const styles = StyleSheet.create({
   backButton: {
     position: "absolute",
     left: 20,
-    color:'white'
+    color: "white",
   },
   Name: {
     color: "white",
@@ -78,10 +118,17 @@ const styles = StyleSheet.create({
     alignSelf: "flex-start",
     left: 20,
   },
+  subName: {
+    color: "white",
+    fontSize: 20,
+    fontWeight: "bold",
+    marginTop: 30,
+    alignSelf: "flex-start",
+    left: 20,
+  },
 
-  loadingIndicator: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
+  Title: {
+    fontSize: 40,
+    fontWeight: "bold",
   },
 });

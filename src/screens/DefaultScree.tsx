@@ -12,10 +12,13 @@ import {
 import { loginStyles } from "../theme/loginTheme";
 import { TeamContext } from "../context/TeamContext";
 import { useForm } from "../hooks/useForm";
+import { Picker } from "@react-native-picker/picker";
+import AddIntegrantes from "../components/AddIntegrantes";
+import DynamicFormApp from "../components/AddIntegrantes";
 
 export const DefaultScreen = () => {
   const [nombreEquipo, setNombreEquipo] = useState("");
-
+  const [selectedLanguage, setSelectedLanguage] = useState();
   const crearEquipo = () => {};
 
   const { fetchTeams, createTeam } = useContext(TeamContext);
@@ -50,14 +53,29 @@ export const DefaultScreen = () => {
           value={createTeamDto}
           onSubmitEditing={onCreate}
         />
-
-        <View style={styles.buttonContainer}>
+        <Picker
+          selectedValue={selectedLanguage}
+          onValueChange={(itemValue, itemIndex) =>
+            setSelectedLanguage(itemValue)
+          }
+          // style={styles.picker}
+          style={[ loginStyles.inputField,styles.picker]}
+        >
+          <Picker.Item label="Java" value="java" />
+          <Picker.Item label="JavaScript" value="js" />
+        </Picker>
+       
+        {/* <AddIntegrantes></AddIntegrantes>
+         */}
+         <DynamicFormApp></DynamicFormApp>
+        <View style={[styles.buttonContainer]}>
           <Button
             title="Crear Equipo"
             onPress={onCreate}
             color={"transparent"}
           />
         </View>
+     
       </View>
     </ImageBackground>
   );
@@ -99,5 +117,15 @@ const styles = StyleSheet.create({
     width: "40%",
     backgroundColor: "#841584",
   },
+  picker: {
+    height: 40,
+    width: "80%",
+   
+    marginBottom: 16,
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: "gray",
+    
+    
+  },
 });
-

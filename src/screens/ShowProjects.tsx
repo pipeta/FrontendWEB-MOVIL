@@ -13,7 +13,7 @@ interface TeamData {
  
 }
 
-export const TestingScreen = () => {
+export const ShowProjects = () => {
   const { fetchTeams, removeTeam } = useContext(TeamContext);
   const [teams, setTeams] = useState<TeamData[]>([]);
 
@@ -107,4 +107,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default TestingScreen;
+export default ShowProjects;
