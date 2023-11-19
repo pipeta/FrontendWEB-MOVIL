@@ -40,6 +40,9 @@
   "@react-native-community/masked-view": "^0.1.11",
   
     
+  "@react-native-picker/picker": "^2.5.1",
+  
+    
   "@react-navigation/drawer": "^6.6.4",
   
     
