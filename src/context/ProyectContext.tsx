@@ -14,7 +14,6 @@ import {
     UpdateProyect
   } from "../interfaces/proyectInterfaces";
   import APIproyect from "../api/nestApiProyect";
-  import { CreateTeamDto, Team } from "../interfaces/teamInterfaces";
   import AsyncStorage from "@react-native-async-storage/async-storage";
   
     type ProyectContextProps = {
@@ -30,7 +29,6 @@ import {
   export const ProyectContext = createContext({} as ProyectContextProps);
   
   export const ProyectProvider = ({ children }: any) => {
-    const [teams, setTeams] = useState<Team[]>([]);
 
     const createProyect = async (createProyect: CreateProyect): Promise<void> => {
         try {
@@ -50,7 +48,6 @@ import {
                 },
                 }
             );
-            console.log(resp);
         } catch (error) {
             console.error(error);
             throw error;
@@ -67,7 +64,6 @@ import {
                 },
             };
             const response = await APIproyect.get("/proyect", config);
-            console.log(response);
         
             const proyects: Proyect[] = response.data;
         
@@ -92,7 +88,6 @@ import {
                 updateProyect,
                 config
             );
-            console.log(resp);
         } catch (error) {
             console.error(error);
             throw error;
@@ -109,7 +104,6 @@ import {
             };
     
             const resp = await APIproyect.delete(`/proyect/${proyectId}`, config);
-            console.log(resp);
         } catch (error) {
             console.error(error);
             throw error;
@@ -130,7 +124,6 @@ import {
                 newTeamProyect,
                 config
             );
-            console.log(resp);
         } catch (error) {
             console.error(error);
             throw error;
@@ -147,7 +140,6 @@ import {
             };
     
             const resp = await APIproyect.delete(`/proyect/deleteteam/${teamId}`, config);
-            console.log(resp);
         } catch (error) {
             console.error(error);
             throw error;
@@ -164,7 +156,6 @@ import {
             };
     
             const resp = await APIproyect.get(`/proyect/teams/${proyectId}`, config);
-            console.log(resp);
     
             const teams = resp.data;
             return teams;

@@ -13,11 +13,11 @@ import { loginStyles } from "../theme/loginTheme";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { useForm } from "../hooks/useForm";
 import { StackScreenProps } from "@react-navigation/stack";
-import { AuthContext } from "../context/AuthContext";
+import { ProyectContext } from "../context/ProyectContext";
 
 
 export const CreateProjectScreen = () => {
-  const { signIn, errorMessage, removeError } = useContext(AuthContext);
+  const { createProyect } = useContext(ProyectContext);
 
   const { name, description, onChange } = useForm({
     name: "",
@@ -25,21 +25,14 @@ export const CreateProjectScreen = () => {
   });
   const [selectedLanguage, setSelectedLanguage] = useState();
 
-  const onLogin = () => {
+
+  const newProyect = () => {
     Keyboard.dismiss();
-    // signIn({ name, description });
+    createProyect({name: name, description: description});
   };
 
-  useEffect(() => {
-    if (errorMessage.length === 0) return;
+  
 
-    Alert.alert("Error", errorMessage, [
-      {
-        text: "ok",
-        onPress: removeError,
-      },
-    ]);
-  }, [errorMessage]);
 
   return (
     <>
@@ -54,7 +47,7 @@ export const CreateProjectScreen = () => {
           
 
           <TextInput
-            placeholder="Nombre de equipo"
+            placeholder="Nombre del proyecto"
             placeholderTextColor="rgba(255,255,255,0.4)"
             underlineColorAndroid="white"
             style={[
@@ -64,7 +57,7 @@ export const CreateProjectScreen = () => {
             selectionColor="white"
             onChangeText={(value) => onChange(value, "name")}
             value={name}
-            onSubmitEditing={onLogin}
+            onSubmitEditing={newProyect}
             autoCapitalize="none"
             autoCorrect={false}
           />
@@ -80,20 +73,16 @@ export const CreateProjectScreen = () => {
             selectionColor="white"
             onChangeText={(value) => onChange(value, "description")}
             value={description}
-            onSubmitEditing={onLogin}
+            onSubmitEditing={newProyect}
             autoCapitalize="none"
             autoCorrect={false}
           />
-
-          
-
-         
 
           <View style={loginStyles.buttonContainer}>
             <TouchableOpacity
               activeOpacity={0.8}
               style={loginStyles.button}
-              onPress={onLogin}
+              onPress={newProyect}
             >
               <Text style={loginStyles.buttonText}>Crear</Text>
             </TouchableOpacity>
