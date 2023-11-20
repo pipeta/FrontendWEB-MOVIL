@@ -63,7 +63,7 @@ export const TeamsScreen = () => {
               price={team.name}
               pricingStyle={{color:'white'}}
               
-              // title={`Autor: ${team.autor}`}
+              title={`Autor: ${team.autor}`}
               info={[`Código Único: ${team.uniqueCode}`, 'Usuarios:']}
               infoStyle={{color:'white'}}
               button={

@@ -1,12 +1,5 @@
 import React, { useContext, useState } from "react";
-
-import {
-  View,
-  FlatList,
-  Text,
-  StyleSheet,
-  ImageBackground,
-} from "react-native";
+import { View, FlatList, StyleSheet, ImageBackground } from "react-native";
 import { PricingCard } from "@rneui/themed";
 import { Button } from "react-native";
 import { useFocusEffect } from "@react-navigation/native";
@@ -40,7 +33,7 @@ export const ProjectsScreen = () => {
       return () => {
         setProyects([]);
       };
-    }, [getProyectByUser])
+    }, [])
   );
 
   const handleRemoveProyect = async (id: string) => {
@@ -50,7 +43,6 @@ export const ProjectsScreen = () => {
 
   const handleEditProyect = async (id: string) => {
     console.log("hola");
-    
   };
 
   return (
@@ -63,39 +55,34 @@ export const ProjectsScreen = () => {
           data={proyects}
           keyExtractor={(proyect) => proyect.id}
           renderItem={({ item: proyect }) => (
-            <FlatList
-              data={proyects}
-              renderItem={({ item: proyect }) => (
-                <PricingCard
-                  key={proyect.id} 
-                  color={"white"}
-                  containerStyle={{
-                    backgroundColor: "#474747",
-                    borderRadius: 10,
-                    borderWidth: 0,
-                    borderColor: "transparent",
-                  }}
-                  price={proyect.name}
-                  title={proyect.owner}
-                  pricingStyle={{ color: "white" }}
-                  info={[`Descripcion: ${proyect.description}`]}
-                  infoStyle={{ color: "white" }}
-                  button={
-                    <View style={styles.buttonContainer}>
-                      <Button
-                        color="green"
-                        title="Ver Proyecto"
-                        onPress={() => handleEditProyect(proyect.id)}
-                      />
-                      <Button
-                        color="red"
-                        title="Eliminar Proyecto "
-                        onPress={() => handleRemoveProyect(proyect.id)}
-                      />
-                    </View>
-                  }
-                />
-              )}
+            <PricingCard
+              key={proyect.id}
+              color={"white"}
+              containerStyle={{
+                backgroundColor: "#474747",
+                borderRadius: 10,
+                borderWidth: 0,
+                borderColor: "transparent",
+              }}
+              price={proyect.name}
+              title={proyect.owner}
+              pricingStyle={{ color: "white" }}
+              info={[`Descripcion: ${proyect.description}`]}
+              infoStyle={{ color: "white" }}
+              button={
+                <View style={styles.buttonContainer}>
+                  <Button
+                    color="green"
+                    title="Ver Proyecto"
+                    onPress={() => handleEditProyect(proyect.id)}
+                  />
+                  <Button
+                    color="red"
+                    title="Eliminar Proyecto "
+                    onPress={() => handleRemoveProyect(proyect.id)}
+                  />
+                </View>
+              }
             />
           )}
         />
