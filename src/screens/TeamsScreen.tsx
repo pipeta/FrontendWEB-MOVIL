@@ -1,19 +1,31 @@
 import React, { useContext, useState } from "react";
 import { TeamContext } from "../context/TeamContext";
-import { View, FlatList, Text, StyleSheet, ImageBackground } from "react-native";
-import { PricingCard, lightColors } from '@rneui/themed';
+import {
+  View,
+  FlatList,
+  Text,
+  StyleSheet,
+  ImageBackground,
+} from "react-native";
+import { PricingCard, lightColors } from "@rneui/themed";
 import { Button } from "react-native";
 import { useFocusEffect } from "@react-navigation/native";
+import { StackScreenProps } from "@react-navigation/stack";
 
 interface TeamData {
   _id: string;
+
   name: string;
   autor: string;
   uniqueCode: string;
- 
+  listUser: {
+    userName: string;
+    email: string;
+    _id: string;
+  }[];
 }
-
-export const TeamsScreen = () => {
+interface Props extends StackScreenProps<any, any> {}
+export const TeamsScreen = ({ navigation }: Props) => {
   const { fetchTeams, removeTeam } = useContext(TeamContext);
   const [teams, setTeams] = useState<TeamData[]>([]);
 
@@ -43,7 +55,14 @@ export const TeamsScreen = () => {
   const handleEditTeam = async (uniqueCode: string) => {
     // await removeTeam(uniqueCode);
     // fetchData();
-    console.log('hola')
+
+    navigation.navigate("EditTeamsScreen", {
+     
+      uniqueCode: uniqueCode
+      
+    });
+
+    console.log("hola");
   };
 
   return (
@@ -58,18 +77,30 @@ export const TeamsScreen = () => {
           keyExtractor={(team) => team._id}
           renderItem={({ item: team }) => (
             <PricingCard
-              color={'white'}
-              containerStyle={{ backgroundColor:  "#474747" ,  borderRadius: 10, borderWidth: 0, borderColor: 'transparent'}}
+              color={"white"}
+              containerStyle={{
+                backgroundColor: "#474747",
+                borderRadius: 10,
+                borderWidth: 0,
+                borderColor: "transparent",
+              }}
               price={team.name}
-              pricingStyle={{color:'white'}}
-              
+              pricingStyle={{ color: "white" }}
               title={`Autor: ${team.autor}`}
-              info={[`Código Único: ${team.uniqueCode}`, 'Usuarios:']}
-              infoStyle={{color:'white'}}
+              info={[`Código Único: ${team.uniqueCode}`, "Usuarios:"]}
+              infoStyle={{ color: "white" }}
               button={
                 <View style={styles.buttonContainer}>
-                  <Button color='green' title="Editar Equipo" onPress={() => handleEditTeam(team.uniqueCode)} />
-                  <Button color='red' title="Eliminar Equipo" onPress={() => handleRemoveTeam(team.uniqueCode)} />
+                  <Button
+                    color="green"
+                    title="Editar Equipo"
+                    onPress={() => handleEditTeam(team.uniqueCode)}
+                  />
+                  <Button
+                    color="red"
+                    title="Eliminar Equipo"
+                    onPress={() => handleRemoveTeam(team.uniqueCode)}
+                  />
                 </View>
               }
             />
@@ -89,22 +120,20 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: "bold",
     marginBottom: 16,
-    color: 'white',
+    color: "white",
   },
   background: {
     flex: 1,
     resizeMode: "cover",
     justifyContent: "center",
   },
-  buttonContainer:{
-    flexDirection:'row',
-    justifyContent:'space-between',
-    marginTop:10,
-    color: '#ad1457',
-    borderRadius:10
-
-
-  }
+  buttonContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginTop: 10,
+    color: "#ad1457",
+    borderRadius: 10,
+  },
 });
 
 export default TeamsScreen;

@@ -1,5 +1,5 @@
 export interface Proyect{
-    id: string;
+    _id: string;
     name: string;
     description: string;
     owner: string;

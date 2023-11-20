@@ -13,8 +13,17 @@ import { loginStyles } from "../theme/loginTheme";
 import { AuthContext } from "../context/AuthContext";
 import { useForm } from "../hooks/useForm";
 import { Divider, List } from "react-native-paper";
-import { GithubOutlined, DeleteOutlined, EditFilled } from "@ant-design/icons";
+import {
+  GithubOutlined,
+  DeleteOutlined,
+  EditFilled,
+  ArrowLeftOutlined,
+} from "@ant-design/icons";
 import { PricingCard, lightColors } from "@rneui/themed";
+import { StackScreenProps } from "@react-navigation/stack";
+import { RouteProp } from "@react-navigation/native";
+import { TeamsStackParams } from "../navigator/navigatorTypes";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 type List2Data = {
   name: string;
@@ -33,10 +42,14 @@ const list2: Partial<List2Data>[] = [
     subtitle: "Vice Chairman",
     linearGradientColors: ["#3F51B5", "#2196F3"],
   },
-
 ];
-
-const EditTeamsScreen = () => {
+interface Props extends StackScreenProps<TeamsStackParams, "EditTeamsScreen"> {
+  route: RouteProp<TeamsStackParams, "EditTeamsScreen">;
+}
+const EditTeamsScreen = ({ route, navigation }: Props) => {
+  const { top } = useSafeAreaInsets();
+  const { uniqueCode } = route.params;
+  console.log(uniqueCode);
   const { user, update } = useContext(AuthContext);
   const { email, onChange } = useForm({
     email: user?.email || "",
@@ -57,22 +70,17 @@ const EditTeamsScreen = () => {
   };
 
   const onSaveChanges = () => {
-   
     console.log("Guardando cambios:", email);
   };
 
-  const handleDelete = (name: string) => {
-   
-  };
+  const handleDelete = (name: string) => {};
 
   const handleEdit = (name: string) => {
-   
     console.log(`Editar elemento: ${name}`);
     setModalVisible(true);
   };
 
   const handleAdd = () => {
-   
     console.log(`Añadir elemento: ${newName}`);
   };
 
@@ -84,7 +92,7 @@ const EditTeamsScreen = () => {
 
   const renderItem = ({ item }: { item: Partial<List2Data> }) => (
     <List.Item
-      key={item.name} 
+      key={item.name}
       title={<Text style={{ color: "white" }}>{item.name}</Text>}
       description={<Text style={{ color: "white" }}>{item.subtitle}</Text>}
       left={() => (
@@ -112,13 +120,21 @@ const EditTeamsScreen = () => {
       style={{ borderBottomWidth: 1 }}
     />
   );
-  
 
   return (
     <ImageBackground
       source={require("../theme/pngtree-simple-lights-on-black-background-image_556934.jpg")}
       style={styles.background}
     >
+      <TouchableOpacity
+        onPress={() => navigation.goBack()}
+        activeOpacity={0.8}
+        style={{ ...styles.backButton, top: top + 5 }}
+      >
+        <ArrowLeftOutlined />
+      </TouchableOpacity>
+      <View style={{ marginBottom: 30 }}></View>
+
       <View style={styles.container}>
         <View style={styles.addContainer}>
           <TextInput
@@ -150,7 +166,6 @@ const EditTeamsScreen = () => {
           </TouchableOpacity>
         </View>
 
-      
         <TouchableOpacity onPress={onSaveChanges}>
           <View style={styles.submitButton}>
             <Text style={styles.submitButtonText}>Submit</Text>
@@ -177,9 +192,7 @@ const EditTeamsScreen = () => {
             <View style={styles.modalContent}>
               <Text style={styles.modalTitle}>Seleccionar Rol:</Text>
               {["Rol1", "Rol2", "Rol3"].map((role) => renderRoleOption(role))}
-              <TouchableOpacity
-                onPress={() => setModalVisible(!modalVisible)}
-              >
+              <TouchableOpacity onPress={() => setModalVisible(!modalVisible)}>
                 <Text style={styles.closeButton}>Cerrar</Text>
               </TouchableOpacity>
             </View>
@@ -194,6 +207,11 @@ const styles = StyleSheet.create({
   flatList: {
     height: "auto",
     marginBottom: 10,
+  },
+  backButton: {
+    position: "absolute",
+    left: 20,
+    color: "white",
   },
   background: {
     flex: 1,

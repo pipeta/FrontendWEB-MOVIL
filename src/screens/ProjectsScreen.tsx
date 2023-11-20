@@ -4,17 +4,19 @@ import { PricingCard } from "@rneui/themed";
 import { Button } from "react-native";
 import { useFocusEffect } from "@react-navigation/native";
 import { ProyectContext } from "../context/ProyectContext";
+import { StackScreenProps } from "@react-navigation/stack";
+import { TeamsStackParams } from "../navigator/navigatorTypes";
 
 interface ProyectData {
-  id: string;
+  _id: string;
   name: string;
   description: string;
   owner: string;
 }
+interface Props extends StackScreenProps<any, any> {}
 
-export const ProjectsScreen = () => {
+export const ProjectsScreen = ({ navigation }: Props) => {
   const { getProyectByUser, removeProyect } = useContext(ProyectContext);
-  console.log("ProyectContext value:", getProyectByUser);
   const [proyects, setProyects] = useState<ProyectData[]>([]);
 
   const fetchData = async () => {
@@ -29,20 +31,24 @@ export const ProjectsScreen = () => {
   useFocusEffect(
     React.useCallback(() => {
       fetchData();
-
       return () => {
         setProyects([]);
       };
     }, [])
   );
 
-  const handleRemoveProyect = async (id: string) => {
-    await removeProyect(id);
+  const handleRemoveProyect = async (_id: string) => {
+    await removeProyect(_id);
     fetchData();
   };
 
-  const handleEditProyect = async (id: string) => {
-    console.log("hola");
+  const handleEditProyect = async (proyect: ProyectData) => {
+    navigation.navigate("PantallaPrueba", {
+      
+      name: proyect.name,
+      description: proyect.description,
+      owner: proyect.owner,
+    });
   };
 
   return (
@@ -53,10 +59,10 @@ export const ProjectsScreen = () => {
       <View style={styles.container}>
         <FlatList
           data={proyects}
-          keyExtractor={(proyect) => proyect.id}
+          keyExtractor={(proyect) => proyect._id}
           renderItem={({ item: proyect }) => (
             <PricingCard
-              key={proyect.id}
+              key={proyect._id}
               color={"white"}
               containerStyle={{
                 backgroundColor: "#474747",
@@ -64,8 +70,7 @@ export const ProjectsScreen = () => {
                 borderWidth: 0,
                 borderColor: "transparent",
               }}
-              price={proyect.name}
-              title={proyect.owner}
+              title={proyect.name}
               pricingStyle={{ color: "white" }}
               info={[`Descripcion: ${proyect.description}`]}
               infoStyle={{ color: "white" }}
@@ -74,12 +79,12 @@ export const ProjectsScreen = () => {
                   <Button
                     color="green"
                     title="Ver Proyecto"
-                    onPress={() => handleEditProyect(proyect.id)}
+                    onPress={() => handleEditProyect(proyect)}
                   />
                   <Button
                     color="red"
                     title="Eliminar Proyecto "
-                    onPress={() => handleRemoveProyect(proyect.id)}
+                    onPress={() => handleRemoveProyect(proyect._id)}
                   />
                 </View>
               }

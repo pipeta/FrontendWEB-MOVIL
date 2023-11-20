@@ -45,12 +45,10 @@ const Sidebar = () => {
         },
       }}
     >
-      <Drawer.Screen name="Editar Equipo" component={EditTeamsScreen} />
-
       <Drawer.Screen name="Ver Proyectos" component={ProjectsScreen} />
       <Drawer.Screen name="Ver Equipos" component={TeamsScreen} />
       <Drawer.Screen name="Crear Equipo" component={DefaultScreen} />
-      <Drawer.Screen name="PantallaPrueba" component={PantallaPrueba} />
+      {/* <Drawer.Screen name="Informacion Proyecto" component={PantallaPrueba} /> */}
       <Drawer.Screen name="Crear Proyecto" component={CreateProjectScreen} />
       <Drawer.Screen name="Testing2Screen" component={Testing2Screen} />
       <Drawer.Screen name="Home" component={Home}></Drawer.Screen>
@@ -67,17 +65,17 @@ const Sidebar = () => {
 export const Navigator = () => {
   const { status } = useContext(AuthContext);
 
-  // if (status === "checking") return <LoadingScreen />;
-  if (status === "checking") return <Sidebar />;
+  if (status === "checking") return <LoadingScreen />;
+  // if (status === "checking") return <Sidebar />;
   return (
     <Stack.Navigator
-      screenOptions={{
-        headerShown: false,
+    screenOptions={{
+      headerShown: false,
         cardStyle: {
           backgroundColor: "white",
         },
       }}
-    >
+      >
       {status !== "authenticated" ? (
         <>
           <Stack.Screen name="LoginScreen" component={LoginScreen} />
@@ -102,12 +100,17 @@ export const Navigator = () => {
               }, 
             }}
           />
+          <Stack.Screen name="Ver Proyectos" component={ProjectsScreen} />
           <Stack.Screen name="Testing2Screen" component={Testing2Screen} />
           <Stack.Screen
             name="EditTestScreen"
           
             component={EditTestScreen}
           />
+          
+          <Stack.Screen name="PantallaPrueba" component={PantallaPrueba} />
+        
+          <Stack.Screen name="EditTeamsScreen" component={EditTeamsScreen} />
         </>
       )}
     </Stack.Navigator>

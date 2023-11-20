@@ -1,80 +1,44 @@
 import React from "react";
-import {
-  Text,
-  View,
-  StyleSheet,
-  TouchableOpacity,
-  Image,
-  ActivityIndicator,
-} from "react-native";
+import { Text, View, StyleSheet, TouchableOpacity } from "react-native";
 import { FAB, Icon } from "@rneui/themed";
 import { StackScreenProps } from "@react-navigation/stack";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { ArrowLeftOutlined } from "@ant-design/icons";
 import { Equipos } from "../components/Equipos";
-import { loginStyles } from "../theme/loginTheme";
 import { Divider } from "@rneui/base";
+import { RouteProp } from "@react-navigation/native";
+import { TeamsStackParams } from "../navigator/navigatorTypes";
 
-interface Props extends StackScreenProps<any, any> {}
 
-export const PantallaPrueba = ({ navigation }: Props) => {
+interface Props extends StackScreenProps<TeamsStackParams, "PantallaPrueba"> {
+  route: RouteProp<TeamsStackParams, "PantallaPrueba">;
+}
+
+export const PantallaPrueba = ({ route, navigation }: Props) => {
   const { top } = useSafeAreaInsets();
+  const { name, description, owner } = route.params;
 
   return (
     <View style={{ flex: 1 }}>
-      {/* Heade Containerr */}
-      <View
-        style={{
-          ...styles.headerContainer,
-        }}
-      >
+      {/* Header Container */}
+      <View style={{ ...styles.headerContainer }}>
         {/* Backbutton */}
         <TouchableOpacity
-          onPress={() => navigation.pop()}
+          onPress={() => navigation.goBack()}
           activeOpacity={0.8}
-          style={{
-            ...styles.backButton,
-            top: top + 5,
-          }}
+          style={{ ...styles.backButton, top: top + 5 }}
         >
           <ArrowLeftOutlined />
         </TouchableOpacity>
+        <Divider></Divider>
 
-        {/* Nombre del Pokemon */}
-        <Text
-          style={{
-            ...styles.Name,
-            top: top + 40,
-          }}
-        >
-          {"Nombre del Proyecto"}
-        </Text>
-        <Text
-          style={{
-            ...styles.subName,
-            top: top + 40,
-          }}
-        >
-          {"Descripcion proyecto"}
-        </Text>
-        <Text
-          style={{
-            ...styles.subName,
-            top: top + 40,
-          }}
-        >
-          {"Creador:"}
-        </Text>
+        {/* Nombre del Proyecto */}
+        <Text style={{ ...styles.Name, top: top + 40 }}>{`Name: ${name}`}</Text>
+        <Text style={{ ...styles.subName, top: top + 40 }}>{`Descripción: ${description}`}</Text>
+        <Text style={{ ...styles.subName, top: top + 40 }}>{`Creador: ${owner}`}</Text>
       </View>
 
-      <View
-        style={{
-          alignItems: "center",
-          paddingHorizontal: 10,
-          paddingBottom: 10,
-          paddingTop: 10,
-        }}
-      >
+      <View style={{ alignItems: "center", paddingHorizontal: 10, paddingBottom: 10, paddingTop: 10 }}>
         <Text style={styles.Title}>{"Equipos"}</Text>
       </View>
       <View style={{ flex: 1, paddingHorizontal: 10, paddingBottom: 10 }}>
@@ -82,15 +46,9 @@ export const PantallaPrueba = ({ navigation }: Props) => {
       </View>
       <Divider></Divider>
       <FAB
-        style={{
-          position: "absolute",
-          bottom: 20,
-          right: 20,
-          backgroundColor: "#007bff", // Cambia el color según tus necesidades
-        }}
+        style={{ position: "absolute", bottom: 20, right: 20, backgroundColor: "#007bff" }}
         title={"+"}
         size="large"
-        
       />
     </View>
   );
@@ -101,20 +59,19 @@ const styles = StyleSheet.create({
     height: 370,
     zIndex: 999,
     alignItems: "center",
-    // borderBottomRightRadius: 1000,
-    // borderBottomLeftRadius: 1000,
-    backgroundColor: "#474747", // Cambia el color de fondo según tus necesidades
+    backgroundColor: "#474747",
   },
   backButton: {
+    flex:1,
     position: "absolute",
     left: 20,
     color: "white",
+    alignItems:"flex-start"
   },
   Name: {
     color: "white",
     fontSize: 40,
     fontWeight: "bold",
-
     alignSelf: "flex-start",
     left: 20,
   },
@@ -126,7 +83,6 @@ const styles = StyleSheet.create({
     alignSelf: "flex-start",
     left: 20,
   },
-
   Title: {
     fontSize: 40,
     fontWeight: "bold",
