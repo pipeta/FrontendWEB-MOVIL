@@ -20,7 +20,7 @@ const list2: Partial<List2Data>[] = [
     subtitle: "Vice Chairman",
     linearGradientColors: ["#3F51B5", "#2196F3"],
   },
-  // ... (otros elementos)
+ 
 ];
 
 const Lists2: React.FunctionComponent = () => {
@@ -34,11 +34,11 @@ const Lists2: React.FunctionComponent = () => {
     };
   
     const handleDelete = (name: string) => {
-      // Aquí debes implementar la lógica para eliminar el elemento de tu lista
+    
       console.log(`Eliminar elemento: ${name}`);
     };
     const handleEdit = (name: string) => {
-        // Aquí debes implementar la lógica para eliminar el elemento de tu lista
+      
         console.log(`Editar elemento: ${name}`);
       };
   
@@ -50,9 +50,9 @@ const Lists2: React.FunctionComponent = () => {
               <ListItem.Title style={{ color: "red" }}>{item.name}</ListItem.Title>
               <ListItem.Subtitle>{item.subtitle}</ListItem.Subtitle>
             </ListItem.Content>
-            <ListItem.Content right style={{ flexDirection: 'row' }}> {/* Cambiar flexDirection a 'row' */}
+            <ListItem.Content right style={{ flexDirection: 'row' }}> 
               <TouchableOpacity onPress={() => handleEdit(item.name || "")}>
-                <EditFilled style={{ fontSize: 24, color: "green", marginRight: 10 }} /> {/* Añadir marginLeft para separar los iconos */}
+                <EditFilled style={{ fontSize: 24, color: "green", marginRight: 10 }} /> 
               </TouchableOpacity>
               <TouchableOpacity onPress={() => handleDelete(item.name || "")}>
                 <DeleteOutlined style={{ fontSize: 24, color: "red" }} />

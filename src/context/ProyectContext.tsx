@@ -17,7 +17,7 @@ import {
   import { CreateTeamDto, Team } from "../interfaces/teamInterfaces";
   import AsyncStorage from "@react-native-async-storage/async-storage";
   
-    type TeamsContextProps = {
+    type ProyectContextProps = {
         createProyect: (createProyect: CreateProyect) => Promise<void>;
         getProyectByUser: () => Promise<Proyect[]>;
         updateProyect: (proyectId: string, updateProyect: UpdateProyect) => Promise<void>;
@@ -27,9 +27,9 @@ import {
         getTeamsByProyect: (proyectId: string) => Promise<void>;
     };
   
-  export const TeamContext = createContext({} as TeamsContextProps);
+  export const ProyectContext = createContext({} as ProyectContextProps);
   
-  export const TeamProvider = ({ children }: any) => {
+  export const ProyectProvider = ({ children }: any) => {
     const [teams, setTeams] = useState<Team[]>([]);
 
     const createProyect = async (createProyect: CreateProyect): Promise<void> => {
@@ -60,7 +60,7 @@ import {
     const getProyectByUser = async (): Promise<Proyect[]> => {
         try {
             const accessToken = await AsyncStorage.getItem("token");
-        
+            console.log('aqerur')
             const config = {
                 headers: {
                 Authorization: `Bearer ${accessToken}`,
@@ -177,7 +177,7 @@ import {
 
 
     return (
-      <TeamContext.Provider
+      <ProyectContext.Provider
         value={{
             createProyect,
             getProyectByUser,
@@ -189,6 +189,6 @@ import {
         }}
       >
         {children}
-      </TeamContext.Provider>
+      </ProyectContext.Provider>
     );
   };

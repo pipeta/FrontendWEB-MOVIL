@@ -13,7 +13,7 @@ interface TeamData {
  
 }
 
-export const TestingScreen = () => {
+export const TeamsScreen = () => {
   const { fetchTeams, removeTeam } = useContext(TeamContext);
   const [teams, setTeams] = useState<TeamData[]>([]);
 
@@ -68,8 +68,8 @@ export const TestingScreen = () => {
               infoStyle={{color:'white'}}
               button={
                 <View style={styles.buttonContainer}>
-                  <Button color='#ad1457' title="Editar Equipo" onPress={() => handleEditTeam(team.uniqueCode)} />
-                  <Button color='#ad1457' title="Eliminar Equipo" onPress={() => handleRemoveTeam(team.uniqueCode)} />
+                  <Button color='green' title="Editar Equipo" onPress={() => handleEditTeam(team.uniqueCode)} />
+                  <Button color='red' title="Eliminar Equipo" onPress={() => handleRemoveTeam(team.uniqueCode)} />
                 </View>
               }
             />
@@ -107,4 +107,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default TestingScreen;
+export default TeamsScreen;
