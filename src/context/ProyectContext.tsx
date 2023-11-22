@@ -23,7 +23,7 @@ import {
         removeProyect: (proyectId: string) => Promise<void>;
         addTeamToProyect: (newTeamProyect: NewTeamProyect) => Promise<void>;
         deleteTeamFromProyect: (teamId: string) => Promise<void>;
-        getTeamsByProyect: (proyectId: string) => Promise<void>;
+        getTeamsByProyect: (proyectId: string) => Promise<TeamProyect[]>;
     };
   
   export const ProyectContext = createContext({} as ProyectContextProps);
@@ -57,7 +57,7 @@ import {
     const getProyectByUser = async (): Promise<Proyect[]> => {
         try {
             const accessToken = await AsyncStorage.getItem("token");
-            console.log('aqerur')
+           
             const config = {
                 headers: {
                 Authorization: `Bearer ${accessToken}`,
@@ -110,7 +110,7 @@ import {
         }
     };
     
-    const addTeamToProyect = async (newTeamProyect: NewTeamProyect): Promise<void> => {
+    const addTeamToProyect = async (newTeamProyect: NewTeamProyect):  Promise<void> => {
         try {
             const accessToken = await AsyncStorage.getItem("token");
             const config = {
@@ -118,12 +118,14 @@ import {
                     Authorization: `Bearer ${accessToken}`,
                 },
             };
-    
+            console.log(newTeamProyect)
             const resp = await APIproyect.post(
                 "/proyect/addteam",
                 newTeamProyect,
                 config
             );
+            console.log(newTeamProyect)
+            console.log(resp)
         } catch (error) {
             console.error(error);
             throw error;
@@ -146,24 +148,26 @@ import {
         }
     };
     
-    const getTeamsByProyect = async (proyectId: string): Promise<void> => {
+    const getTeamsByProyect = async (proyectId: string): Promise<TeamProyect[]> => {
         try {
-            const accessToken = await AsyncStorage.getItem("token");
-            const config = {
-                headers: {
-                    Authorization: `Bearer ${accessToken}`,
-                },
-            };
-    
-            const resp = await APIproyect.get(`/proyect/teams/${proyectId}`, config);
-    
-            const teams = resp.data;
-            return teams;
+          const accessToken = await AsyncStorage.getItem("token");
+          const config = {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          };
+      
+          const resp = await APIproyect.get(`/proyect/teams/${proyectId}`, config);
+         
+          const teams: TeamProyect[] = resp.data;
+          
+          return teams;
         } catch (error) {
-            console.error(error);
-            throw error;
+          console.error(error);
+          throw error;
         }
-    };
+      };
+      
     
 
 

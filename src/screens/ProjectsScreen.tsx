@@ -44,7 +44,7 @@ export const ProjectsScreen = ({ navigation }: Props) => {
 
   const handleEditProyect = async (proyect: ProyectData) => {
     navigation.navigate("PantallaPrueba", {
-      
+      _id:proyect._id,
       name: proyect.name,
       description: proyect.description,
       owner: proyect.owner,

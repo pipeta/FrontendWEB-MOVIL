@@ -25,6 +25,13 @@ import AddMembersScreen from "../screens/AddMembersScreen";
 import { CreateProjectScreen } from "../screens/CreateProjectScreen";
 import ProjectsScreen from "../screens/ProjectsScreen";
 import EditTeamsScreen from "../screens/EditTeamsScreen";
+import AddTeamsScreen from "../screens/AddTeamsScreen";
+import { SearchScreen } from "../screens/SearchScreen";
+import { CreateTask } from "../screens/CreateTask";
+import { UpdateTask } from "../screens/UpdateTask";
+
+import { DeleteTaskScreen } from "../screens/DeleteTaskScreen";
+import { ViewTasks } from "../screens/ViewTasksScreen";
 
 
 
@@ -45,6 +52,19 @@ const Sidebar = () => {
         },
       }}
     >
+      {/* <Drawer.Screen name="AddTeamsScreen" component={AddTeamsScreen} /> */}
+     
+
+      <Drawer.Screen name="Ver Tarea" component={ViewTasks} />
+
+      <Drawer.Screen name="Eliminar Tarea" component={DeleteTaskScreen} />
+
+      <Drawer.Screen name="Editar Tarea" component={UpdateTask} />
+
+      <Drawer.Screen name="Crear Tarea" component={CreateTask} />
+      <Drawer.Screen name="Busqueda" component={SearchScreen} />
+
+      
       <Drawer.Screen name="Ver Proyectos" component={ProjectsScreen} />
       <Drawer.Screen name="Ver Equipos" component={TeamsScreen} />
       <Drawer.Screen name="Crear Equipo" component={DefaultScreen} />
@@ -111,6 +131,7 @@ export const Navigator = () => {
           <Stack.Screen name="PantallaPrueba" component={PantallaPrueba} />
         
           <Stack.Screen name="EditTeamsScreen" component={EditTeamsScreen} />
+          <Stack.Screen name="AddTeamsScreen" component={AddTeamsScreen} />
         </>
       )}
     </Stack.Navigator>

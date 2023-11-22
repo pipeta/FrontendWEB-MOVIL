@@ -122,4 +122,29 @@ export const loginStyles = StyleSheet.create({
     textAlign: "center",
     marginTop: 10,
   },
+  confirmationContainer: {
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 20,
+  },
+  confirmationText: {
+    color: "white",
+    marginBottom: 10,
+  },
+  confirmationButtonContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
+  confirmationButton: {
+    padding: 10,
+    borderRadius: 5,
+    width: "45%", // Ajusta el ancho según tus necesidades
+    alignItems: "center",
+    marginBottom:10
+  },
+  confirmationButtonText: {
+    color: "white",
+    fontWeight: "bold",
+  },
 });

@@ -16,13 +16,18 @@ interface Props extends StackScreenProps<TeamsStackParams, "PantallaPrueba"> {
 
 export const PantallaPrueba = ({ route, navigation }: Props) => {
   const { top } = useSafeAreaInsets();
-  const { name, description, owner } = route.params;
+  const { _id,name, description, owner } = route.params;
+  const handleFABPress = () => {
+    navigation.navigate("AddTeamsScreen",  {_id:_id}  );
+  };
 
+
+ 
   return (
     <View style={{ flex: 1 }}>
-      {/* Header Container */}
+    
       <View style={{ ...styles.headerContainer }}>
-        {/* Backbutton */}
+       
         <TouchableOpacity
           onPress={() => navigation.goBack()}
           activeOpacity={0.8}
@@ -32,7 +37,7 @@ export const PantallaPrueba = ({ route, navigation }: Props) => {
         </TouchableOpacity>
         <Divider></Divider>
 
-        {/* Nombre del Proyecto */}
+       
         <Text style={{ ...styles.Name, top: top + 40 }}>{`Name: ${name}`}</Text>
         <Text style={{ ...styles.subName, top: top + 40 }}>{`Descripción: ${description}`}</Text>
         <Text style={{ ...styles.subName, top: top + 40 }}>{`Creador: ${owner}`}</Text>
@@ -42,13 +47,14 @@ export const PantallaPrueba = ({ route, navigation }: Props) => {
         <Text style={styles.Title}>{"Equipos"}</Text>
       </View>
       <View style={{ flex: 1, paddingHorizontal: 10, paddingBottom: 10 }}>
-        <Equipos />
+        <Equipos proyectId={_id} />
       </View>
       <Divider></Divider>
       <FAB
         style={{ position: "absolute", bottom: 20, right: 20, backgroundColor: "#007bff" }}
         title={"+"}
         size="large"
+        onPress={handleFABPress}
       />
     </View>
   );

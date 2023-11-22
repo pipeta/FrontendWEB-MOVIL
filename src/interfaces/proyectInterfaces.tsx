@@ -6,9 +6,15 @@ export interface Proyect{
 }
   
 export interface TeamProyect{
-    id: string;
-    id_proyect: string;
+    _id: string;
     name: string;
+    autor: string;
+    uniqueCode: string;
+    listUser: {
+      userName: string;
+      email: string;
+      _id: string;
+    }[];
 }
 
 export interface CreateProyect{

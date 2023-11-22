@@ -12,6 +12,7 @@ import { useNavigation } from "@react-navigation/native"; // Importa useNavigati
 import { TeamContext } from "../context/TeamContext";
 import { useFocusEffect } from "@react-navigation/native";
 import { StackScreenProps } from "@react-navigation/stack";
+import { ProyectContext } from "../context/ProyectContext";
 // import { TeamsStackParams } from "../navigator/TeamsNavigator";
 const windowWidth = Dimensions.get("window").width;
 
@@ -27,13 +28,14 @@ interface TeamData {
   }[];
 }
 
-export const Equipos = () => {
-  const { fetchTeams, removeTeam } = useContext(TeamContext);
+export const Equipos = ({ proyectId }: { proyectId: string }) => {
+  
+  const {  getTeamsByProyect } = useContext(ProyectContext);
   const [teams, setTeams] = useState<TeamData[]>([]);
-
+  
   const fetchData = async () => {
     try {
-      const data: TeamData[] = await fetchTeams();
+      const data: TeamData[] = await getTeamsByProyect(proyectId);
       setTeams(data);
     } catch (error) {
       console.error(error);
@@ -47,8 +49,9 @@ export const Equipos = () => {
       return () => {
         setTeams([]);
       };
-    }, [fetchTeams])
+    }, [proyectId])
   );
+
 
   const handleTeamPress = (selectedTeam: TeamData) => {
     // navigation.navigate('EditTestScreen', {
@@ -62,35 +65,30 @@ export const Equipos = () => {
   return (
     <ScrollView>
       <View style={styles.container}>
-        {teams.map((team, index) => (
-          <TouchableOpacity
-            key={team._id}
-            activeOpacity={0.9}
-            style={styles.column}
-            onPress={() => handleTeamPress(team)} // Pass the selected team to the function
-          >
-            <View
-              style={{
-                ...styles.cardContainer,
-                backgroundColor: "#474747",
-              }}
+        {teams.length > 0 ? (
+          teams.map((team, index) => (
+            <TouchableOpacity
+              key={team._id}
+              activeOpacity={0.9}
+              style={styles.column}
+              onPress={() => handleTeamPress(team)} 
             >
-              <View>
-                <Text style={styles.title}>{team.name}</Text>
-                <Text style={styles.name}>Autor: {team.autor}</Text>
-                <Text style={styles.name}>Código: {team.uniqueCode}</Text>
-
-                <Text style={styles.name}>Usuarios: {team.listUser.length}</Text>
-                {/* {team.listUser.map((user, userIndex) => (
-                  <Text key={user._id} style={styles.name}>
-                    - {user.userName} ({user.email})
-                  </Text>
-                ))}
-                 */}
+              <View
+                style={{
+                  ...styles.cardContainer,
+                  backgroundColor: "#474747",
+                }}
+              >
+                <View>
+                  <Text style={styles.title}>{team.name}</Text>
+                
+                </View>
               </View>
-            </View>
-          </TouchableOpacity>
-        ))}
+            </TouchableOpacity>
+          ))
+        ) : (
+          <Text style={styles.noTeamsText}>No hay equipos disponibles.</Text>
+        )}
       </View>
     </ScrollView>
   );
@@ -117,6 +115,9 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 5,
+    alignItems: 'center',
+    justifyContent: 'center', 
+    backgroundColor: "#474747", 
   },
   background: {
     flex: 1,
@@ -125,18 +126,21 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 20,
     fontWeight: "bold",
-    top: 20,
-    left: 10,
     color: "white",
   },
   name: {
-    fontSize: 15,
+    fontSize: 35,
     fontWeight: "bold",
-    top: 20,
-    left: 10,
     color: "white",
   },
   column: {
-    width: "50%", // Dos columnas
+    width: "50%", 
+  },
+  noTeamsText: {
+    fontSize: 18,
+    color: "white",
+    textAlign: "center",
+    marginTop: 20,
   },
 });
+

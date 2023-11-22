@@ -11,6 +11,12 @@ type Team = {
     _id: string;
   }[];
 };
+type Team2 = {
+  _id: string;
+
+
+};
+
 
 type TeamsStackParams = {
   Sidebar: undefined;
@@ -18,6 +24,8 @@ type TeamsStackParams = {
   EditTestScreen: Team; // Puedes definir los parámetros que necesites aquí
   PantallaPrueba: Project;
   EditTeamsScreen: Team;
+  AddTeamsScreen:  Team2
+
 };
 
 type Project = {
