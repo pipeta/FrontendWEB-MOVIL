@@ -66,7 +66,7 @@ export const UpdateTask: React.FC<UpdateTaskProps> = () => {
 
           
           <View>
-            
+
             <TextInput
               style={loginStyles.inputField}
               placeholder="Ingrese el ID de la tarea"
@@ -144,18 +144,7 @@ export const UpdateTask: React.FC<UpdateTaskProps> = () => {
           </View>
 
         
-          <View>
-            <TextInput
-              style={loginStyles.inputField}
-              placeholder="Nombre del proyecto"
-              placeholderTextColor="rgba(255,255,255,0.4)"
-              onChangeText={(value) => onChange(value, "project")}
-              value={project}
-              autoCapitalize="none"
-              autoCorrect={false}
-            />
-          </View>
-
+         
           
           <View style={styles.buttonContainer}>
             <TouchableOpacity
