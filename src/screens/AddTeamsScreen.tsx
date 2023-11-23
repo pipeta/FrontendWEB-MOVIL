@@ -32,14 +32,14 @@ interface Props extends StackScreenProps<TeamsStackParams, "AddTeamsScreen"> {}
 
 export const AddTeamsScreen = ({ navigation, route }: Props) => {
   const { top } = useSafeAreaInsets();
-  const { fetchTeams, removeTeam } = useContext(TeamContext);
+  const { fetchTeamsFree, removeTeam } = useContext(TeamContext);
   const { addTeamToProyect } = useContext(ProyectContext);
   const [teams, setTeams] = useState<TeamData[]>([]);
   const { _id } = route.params;
 
   const fetchData = async () => {
     try {
-      const data: TeamData[] = await fetchTeams();
+      const data: TeamData[] = await fetchTeamsFree(_id);
       setTeams(data);
       console.log(data);
     } catch (error) {
