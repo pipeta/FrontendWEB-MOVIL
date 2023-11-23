@@ -19,7 +19,7 @@ import { ProyectContext } from "../context/ProyectContext";
 export const CreateProjectScreen = () => {
   const { createProyect } = useContext(ProyectContext);
 
-  const { name, description, onChange } = useForm({
+  const { name, description, onChange,resetForm } = useForm({
     name: "",
     description: "",
   });
@@ -29,6 +29,8 @@ export const CreateProjectScreen = () => {
   const newProyect = () => {
     Keyboard.dismiss();
     createProyect({name: name, description: description});
+    resetForm()
+
   };
 
   
