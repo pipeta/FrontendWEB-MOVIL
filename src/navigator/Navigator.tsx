@@ -31,7 +31,7 @@ import { CreateTask } from "../screens/CreateTask";
 import { UpdateTask } from "../screens/UpdateTask";
 
 import { DeleteTaskScreen } from "../screens/DeleteTaskScreen";
-import { ViewTasks } from "../screens/ViewTasksScreen";
+// import { ViewTasks } from "../screens/ViewTasksScreen";
 
 
 
@@ -55,7 +55,7 @@ const Sidebar = () => {
       {/* <Drawer.Screen name="AddTeamsScreen" component={AddTeamsScreen} /> */}
      
 
-      <Drawer.Screen name="Ver Tarea" component={ViewTasks} />
+      {/* <Drawer.Screen name="Ver Tarea" component={ViewTasks} /> */}
       <Drawer.Screen name="Busqueda" component={SearchScreen} />
 
       <Drawer.Screen name="Eliminar Tarea" component={DeleteTaskScreen} />
