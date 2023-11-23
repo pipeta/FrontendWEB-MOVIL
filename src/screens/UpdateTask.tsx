@@ -66,7 +66,7 @@ export const UpdateTask: React.FC<UpdateTaskProps> = () => {
 
           
           <View>
-            <Text>ID de la tarea a actualizar</Text>
+            
             <TextInput
               style={loginStyles.inputField}
               placeholder="Ingrese el ID de la tarea"

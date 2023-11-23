@@ -1,6 +1,7 @@
 import React, { useContext, useState } from 'react';
 import { Text, View, TextInput, TouchableOpacity, FlatList, StyleSheet } from 'react-native';
 import { Tareas } from '../components/Tareas';
+import { SearchInput } from '../components/SearchInput';
 // import { Task } from '../types'; // Asumiendo que tienes un tipo Task definido
 
 interface ViewTasksProps {}
@@ -12,14 +13,16 @@ type Task = {
     responsible: string;
   };
 export const ViewTasks: React.FC<ViewTasksProps> = () => {
-  const [tasks, setTasks] = useState<Task[]>([]); 
-  const [filterText, setFilterText] = useState('');
+  // const [tasks, setTasks] = useState<Task[]>([]); 
+  // const [tasks, setTasks] = fetch
+  const [taskFiltered, setTaskFiltered] = useState<Task[]>([]);
+  const [ term, setTerm ] = useState('')
 
 
   const filterTasks = () => {
     const filteredTasks = tasks.filter((task) =>
-      task.name.toLowerCase().includes(filterText.toLowerCase()) ||
-      task.responsible.toLowerCase().includes(filterText.toLowerCase())
+      task.name.toLowerCase().includes(taskFiltered.toLowerCase()) ||
+      task.responsible.toLowerCase().includes(taskFiltered.toLowerCase())
     );
    
     setTasks(filteredTasks);
@@ -30,17 +33,40 @@ export const ViewTasks: React.FC<ViewTasksProps> = () => {
    
   };
 
+  useEffect(() => {
+    
+
+    if(term.length === 0){
+      return setTaskFiltered([])
+    }
+    setTaskFiltered(filterTasks)
+  
+    
+  }, [term])
+  
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Listado de Tareas</Text>
 
       <View style={styles.filterContainer}>
+
+        <SearchInput 
+          onDebounce={(value) => setTerm(value)}
+          
+        
+        />
+
+
+        
+
+
         <TextInput
           style={styles.inputField}
           placeholder="Filtrar por nombre o responsable"
           placeholderTextColor="rgba(255,255,255,0.4)"
-          onChangeText={(text) => setFilterText(text)}
-          value={filterText}
+          onChangeText={(text) => setTaskFiltered(text)}
+          value={taskFiltered}
         />
         <TouchableOpacity
           style={styles.filterButton}
