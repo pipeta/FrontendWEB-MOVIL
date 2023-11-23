@@ -87,7 +87,7 @@ export const TeamsScreen = ({ navigation }: Props) => {
               price={team.name}
               pricingStyle={{ color: "white" }}
               title={`Autor: ${team.autor}`}
-              info={[`Código Único: ${team.uniqueCode}`, "Usuarios:"]}
+              info={[`Código Único: ${team.uniqueCode}`]}
               infoStyle={{ color: "white" }}
               button={
                 <View style={styles.buttonContainer}>
