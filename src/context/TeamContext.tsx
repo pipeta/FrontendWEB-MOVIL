@@ -24,6 +24,7 @@ type TeamsContextProps = {
   deleteTeam: (name: string) => Promise<void>;
   loadTeamById: (id: string) => Promise<Usuario>;
   removeTeam: (uniqueCode: string) => Promise<void>;
+  fetchTeamsFree: (id_proyect: string) => Promise<TeamData[]>;
 };
 interface TeamData {
   _id: string;
@@ -110,6 +111,29 @@ export const TeamProvider = ({ children }: any) => {
   const loadTeamById = async (id: string) => {
     throw new Error("asdasd");
   };
+
+
+  const fetchTeamsFree = async (id_proyect: string): Promise<TeamData[]> => {
+    try {
+      const accessToken = await AsyncStorage.getItem("token");
+
+      const config = {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      };
+      const response = await APIteam.get(`/team/teamfree/${id_proyect}`, config);
+      console.log(response);
+
+      const teamsData: TeamData[] = response.data;
+
+      return teamsData;
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  };
+
   return (
     <TeamContext.Provider
       value={{
@@ -119,6 +143,7 @@ export const TeamProvider = ({ children }: any) => {
         deleteTeam,
         loadTeamById,
         removeTeam,
+        fetchTeamsFree
       }}
     >
       {children}
