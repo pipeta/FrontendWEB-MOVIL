@@ -15,7 +15,7 @@ import { useForm } from "../hooks/useForm";
 import { StackScreenProps } from "@react-navigation/stack";
 import { TeamContext } from "../context/TeamContext";
 
-export const CreateProjectScreen = () => {
+export const CreateTeamScreen = () => {
   const { createTeam } = useContext(TeamContext);
 
   const { name, onChange, resetForm } = useForm({

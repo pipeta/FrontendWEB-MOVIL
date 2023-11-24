@@ -125,7 +125,7 @@ export const TasksProvider = ({ children }:any) => {
           Authorization: `Bearer ${accessToken}`,
         },
       };
-
+      console.log('deleteTask recibió taskId en el contexto:', id_task);
       const resp = await APIproyect.delete(`/task/${id_task}`, config);
       console.log(resp);
 

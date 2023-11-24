@@ -1,56 +1,94 @@
 import React, { useContext, useState } from "react";
-import { Text, View, TouchableOpacity, TextInput, KeyboardAvoidingView, Platform, Alert, StyleSheet } from "react-native";
+import {
+  Text,
+  View,
+  TouchableOpacity,
+  TextInput,
+  KeyboardAvoidingView,
+  Platform,
+  Alert,
+  StyleSheet,
+} from "react-native";
 import { Background } from "../components/Background";
 import { loginStyles } from "../theme/loginTheme";
 import { useForm } from "../hooks/useForm";
-import { ProyectContext } from "../context/ProyectContext";
+import { TaskState, TasksContext } from "../context/TaskContext";
+import { useNavigation } from "@react-navigation/native";
 
 interface UpdateTaskProps {}
 
 export const UpdateTask: React.FC<UpdateTaskProps> = () => {
-//   const { updateTask } = useContext(ProyectContext);
-
+  const { deleteTask, updateTask } = useContext(TasksContext);
   const {
     taskId,
     name,
     description,
-    responsible,
+    responsible: id_responsible,
     startDate,
     endDate,
     project,
     onChange,
+    resetForm,
   } = useForm({
     taskId: "",
     name: "",
     description: "",
     responsible: "",
-    startDate: "", 
-    endDate: "", 
+    startDate: "",
+    endDate: "",
     project: "",
   });
+  const { navigate } = useNavigation();
+  const [confirmationInfo, setConfirmationInfo] = useState({
+    isVisible: false,
+    action: "eliminar" as "eliminar" | "actualizar",
+  });
 
-  const [isConfirmationVisible, setConfirmationVisibility] = useState(false);
+  const setConfirmationVisibility = (
+    isVisible: boolean,
+    action: "eliminar" | "actualizar" = "eliminar"
+  ) => {
+    setConfirmationInfo({
+      isVisible,
+      action,
+    });
+  };
 
   const updateConfirmation = () => {
-    Alert.alert(
-      "Confirmar actualización",
-      "¿Estás seguro de que quieres actualizar esta tarea?",
-      [
-        {
-          text: "Cancelar",
-          style: "cancel",
-        },
-        {
-          text: "Actualizar",
-          onPress: () => {
-            
-            
-            
-          },
-        },
-      ],
-      { cancelable: false }
-    );
+    if (!taskId.trim() ) {
+      console.log("Ingrese el ID de la tarea y el nombre antes de actualizar.");
+      return;
+    }
+    if (!name.trim()) {
+      console.log("Ingrese el nombre de la tarea antes de actualizar.");
+      return;
+    }
+
+    console.log("Antes de mostrar la alerta");
+    const startDateParse = new Date(startDate)
+    const endDateParse = new Date(endDate)
+
+    updateTask(taskId, {
+      name,
+      description,
+      id_responsible,
+      startDate: startDateParse,
+      endDate: endDateParse,
+    });
+    resetForm();
+    console.log("Después de resetForm:", taskId, name, description, id_responsible, startDate, endDate, project);
+  };
+
+  const deleteConfirmation = () => {
+    console.log("taskID", taskId);
+    console.log("Ingresando a deleteConfirmation");
+    if (!taskId.trim()) {
+      console.log("Ingrese el ID de la tarea antes de intentar eliminar.");
+      return;
+    }
+    console.log("Antes de mostrar la alerta");
+    deleteTask(taskId);
+    resetForm();
   };
 
   return (
@@ -64,9 +102,7 @@ export const UpdateTask: React.FC<UpdateTaskProps> = () => {
         <View style={loginStyles.formContainer}>
           <Text style={loginStyles.title}>Actualizar tarea</Text>
 
-          
           <View>
-
             <TextInput
               style={loginStyles.inputField}
               placeholder="Ingrese el ID de la tarea"
@@ -78,7 +114,6 @@ export const UpdateTask: React.FC<UpdateTaskProps> = () => {
             />
           </View>
 
-          
           <View>
             <TextInput
               style={loginStyles.inputField}
@@ -91,7 +126,6 @@ export const UpdateTask: React.FC<UpdateTaskProps> = () => {
             />
           </View>
 
-          
           <View>
             <TextInput
               style={loginStyles.inputField}
@@ -104,24 +138,22 @@ export const UpdateTask: React.FC<UpdateTaskProps> = () => {
             />
           </View>
 
-          
           <View>
             <TextInput
               style={loginStyles.inputField}
               placeholder="Nombre del responsable"
               placeholderTextColor="rgba(255,255,255,0.4)"
               onChangeText={(value) => onChange(value, "responsible")}
-              value={responsible}
+              value={id_responsible}
               autoCapitalize="none"
               autoCorrect={false}
             />
           </View>
 
-         
           <View>
             <TextInput
               style={loginStyles.inputField}
-              placeholder="YYYY-MM-DD"
+              placeholder="YYYY/MM/DD"
               placeholderTextColor="rgba(255,255,255,0.4)"
               onChangeText={(value) => onChange(value, "startDate")}
               value={startDate}
@@ -130,11 +162,10 @@ export const UpdateTask: React.FC<UpdateTaskProps> = () => {
             />
           </View>
 
-         
           <View>
             <TextInput
               style={loginStyles.inputField}
-              placeholder="YYYY-MM-DD"
+              placeholder="YYYY/MM/DD"
               placeholderTextColor="rgba(255,255,255,0.4)"
               onChangeText={(value) => onChange(value, "endDate")}
               value={endDate}
@@ -143,38 +174,58 @@ export const UpdateTask: React.FC<UpdateTaskProps> = () => {
             />
           </View>
 
-        
-         
-          
           <View style={styles.buttonContainer}>
             <TouchableOpacity
               activeOpacity={0.8}
               style={styles.button}
-              onPress={() => setConfirmationVisibility(true)}
+              onPress={() => setConfirmationVisibility(true, "actualizar")}
             >
               <Text style={styles.buttonText}>Actualizar Tarea</Text>
             </TouchableOpacity>
+
+            <TouchableOpacity
+              activeOpacity={0.8}
+              style={{ ...styles.button, backgroundColor: "red" }}
+              onPress={() => setConfirmationVisibility(true, "eliminar")}
+            >
+              <Text style={styles.buttonText}>Eliminar Tarea</Text>
+            </TouchableOpacity>
           </View>
 
-         
-          {isConfirmationVisible && (
+          {confirmationInfo.isVisible && (
             <View style={loginStyles.confirmationContainer}>
               <Text style={loginStyles.confirmationText}>
-                ¿Estás seguro de que quieres actualizar esta tarea?
+                {confirmationInfo.action === "actualizar"
+                  ? "¿Estás seguro de que quieres actualizar esta tarea?"
+                  : "¿Estás seguro de que quieres eliminar esta tarea?"}
               </Text>
               <TouchableOpacity
                 activeOpacity={0.8}
-                style={[loginStyles.confirmationButton, { backgroundColor: "red" }]}
+                style={[
+                  loginStyles.confirmationButton,
+                  { backgroundColor: "red" },
+                ]}
                 onPress={() => setConfirmationVisibility(false)}
               >
                 <Text style={loginStyles.confirmationButtonText}>Cancelar</Text>
               </TouchableOpacity>
               <TouchableOpacity
                 activeOpacity={0.8}
-                style={[loginStyles.confirmationButton, { backgroundColor: "green" }]}
-                onPress={updateConfirmation}
+                style={[
+                  loginStyles.confirmationButton,
+                  { backgroundColor: "green" },
+                ]}
+                onPress={
+                  confirmationInfo.action === "actualizar"
+                    ? updateConfirmation
+                    : deleteConfirmation
+                }
               >
-                <Text style={loginStyles.confirmationButtonText}>Actualizar</Text>
+                <Text style={loginStyles.confirmationButtonText}>
+                  {confirmationInfo.action === "actualizar"
+                    ? "Actualizar"
+                    : "Eliminar"}
+                </Text>
               </TouchableOpacity>
             </View>
           )}
@@ -183,21 +234,22 @@ export const UpdateTask: React.FC<UpdateTaskProps> = () => {
     </>
   );
 };
+
 const styles = StyleSheet.create({
-    
-  
-    buttonContainer: {
-      alignItems: "center",
-      marginTop: 20,
-    },
-    button: {
-      backgroundColor: "#007BFF",
-      padding: 10,
-      borderRadius: 5,
-    },
-    buttonText: {
-      color: "white",
-      fontSize: 16,
-      fontWeight: "bold",
-    },
+  buttonContainer: {
+    alignItems: "center",
+    marginTop: 20,
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
+  button: {
+    backgroundColor: "#007BFF",
+    padding: 10,
+    borderRadius: 5,
+  },
+  buttonText: {
+    color: "white",
+    fontSize: 16,
+    fontWeight: "bold",
+  },
 });
