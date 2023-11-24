@@ -14,29 +14,20 @@ import {
   Usuario,
 } from "../interfaces/appInterfaces";
 import APIteam from "../api/nestApiTeam";
-import { CreateTeamDto, Team } from "../interfaces/teamInterfaces";
+import { CreateTeamDto, Member, Team } from "../interfaces/teamInterfaces";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 type TeamsContextProps = {
   createTeam: (createTeamDto: string) => Promise<void>;
-  fetchTeams: () => Promise<TeamData[]>;
+  fetchTeams: () => Promise<Team[]>;
   updateTeam: (name: string, teamId: string) => Promise<void>;
   deleteTeam: (name: string) => Promise<void>;
   loadTeamById: (id: string) => Promise<Usuario>;
   removeTeam: (uniqueCode: string) => Promise<void>;
-  fetchTeamsFree: (id_proyect: string) => Promise<TeamData[]>;
+  fetchTeamsFree: (id_proyect: string) => Promise<Team[]>;
+  fetchMemberTeam: (id_team: string) => Promise<Member[]>;
 };
-interface TeamData {
-  _id: string;
-  name: string;
-  autor: string;
-  uniqueCode: string;
-  listUser: {
-    userName: string;
-    email: string;
-    _id: string;
-  }[];
-}
+
 
 export const TeamContext = createContext({} as TeamsContextProps);
 
@@ -70,7 +61,7 @@ export const TeamProvider = ({ children }: any) => {
     }
   };
 
-  const fetchTeams = async (): Promise<TeamData[]> => {
+  const fetchTeams = async (): Promise<Team[]> => {
     try {
       const accessToken = await AsyncStorage.getItem("token");
 
@@ -82,7 +73,7 @@ export const TeamProvider = ({ children }: any) => {
       const response = await APIteam.get("/team", config);
       console.log(response);
 
-      const teamsData: TeamData[] = response.data;
+      const teamsData: Team[] = response.data;
 
       return teamsData;
     } catch (error) {
@@ -113,7 +104,7 @@ export const TeamProvider = ({ children }: any) => {
   };
 
 
-  const fetchTeamsFree = async (id_proyect: string): Promise<TeamData[]> => {
+  const fetchTeamsFree = async (id_proyect: string): Promise<Team[]> => {
     try {
       const accessToken = await AsyncStorage.getItem("token");
 
@@ -125,7 +116,7 @@ export const TeamProvider = ({ children }: any) => {
       const response = await APIteam.get(`/team/teamfree/${id_proyect}`, config);
       console.log(response);
 
-      const teamsData: TeamData[] = response.data;
+      const teamsData: Team[] = response.data;
 
       return teamsData;
     } catch (error) {
@@ -133,6 +124,27 @@ export const TeamProvider = ({ children }: any) => {
       throw error;
     }
   };
+
+  const fetchMemberTeam = async (id_team: string): Promise<Member[]> => {
+    try {
+      const accessToken = await AsyncStorage.getItem("token");
+
+      const config = {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      };
+      const response = await APIteam.get(`/team/member/${id_team}`, config);
+      console.log(response);
+
+      const members: Member[] = response.data;
+
+      return members;
+    } catch (error) {
+        console.error(error);
+        throw error;
+    }
+  }
 
   return (
     <TeamContext.Provider
@@ -143,7 +155,8 @@ export const TeamProvider = ({ children }: any) => {
         deleteTeam,
         loadTeamById,
         removeTeam,
-        fetchTeamsFree
+        fetchTeamsFree,
+        fetchMemberTeam
       }}
     >
       {children}

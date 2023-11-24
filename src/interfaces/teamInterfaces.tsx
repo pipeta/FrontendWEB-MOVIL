@@ -1,15 +1,14 @@
 export type Member = {
-  id: string;
-  username: string;
+  _id: string;
+  userName: string;
   email: string;
 };
 
 export type Team = {
-  id: string;
+  _id: string;
   name: string;
-  author: string;
+  autor: string;
   uniqueCode: string;
-  members: Member[];
 };
 
 export type CreateTeamDto = {

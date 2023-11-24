@@ -11,27 +11,18 @@ import { PricingCard, lightColors } from "@rneui/themed";
 import { Button } from "react-native";
 import { useFocusEffect } from "@react-navigation/native";
 import { StackScreenProps } from "@react-navigation/stack";
+import { Team } from "../interfaces/teamInterfaces";
 
-interface TeamData {
-  _id: string;
 
-  name: string;
-  autor: string;
-  uniqueCode: string;
-  listUser: {
-    userName: string;
-    email: string;
-    _id: string;
-  }[];
-}
+
 interface Props extends StackScreenProps<any, any> {}
 export const TeamsScreen = ({ navigation }: Props) => {
   const { fetchTeams, removeTeam } = useContext(TeamContext);
-  const [teams, setTeams] = useState<TeamData[]>([]);
+  const [teams, setTeams] = useState<Team[]>([]);
 
   const fetchData = async () => {
     try {
-      const data: TeamData[] = await fetchTeams();
+      const data: Team[] = await fetchTeams();
       setTeams(data);
     } catch (error) {
       console.error(error);
