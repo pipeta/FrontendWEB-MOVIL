@@ -12,21 +12,11 @@ import { useFocusEffect } from "@react-navigation/native";
 import { StackScreenProps } from "@react-navigation/stack";
 import { ProyectContext } from "../context/ProyectContext";
 import { TeamsStackParams } from "../navigator/navigatorTypes";
-import { ArrowLeftOutlined } from "@ant-design/icons";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { TeamContext } from "../context/TeamContext";
+import { Team } from "../interfaces/teamInterfaces";
 
-interface TeamData {
-  _id: string;
-  name: string;
-  autor: string;
-  uniqueCode: string;
-  listUser: {
-    userName: string;
-    email: string;
-    _id: string;
-  }[];
-}
+
 
 interface Props extends StackScreenProps<TeamsStackParams, "AddTeamsScreen"> {}
 
@@ -34,12 +24,12 @@ export const AddTeamsScreen = ({ navigation, route }: Props) => {
   const { top } = useSafeAreaInsets();
   const { fetchTeamsFree, removeTeam } = useContext(TeamContext);
   const { addTeamToProyect } = useContext(ProyectContext);
-  const [teams, setTeams] = useState<TeamData[]>([]);
+  const [teams, setTeams] = useState<Team[]>([]);
   const { _id } = route.params;
 
   const fetchData = async () => {
     try {
-      const data: TeamData[] = await fetchTeamsFree(_id);
+      const data: Team[] = await fetchTeamsFree(_id);
       setTeams(data);
       console.log(data);
     } catch (error) {
