@@ -14,18 +14,20 @@ import {
   Usuario,
 } from "../interfaces/appInterfaces";
 import APIteam from "../api/nestApiTeam";
-import { CreateTeamDto, Member, Team } from "../interfaces/teamInterfaces";
+import { CreateMemberReques, CreateTeamDto, DeleteMemberDto, Member, Team } from "../interfaces/teamInterfaces";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 type TeamsContextProps = {
   createTeam: (createTeamDto: string) => Promise<void>;
   fetchTeams: () => Promise<Team[]>;
-  updateTeam: (name: string, teamId: string) => Promise<void>;
+  updateTeam: (id_team: string, name: string) => Promise<void>;
   deleteTeam: (name: string) => Promise<void>;
   loadTeamById: (id: string) => Promise<Usuario>;
   removeTeam: (uniqueCode: string) => Promise<void>;
   fetchTeamsFree: (id_proyect: string) => Promise<Team[]>;
   fetchMemberTeam: (id_team: string) => Promise<Member[]>;
+  addUser: (data: CreateMemberReques) => Promise<void>;
+  removeUser: (data: DeleteMemberDto) => Promise<void>;
 };
 
 
@@ -97,7 +99,16 @@ export const TeamProvider = ({ children }: any) => {
       console.error(error);
     }
   };
-  const updateTeam = async (name: string, teamId: string) => {};
+  const updateTeam = async (id_team: string, name: string): Promise<void> => {
+    try {
+      const accessToken = await AsyncStorage.getItem("token");
+
+      await APIteam.patch(`/team/${id_team}`, {name: name}, { headers: { Authorization: `Bearer ${accessToken}` } });
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  };
   const deleteTeam = async (name: string) => {};
   const loadTeamById = async (id: string) => {
     throw new Error("asdasd");
@@ -135,7 +146,6 @@ export const TeamProvider = ({ children }: any) => {
         },
       };
       const response = await APIteam.get(`/team/member/${id_team}`, config);
-      console.log(response);
 
       const members: Member[] = response.data;
 
@@ -145,6 +155,28 @@ export const TeamProvider = ({ children }: any) => {
         throw error;
     }
   }
+  
+  const addUser = async (data: CreateMemberReques): Promise<void> => {
+    try {
+      const accessToken = await AsyncStorage.getItem("token");
+
+      await APIteam.post("/team/member/adduser", data, { headers: { Authorization: `Bearer ${accessToken}` } });
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  };
+
+  const removeUser = async (data: DeleteMemberDto): Promise<void> => {
+    try {
+      const accessToken = await AsyncStorage.getItem("token");
+
+      await APIteam.post("/team/member/remove-user", data, { headers: { Authorization: `Bearer ${accessToken}` } });
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  };
 
   return (
     <TeamContext.Provider
@@ -156,7 +188,9 @@ export const TeamProvider = ({ children }: any) => {
         loadTeamById,
         removeTeam,
         fetchTeamsFree,
-        fetchMemberTeam
+        fetchMemberTeam,
+        addUser,
+        removeUser,
       }}
     >
       {children}
