@@ -43,13 +43,13 @@ export const TeamsScreen = ({ navigation }: Props) => {
     await removeTeam(uniqueCode);
     fetchData();
   };
-  const handleEditTeam = async (uniqueCode: string) => {
+  const handleEditTeam = async (uniqueCode: string, _id: string) => {
     // await removeTeam(uniqueCode);
     // fetchData();
-
     navigation.navigate("EditTeamsScreen", {
      
-      uniqueCode: uniqueCode
+      uniqueCode: uniqueCode,
+      _id: _id
       
     });
 
@@ -85,7 +85,7 @@ export const TeamsScreen = ({ navigation }: Props) => {
                   <Button
                     color="green"
                     title="Editar Equipo"
-                    onPress={() => handleEditTeam(team.uniqueCode)}
+                    onPress={() => handleEditTeam(team.uniqueCode, team._id)}
                   />
                   <Button
                     color="red"

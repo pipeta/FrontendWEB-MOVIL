@@ -21,46 +21,71 @@ import {
 } from "@ant-design/icons";
 import { PricingCard, lightColors } from "@rneui/themed";
 import { StackScreenProps } from "@react-navigation/stack";
-import { RouteProp } from "@react-navigation/native";
+import { RouteProp, useFocusEffect } from "@react-navigation/native";
 import { TeamsStackParams } from "../navigator/navigatorTypes";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { Member } from "../interfaces/teamInterfaces";
+import { TeamContext } from "../context/TeamContext";
+import { RolContext } from "../context/RolContext";
 
-type List2Data = {
-  name: string;
-  subtitle: string;
-  linearGradientColors: string[];
-};
 
-const list2: Partial<List2Data>[] = [
-  {
-    name: "Amy Farha",
-    subtitle: "Vice President",
-    linearGradientColors: ["#FF9800", "#F44336"],
-  },
-  {
-    name: "Chris Jackson",
-    subtitle: "Vice Chairman",
-    linearGradientColors: ["#3F51B5", "#2196F3"],
-  },
-];
+
+
+
+
+
+
+
 interface Props extends StackScreenProps<TeamsStackParams, "EditTeamsScreen"> {
   route: RouteProp<TeamsStackParams, "EditTeamsScreen">;
 }
 const EditTeamsScreen = ({ route, navigation }: Props) => {
+
+  const [members, setMembers] = useState<Partial<Member>[]>([]);
+
   const { top } = useSafeAreaInsets();
-  const { uniqueCode } = route.params;
-  console.log(uniqueCode);
+  const { uniqueCode, _id, name } = route.params;
   const { user, update } = useContext(AuthContext);
   const { email, onChange } = useForm({
     email: user?.email || "",
   });
 
   const [newName, setNewName] = useState("");
+  const [emailUser, setEmailUser] = useState("");
   const [modalVisible, setModalVisible] = useState(false);
 
   const [checkedStates, setCheckedStates] = useState<{
     [key: string]: boolean;
   }>({});
+
+  const { getAllRoles } = useContext(RolContext);
+  const { fetchMemberTeam, addUser, removeUser, updateTeam } = useContext(TeamContext);
+
+  const fetchData = async (id_team: string) => {
+    try {
+      const data: Member[] = await fetchMemberTeam(id_team);
+      setMembers(data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  useFocusEffect(
+    React.useCallback(() => {
+      fetchData(_id);
+      setNewName(name);
+  
+      return () => {
+        setMembers([]);
+      };
+    }, [fetchMemberTeam])
+  );
+
+
+  const buttonRol = () => {
+    setModalVisible(true)
+  }
+
 
   const toggleCheckbox = (name: string) => {
     setCheckedStates((prevState) => ({
@@ -69,19 +94,22 @@ const EditTeamsScreen = ({ route, navigation }: Props) => {
     }));
   };
 
-  const onSaveChanges = () => {
-    console.log("Guardando cambios:", email);
+  const buttonDeleteUser = async (uniqueCode: string, email: string | undefined) => {
+    if(email !== undefined){
+      await removeUser({uniqueCode: uniqueCode, email: email });
+    }
+    fetchData(_id);
   };
 
-  const handleDelete = (name: string) => {};
-
-  const handleEdit = (name: string) => {
-    console.log(`Editar elemento: ${name}`);
-    setModalVisible(true);
+  const buttonSetNameTeam = async (id_team: string,name: string) => {
+    await updateTeam(id_team,name);
+    setNewName("");
   };
 
-  const handleAdd = () => {
-    console.log(`Añadir elemento: ${newName}`);
+  const buttonAddUser = async (uniqueCode: string, email: string) => {
+    await addUser({uniqueCode: uniqueCode, email: email });
+    fetchData(_id);
+    setEmailUser("");
   };
 
   const renderRoleOption = (role: string) => (
@@ -90,11 +118,11 @@ const EditTeamsScreen = ({ route, navigation }: Props) => {
     </TouchableOpacity>
   );
 
-  const renderItem = ({ item }: { item: Partial<List2Data> }) => (
+  const renderItem = ({ item }: { item: Partial<Member> }) => (
     <List.Item
-      key={item.name}
-      title={<Text style={{ color: "white" }}>{item.name}</Text>}
-      description={<Text style={{ color: "white" }}>{item.subtitle}</Text>}
+      key={item.userName}
+      title={<Text style={{ color: "white" }}>{item.userName}</Text>}
+      description={<Text style={{ color: "white" }}>{item.email}</Text>}
       left={() => (
         <GithubOutlined
           style={{ fontSize: 24, color: "white", marginRight: 10 }}
@@ -102,7 +130,7 @@ const EditTeamsScreen = ({ route, navigation }: Props) => {
       )}
       right={() => (
         <View style={{ flexDirection: "row" }}>
-          <TouchableOpacity onPress={() => handleEdit(item.name || "")}>
+          <TouchableOpacity onPress={() => buttonRol}>
             <EditFilled
               style={{
                 fontSize: 24,
@@ -112,7 +140,7 @@ const EditTeamsScreen = ({ route, navigation }: Props) => {
               }}
             />
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => handleDelete(item.name || "")}>
+          <TouchableOpacity onPress={() => buttonDeleteUser(uniqueCode,item.email)}>
             <DeleteOutlined style={{ fontSize: 24, color: "red" }} />
           </TouchableOpacity>
         </View>
@@ -138,15 +166,15 @@ const EditTeamsScreen = ({ route, navigation }: Props) => {
       <View style={styles.container}>
         <View style={styles.addContainer}>
           <TextInput
-            placeholder="Nuevo Nombre"
+            placeholder="Nombre de equipo"
             placeholderTextColor="rgba(255,255,255,0.7)"
             style={[loginStyles.inputField, styles.inputField]}
             onChangeText={(value) => setNewName(value)}
             value={newName}
           />
-          <TouchableOpacity onPress={handleAdd}>
+          <TouchableOpacity onPress={() => buttonSetNameTeam(_id, newName)}>
             <View style={styles.addButton}>
-              <Text style={styles.addButtonText}>Editar</Text>
+              <Text style={styles.addButtonText}>Actualizar</Text>
             </View>
           </TouchableOpacity>
         </View>
@@ -156,29 +184,21 @@ const EditTeamsScreen = ({ route, navigation }: Props) => {
             placeholder="Añadir Integrante"
             placeholderTextColor="rgba(255,255,255,0.7)"
             style={[loginStyles.inputField, styles.inputField]}
-            onChangeText={(value) => setNewName(value)}
-            value={newName}
+            onChangeText={(value) => setEmailUser(value)}
+            value={emailUser}
           />
-          <TouchableOpacity onPress={handleAdd}>
+          <TouchableOpacity onPress={() => buttonAddUser(uniqueCode,emailUser)}>
             <View style={styles.addButton}>
               <Text style={styles.addButtonText}>Añadir</Text>
             </View>
           </TouchableOpacity>
         </View>
 
-        <TouchableOpacity onPress={onSaveChanges}>
-          <View style={styles.submitButton}>
-            <Text style={styles.submitButtonText}>Submit</Text>
-          </View>
-        </TouchableOpacity>
-
         <FlatList
-          ListHeaderComponent={
-            <View>{list2.map((l) => renderItem({ item: l }))}</View>
-          }
-          data={list2}
+          ListHeaderComponent={<View />}
+          data={members}
           renderItem={renderItem}
-          keyExtractor={(item) => (item.name ? item.name.toString() : "")}
+          keyExtractor={(item) => (item.userName ? item.userName.toString() : "")}
           style={styles.flatList}
         />
 

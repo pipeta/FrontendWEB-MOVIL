@@ -14,3 +14,14 @@ export type Team = {
 export type CreateTeamDto = {
   name: string;
 };
+
+export type CreateMemberReques = {
+  uniqueCode: string;
+  email: string
+}
+
+
+export type DeleteMemberDto = {
+  uniqueCode: string;
+  email: string
+}
