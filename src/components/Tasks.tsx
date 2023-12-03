@@ -1,91 +1,70 @@
-import React, { useContext, useState, useEffect } from "react";
-import { View, Text, TouchableOpacity, StyleSheet, Dimensions, ScrollView } from "react-native";
-import { useFocusEffect, useNavigation } from "@react-navigation/native";
-import { TasksContext, Task, TaskState } from "../context/TaskContext";
-import { StackScreenProps } from "@react-navigation/stack";
+import React from "react";
+import { View, Text, FlatList, TouchableOpacity, StyleSheet, Dimensions } from "react-native";
+import { FontAwesome } from "@expo/vector-icons";
 import { TeamsStackParams } from "../navigator/navigatorTypes";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
-import moment from "moment";
+import { StackScreenProps } from "@react-navigation/stack";
+import { Task } from "../context/TaskContext";
+import { RouteProp } from "@react-navigation/native";
 
 const windowWidth = Dimensions.get("window").width;
 
-export const Tasks = ({ _id }: { _id: string }) => {
-  const { top } = useSafeAreaInsets();
-  const { fetchTasks } = useContext(TasksContext);
-  const [tasks, setTasks] = useState<Task[]>([]);
+interface Props {
+  route?: RouteProp<TeamsStackParams, "SearchScreen">;  // Ajuste aquí
+  navigation: StackScreenProps<TeamsStackParams, "SearchScreen">["navigation"];
+  tasks: Task[];
+}
 
-  const fetchData = async () => {
-    try {
-      const data: Task[] = await fetchTasks(_id);
-
-      // Formatear las fechas utilizando moment
-      const formattedTasks = data.map((task) => ({
-        ...task,
-        startDate: new Date(task.startDate),
-        endDate: new Date(task.endDate),
-      }));
-
-      setTasks(formattedTasks);
-    } catch (error) {
-      console.error(error);
-    }
+export const Tasks: React.FC<Props> = ({ route, navigation, tasks }: Props) => {
+  const handleTaskPress = async (task: Task) => {
+    navigation.navigate("TaskDetailScreen", {
+      description: task.description,
+      emailCreator: task.emailCreator,
+      endDate: task.endDate,
+      id_proyect: task.id_proyect,
+      is_deleted: task.is_deleted,
+      name: task.name,
+      nameResponsible: task.nameResponsible,
+      startDate: task.startDate,
+      state: task.state,
+    });
   };
 
-  useFocusEffect(
-    React.useCallback(() => {
-      fetchData();
-      return () => {
-        setTasks([]);
-      };
-    }, [_id])
-  );
-
-  const handleTaskPress = (selectedTask: Task) => {
-    // Puedes agregar la navegación aquí si es necesario
-  };
+  const keyExtractor = (task: Task) => task.id_proyect;
 
   return (
-    <ScrollView style={styles.background}>
-      <View style={styles.container}>
-        {tasks.length > 0 ? (
-          tasks.map((task, index) => (
-            <TouchableOpacity
-              key={task.id_proyect}
-              activeOpacity={0.9}
-              style={styles.column}
-              onPress={() => handleTaskPress(task)}
-            >
-              <View style={{ ...styles.cardContainer, backgroundColor: "#474747" }}>
-                <View>
-                  <Text style={styles.title}>{task.name}</Text>
-                  <Text style={styles.subtitle}>{task.nameResponsible}</Text>
-                </View>
-              </View>
-            </TouchableOpacity>
-          ))
-        ) : (
-          <Text style={styles.noTasksText}>No hay tareas disponibles.</Text>
-        )}
-      </View>
-    </ScrollView>
+    <FlatList
+      data={tasks}
+      keyExtractor={keyExtractor}
+      renderItem={({ item }) => (
+        <TouchableOpacity
+          key={keyExtractor(item)}
+          activeOpacity={0.9}
+          style={styles.cardContainer}
+          onPress={() => handleTaskPress(item)}
+        >
+          <View style={styles.taskInfoContainer}>
+            <View>
+              <Text style={styles.title}>{item.name}</Text>
+              <Text style={styles.subtitle}>{item.nameResponsible}</Text>
+            </View>
+            <FontAwesome name="eye" size={24} color="white" style={styles.eyeIcon} />
+          </View>
+        </TouchableOpacity>
+      )}
+      contentContainerStyle={styles.container}
+    />
   );
 };
 
 const styles = StyleSheet.create({
-  background: {
-    flex: 1,
-  },
   container: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    justifyContent: "space-between",
+    flexDirection: "column",
     padding: 10,
     marginLeft: 10,
+    width: "100%",
   },
   cardContainer: {
     marginVertical: 10,
-    height: 120,
-    width: windowWidth * 0.4,
     borderRadius: 10,
     shadowColor: "#000",
     shadowOffset: {
@@ -95,28 +74,28 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 5,
+    backgroundColor: "#474747",
+    width: "100%",
+    paddingHorizontal: 15,
+    paddingVertical: 15,
+  },
+  taskInfoContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
     alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: "#474747",  // Cambiado a #474747
   },
   title: {
     fontSize: 20,
     fontWeight: "bold",
     color: "white",
-    textAlign: "center",
+    textAlign: "left",
   },
   subtitle: {
     fontSize: 16,
     color: "white",
-    textAlign: "center",
+    textAlign: "left",
   },
-  column: {
-    width: "50%",
-  },
-  noTasksText: {
-    fontSize: 18,
-    color: "white",
-    textAlign: "center",
-    marginTop: 20,
+  eyeIcon: {
+    marginLeft: 10,
   },
 });
