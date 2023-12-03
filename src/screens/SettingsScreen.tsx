@@ -13,7 +13,8 @@ import {
 import { loginStyles } from "../theme/loginTheme";
 import { AuthContext } from "../context/AuthContext";
 import { useForm } from "../hooks/useForm";
-import { PricingCard, lightColors } from '@rneui/themed';
+import { PricingCard, lightColors } from "@rneui/themed";
+import { Background } from "../components/Background";
 export const SettingsScreen = () => {
   const { user, update } = useContext(AuthContext);
   const { email, password, userName, onChange } = useForm({
@@ -37,10 +38,8 @@ export const SettingsScreen = () => {
   };
 
   return (
-    <ImageBackground
-      source={require("../theme/pngtree-simple-lights-on-black-background-image_556934.jpg")}
-      style={styles.background}
-    >
+    <>
+      <Background />
       <View style={styles.container}>
         <Text style={[loginStyles.title, styles.title]}>Editar Perfil</Text>
 
@@ -95,7 +94,7 @@ export const SettingsScreen = () => {
           </Text>
         </TouchableOpacity>
       </View>
-    </ImageBackground>
+    </>
   );
 };
 

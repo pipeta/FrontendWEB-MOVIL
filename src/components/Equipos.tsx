@@ -29,10 +29,9 @@ interface TeamData {
 }
 
 export const Equipos = ({ proyectId }: { proyectId: string }) => {
-  
-  const {  getTeamsByProyect } = useContext(ProyectContext);
+  const { getTeamsByProyect } = useContext(ProyectContext);
   const [teams, setTeams] = useState<TeamData[]>([]);
-  
+
   const fetchData = async () => {
     try {
       const data: TeamData[] = await getTeamsByProyect(proyectId);
@@ -52,7 +51,6 @@ export const Equipos = ({ proyectId }: { proyectId: string }) => {
     }, [proyectId])
   );
 
-
   const handleTeamPress = (selectedTeam: TeamData) => {
     // navigation.navigate('EditTestScreen', {
     //   id: selectedTeam._id,
@@ -63,7 +61,7 @@ export const Equipos = ({ proyectId }: { proyectId: string }) => {
   };
 
   return (
-    <ScrollView>
+    <ScrollView style={styles.background}>
       <View style={styles.container}>
         {teams.length > 0 ? (
           teams.map((team, index) => (
@@ -71,17 +69,16 @@ export const Equipos = ({ proyectId }: { proyectId: string }) => {
               key={team._id}
               activeOpacity={0.9}
               style={styles.column}
-              onPress={() => handleTeamPress(team)} 
+              onPress={() => handleTeamPress(team)}
             >
               <View
                 style={{
                   ...styles.cardContainer,
-                  backgroundColor: "#474747",
+                  backgroundColor: "#171a1f",
                 }}
               >
                 <View>
                   <Text style={styles.title}>{team.name}</Text>
-                
                 </View>
               </View>
             </TouchableOpacity>
@@ -95,6 +92,10 @@ export const Equipos = ({ proyectId }: { proyectId: string }) => {
 };
 
 const styles = StyleSheet.create({
+  background: {
+    flex: 1,
+    
+  },
   container: {
     flexDirection: "row",
     flexWrap: "wrap",
@@ -110,31 +111,23 @@ const styles = StyleSheet.create({
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
-      height: 2,
+      height: 6,
     },
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 5,
-    alignItems: 'center',
-    justifyContent: 'center', 
-    backgroundColor: "#474747", 
-  },
-  background: {
-    flex: 1,
-    resizeMode: "cover",
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#171a1f",
   },
   title: {
     fontSize: 20,
     fontWeight: "bold",
     color: "white",
-  },
-  name: {
-    fontSize: 35,
-    fontWeight: "bold",
-    color: "white",
+    textAlign: "center",
   },
   column: {
-    width: "50%", 
+    width: "50%",
   },
   noTeamsText: {
     fontSize: 18,
@@ -143,4 +136,3 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
 });
-

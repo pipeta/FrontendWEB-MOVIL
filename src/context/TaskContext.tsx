@@ -8,9 +8,9 @@ export interface Task {
   startDate: Date;
   endDate: Date;
   state: TaskState;
-  creator: string;
-  id_responsible: string | null;
-  id_project: string;
+  emailCreator: string;
+  nameResponsible: string | null;
+  id_proyect: string;
   is_deleted: boolean;
 }
 
@@ -109,7 +109,7 @@ export const TasksProvider = ({ children }:any) => {
       console.log(resp);
 
       setTasks((prevTasks) =>
-        prevTasks.map((t) => (t.id_project === id_task ? { ...t, ...task } : t))
+        prevTasks.map((t) => (t.id_proyect === id_task ? { ...t, ...task } : t))
       );
     } catch (error) {
       console.error(error);
@@ -129,7 +129,7 @@ export const TasksProvider = ({ children }:any) => {
       const resp = await APIproyect.delete(`/task/${id_task}`, config);
       console.log(resp);
 
-      setTasks((prevTasks) => prevTasks.filter((t) => t.id_project !== id_task));
+      setTasks((prevTasks) => prevTasks.filter((t) => t.id_proyect !== id_task));
     } catch (error) {
       console.error(error);
       throw error;

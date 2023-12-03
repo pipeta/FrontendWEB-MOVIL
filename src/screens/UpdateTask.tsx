@@ -71,7 +71,7 @@ export const UpdateTask: React.FC<UpdateTaskProps> = () => {
     updateTask(taskId, {
       name,
       description,
-      id_responsible,
+      nameResponsible: id_responsible,
       startDate: startDateParse,
       endDate: endDateParse,
     });

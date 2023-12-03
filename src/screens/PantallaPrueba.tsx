@@ -1,14 +1,18 @@
-import React from "react";
-import { Text, View, StyleSheet, TouchableOpacity } from "react-native";
-import { FAB, Icon } from "@rneui/themed";
-import { StackScreenProps } from "@react-navigation/stack";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
+import React, { useState } from "react";
+import {
+  Text,
+  View,
+  StyleSheet,
+  TouchableOpacity,
+} from "react-native";
+import { FAB } from "@rneui/themed";
 import { ArrowLeftOutlined } from "@ant-design/icons";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Equipos } from "../components/Equipos";
 import { Divider } from "@rneui/base";
 import { RouteProp } from "@react-navigation/native";
+import { StackScreenProps } from "@react-navigation/stack";
 import { TeamsStackParams } from "../navigator/navigatorTypes";
-
 
 interface Props extends StackScreenProps<TeamsStackParams, "PantallaPrueba"> {
   route: RouteProp<TeamsStackParams, "PantallaPrueba">;
@@ -16,18 +20,21 @@ interface Props extends StackScreenProps<TeamsStackParams, "PantallaPrueba"> {
 
 export const PantallaPrueba = ({ route, navigation }: Props) => {
   const { top } = useSafeAreaInsets();
-  const { _id,name, description, owner } = route.params;
+  const { _id, name, description, owner } = route.params;
+  const [descriptionLines, setDescriptionLines] = useState(2);
+  const [ownerLines, setOwnerLines] = useState(2);
+
   const handleFABPress = () => {
-    navigation.navigate("AddTeamsScreen",  {_id:_id}  );
+    navigation.navigate("AddTeamsScreen", { _id: _id });
+  };
+  const handleTaskPress = () => {
+    navigation.navigate("SearchScreen", { _id: _id });
   };
 
 
- 
   return (
-    <View style={{ flex: 1 }}>
-    
+    <View style={{ flex: 1, backgroundColor: "#FFFFF0" }}>
       <View style={{ ...styles.headerContainer }}>
-       
         <TouchableOpacity
           onPress={() => navigation.goBack()}
           activeOpacity={0.8}
@@ -37,13 +44,58 @@ export const PantallaPrueba = ({ route, navigation }: Props) => {
         </TouchableOpacity>
         <Divider></Divider>
 
-       
         <Text style={{ ...styles.Name, top: top + 40 }}>{`Name: ${name}`}</Text>
-        <Text style={{ ...styles.subName, top: top + 40 }}>{`Descripción: ${description}`}</Text>
-        <Text style={{ ...styles.subName, top: top + 40 }}>{`Creador: ${owner}`}</Text>
+
+        <View style={{ width: '100%', paddingHorizontal: 10 }}>
+          <Text
+            style={{
+              ...styles.subName,
+              top: top + 60,
+            }}
+            numberOfLines={descriptionLines}
+            onTextLayout={(e) =>
+              setDescriptionLines(e.nativeEvent.lines.length)
+            }
+          >
+            {`Descripción: ${description}`}
+          </Text>
+          <Text
+            style={{
+              ...styles.subName,
+              top: top + 60,
+            }}
+            numberOfLines={ownerLines}
+            onTextLayout={(e) =>
+              setOwnerLines(e.nativeEvent.lines.length)
+            }
+          >
+            {`Creador: ${owner}`}
+          </Text>
+        </View>
+
+        <TouchableOpacity
+          activeOpacity={0.8}
+          style={{
+            ...styles.button,
+            top: top + 100,
+            alignSelf: "flex-start",
+            left: 30,
+            backgroundColor:"#5566ff"
+          }}
+          onPress={handleTaskPress}
+        >
+          <Text style={styles.buttonText}>Ver Tareas</Text>
+        </TouchableOpacity>
       </View>
 
-      <View style={{ alignItems: "center", paddingHorizontal: 10, paddingBottom: 10, paddingTop: 10 }}>
+      <View
+        style={{
+          alignItems: "center",
+          paddingHorizontal: 10,
+          paddingBottom: 10,
+          paddingTop: 10,
+        }}
+      >
         <Text style={styles.Title}>{"Equipos"}</Text>
       </View>
       <View style={{ flex: 1, paddingHorizontal: 10, paddingBottom: 10 }}>
@@ -51,7 +103,14 @@ export const PantallaPrueba = ({ route, navigation }: Props) => {
       </View>
       <Divider></Divider>
       <FAB
-        style={{ position: "absolute", bottom: 20, right: 20, backgroundColor: "#007bff" }}
+        style={{
+          position: "absolute",
+          bottom: 20,
+          right: 20,
+          // backgroundColor: "#007bff",
+        }}
+        
+        color="green"
         title={"+"}
         size="large"
         onPress={handleFABPress}
@@ -65,14 +124,26 @@ const styles = StyleSheet.create({
     height: 370,
     zIndex: 999,
     alignItems: "center",
-    backgroundColor: "#474747",
+    marginBottom: 10,
+    backgroundColor: "#171a1f",
+    borderRadius: 10,
+    borderWidth: 0,
+    borderColor: "transparent",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 5,
+    },
+    shadowOpacity: 1,
+    shadowRadius: 10,
+    elevation: 10,
   },
   backButton: {
-    flex:1,
+    flex: 1,
     position: "absolute",
     left: 20,
     color: "white",
-    alignItems:"flex-start"
+    alignItems: "flex-start",
   },
   Name: {
     color: "white",
@@ -85,12 +156,22 @@ const styles = StyleSheet.create({
     color: "white",
     fontSize: 20,
     fontWeight: "bold",
-    marginTop: 30,
+    marginTop: 10,
     alignSelf: "flex-start",
     left: 20,
   },
   Title: {
     fontSize: 40,
+    fontWeight: "bold",
+  },
+  button: {
+    backgroundColor: "#007BFF",
+    padding: 10,
+    borderRadius: 5,
+  },
+  buttonText: {
+    color: "white",
+    fontSize: 16,
     fontWeight: "bold",
   },
 });

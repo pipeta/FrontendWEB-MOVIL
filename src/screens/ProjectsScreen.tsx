@@ -6,6 +6,7 @@ import { useFocusEffect } from "@react-navigation/native";
 import { ProyectContext } from "../context/ProyectContext";
 import { StackScreenProps } from "@react-navigation/stack";
 import { TeamsStackParams } from "../navigator/navigatorTypes";
+import { Background } from "../components/Background";
 
 interface ProyectData {
   _id: string;
@@ -13,6 +14,7 @@ interface ProyectData {
   description: string;
   owner: string;
 }
+
 interface Props extends StackScreenProps<any, any> {}
 
 export const ProjectsScreen = ({ navigation }: Props) => {
@@ -42,9 +44,20 @@ export const ProjectsScreen = ({ navigation }: Props) => {
     fetchData();
   };
 
+
+  const handleTask = async (proyect: ProyectData) => {
+    navigation.navigate("PantallaPrueba", {
+      _id: proyect._id,
+      name: proyect.name,
+      description: proyect.description,
+      owner: proyect.owner,
+    });
+  };
+
+
   const handleEditProyect = async (proyect: ProyectData) => {
     navigation.navigate("PantallaPrueba", {
-      _id:proyect._id,
+      _id: proyect._id,
       name: proyect.name,
       description: proyect.description,
       owner: proyect.owner,
@@ -52,10 +65,8 @@ export const ProjectsScreen = ({ navigation }: Props) => {
   };
 
   return (
-    <ImageBackground
-      source={require("../theme/pngtree-simple-lights-on-black-background-image_556934.jpg")}
-      style={styles.background}
-    >
+    <>
+      <Background />
       <View style={styles.container}>
         <FlatList
           data={proyects}
@@ -69,6 +80,14 @@ export const ProjectsScreen = ({ navigation }: Props) => {
                 borderRadius: 10,
                 borderWidth: 0,
                 borderColor: "transparent",
+                shadowColor: "#000",
+                shadowOffset: {
+                  width: 0,
+                  height: 20,
+                },
+                shadowOpacity: 1, // Ajusta este valor según tu preferencia
+                shadowRadius: 10, // Ajusta este valor según tu preferencia
+                elevation: 10,
               }}
               title={proyect.name}
               pricingStyle={{ color: "white" }}
@@ -77,13 +96,14 @@ export const ProjectsScreen = ({ navigation }: Props) => {
               button={
                 <View style={styles.buttonContainer}>
                   <Button
-                    color="green"
+                    color="#5566ff"
+      
                     title="Ver Proyecto"
                     onPress={() => handleEditProyect(proyect)}
                   />
                   <Button
                     color="red"
-                    title="Eliminar Proyecto "
+                    title="Eliminar Proyecto"
                     onPress={() => handleRemoveProyect(proyect._id)}
                   />
                 </View>
@@ -92,7 +112,7 @@ export const ProjectsScreen = ({ navigation }: Props) => {
           )}
         />
       </View>
-    </ImageBackground>
+    </>
   );
 };
 

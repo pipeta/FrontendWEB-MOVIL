@@ -21,8 +21,9 @@ type Team2 = {
 type TeamsStackParams = {
   Sidebar: undefined;
   Testing2Screen: undefined;
-  EditTestScreen: Team; // Puedes definir los parámetros que necesites aquí
+  EditTestScreen: Team; 
   PantallaPrueba: Project;
+  SearchScreen: Team2;
   EditTeamsScreen: Team;
   AddTeamsScreen:  Team2
 

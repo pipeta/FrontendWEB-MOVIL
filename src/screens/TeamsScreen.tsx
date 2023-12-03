@@ -12,10 +12,10 @@ import { Button } from "react-native";
 import { useFocusEffect } from "@react-navigation/native";
 import { StackScreenProps } from "@react-navigation/stack";
 import { Team } from "../interfaces/teamInterfaces";
-
-
+import { Background } from "../components/Background";
 
 interface Props extends StackScreenProps<any, any> {}
+
 export const TeamsScreen = ({ navigation }: Props) => {
   const { fetchTeams, removeTeam } = useContext(TeamContext);
   const [teams, setTeams] = useState<Team[]>([]);
@@ -32,7 +32,6 @@ export const TeamsScreen = ({ navigation }: Props) => {
   useFocusEffect(
     React.useCallback(() => {
       fetchData();
-
       return () => {
         setTeams([]);
       };
@@ -43,26 +42,18 @@ export const TeamsScreen = ({ navigation }: Props) => {
     await removeTeam(uniqueCode);
     fetchData();
   };
-  const handleEditTeam = async (uniqueCode: string, _id: string) => {
-    // await removeTeam(uniqueCode);
-    // fetchData();
-    navigation.navigate("EditTeamsScreen", {
-     
-      uniqueCode: uniqueCode,
-      _id: _id
-      
-    });
 
-    console.log("hola");
+  const handleEditTeam = async (uniqueCode: string, _id: string) => {
+    navigation.navigate("EditTeamsScreen", {
+      uniqueCode: uniqueCode,
+      _id: _id,
+    });
   };
 
   return (
-    <ImageBackground
-      source={require("../theme/pngtree-simple-lights-on-black-background-image_556934.jpg")}
-      style={styles.background}
-    >
+    <>
+      <Background />
       <View style={styles.container}>
-        {/* <Text style={styles.heading}>Lista de Equipos:</Text> */}
         <FlatList
           data={teams}
           keyExtractor={(team) => team._id}
@@ -74,6 +65,14 @@ export const TeamsScreen = ({ navigation }: Props) => {
                 borderRadius: 10,
                 borderWidth: 0,
                 borderColor: "transparent",
+                shadowColor: "#000",
+                shadowOffset: {
+                  width: 0,
+                  height: 20,
+                },
+                shadowOpacity: 1, // Ajusta este valor según tu preferencia
+                shadowRadius: 10, // Ajusta este valor según tu preferencia
+                elevation: 10,
               }}
               price={team.name}
               pricingStyle={{ color: "white" }}
@@ -83,7 +82,8 @@ export const TeamsScreen = ({ navigation }: Props) => {
               button={
                 <View style={styles.buttonContainer}>
                   <Button
-                    color="green"
+                    color="#5566ff"
+          
                     title="Editar Equipo"
                     onPress={() => handleEditTeam(team.uniqueCode, team._id)}
                   />
@@ -98,7 +98,7 @@ export const TeamsScreen = ({ navigation }: Props) => {
           )}
         />
       </View>
-    </ImageBackground>
+    </>
   );
 };
 
