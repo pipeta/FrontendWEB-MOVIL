@@ -9,6 +9,7 @@ import {
   TouchableOpacity,
   Modal,
 } from "react-native";
+import { FontAwesome } from "@expo/vector-icons";
 import { loginStyles } from "../theme/loginTheme";
 import { AuthContext } from "../context/AuthContext";
 import { useForm } from "../hooks/useForm";
@@ -27,6 +28,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Member } from "../interfaces/teamInterfaces";
 import { TeamContext } from "../context/TeamContext";
 import { RolContext } from "../context/RolContext";
+import { Background } from "../components/Background";
 
 
 
@@ -57,30 +59,54 @@ const EditTeamsScreen = ({ route, navigation }: Props) => {
   const [checkedStates, setCheckedStates] = useState<{
     [key: string]: boolean;
   }>({});
-
+  console.log('estoy en el editteamsscreen')
   const { getAllRoles } = useContext(RolContext);
-  const { fetchMemberTeam, addUser, removeUser, updateTeam } = useContext(TeamContext);
+  const { fetchMemberTeam, addUser, removeUser, updateTeam,removeTeam } = useContext(TeamContext);
 
   const fetchData = async (id_team: string) => {
     try {
+      console.log('estoy en el fechdata1')
+      console.log(id_team)
+      console.log('estoy en el fechdata2')
       const data: Member[] = await fetchMemberTeam(id_team);
+      console.log(data)
       setMembers(data);
     } catch (error) {
       console.error(error);
+      console.log('estoy en el fechdata error')
     }
   };
 
   useFocusEffect(
     React.useCallback(() => {
-      fetchData(_id);
-      setNewName(name);
+      const fetchDataAndSetState = async () => {
+        try {
+          await fetchData(_id);
+          setNewName(name);
+        } catch (error) {
+          console.error(error);
+        }
+      };
+  
+      fetchDataAndSetState();
   
       return () => {
         setMembers([]);
       };
-    }, [fetchMemberTeam])
+    }, [fetchMemberTeam, _id, name])
   );
+  
+  const handleDeleteTeam = async () => {
+    try {
+      // Lógica para eliminar el equipo usando el contexto
+      await removeTeam(uniqueCode);
 
+      // Redirigir a la pantalla anterior o realizar alguna otra acción
+      navigation.goBack();
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   const buttonRol = () => {
     setModalVisible(true)
@@ -129,46 +155,44 @@ const EditTeamsScreen = ({ route, navigation }: Props) => {
         />
       )}
       right={() => (
-        <View style={{ flexDirection: "row" }}>
+        <View style={{ flexDirection: "row",marginLeft: 10, }}>
           <TouchableOpacity onPress={() => buttonRol}>
             <EditFilled
               style={{
                 fontSize: 24,
                 color: "green",
                 marginRight: 10,
-                marginLeft: 70,
+                marginLeft: 5,
               }}
             />
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => buttonDeleteUser(uniqueCode,item.email)}>
+          <TouchableOpacity onPress={() => buttonDeleteUser(uniqueCode, item.email)}>
             <DeleteOutlined style={{ fontSize: 24, color: "red" }} />
           </TouchableOpacity>
         </View>
       )}
-      style={{ borderBottomWidth: 1 }}
+      style={styles.listItem}  // Nuevo estilo para controlar el ancho de las listas
     />
   );
 
+
   return (
-    <ImageBackground
-      source={require("../theme/pngtree-simple-lights-on-black-background-image_556934.jpg")}
-      style={styles.background}
-    >
-      <TouchableOpacity
-        onPress={() => navigation.goBack()}
-        activeOpacity={0.8}
-        style={{ ...styles.backButton, top: top + 5 }}
-      >
-        <ArrowLeftOutlined />
+    <>
+      <Background />
+      <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
+        <FontAwesome name="arrow-left" size={24} color="white" />
       </TouchableOpacity>
-      <View style={{ marginBottom: 30 }}></View>
+
+      <TouchableOpacity onPress={handleDeleteTeam} style={styles.deleteButton}>
+        <FontAwesome name="trash-o" size={24} color="white" />
+      </TouchableOpacity>
 
       <View style={styles.container}>
-        <View style={styles.addContainer}>
+        <View style={styles.inputContainer}>
           <TextInput
             placeholder="Nombre de equipo"
             placeholderTextColor="rgba(255,255,255,0.7)"
-            style={[loginStyles.inputField, styles.inputField]}
+            style={styles.inputField}
             onChangeText={(value) => setNewName(value)}
             value={newName}
           />
@@ -179,15 +203,15 @@ const EditTeamsScreen = ({ route, navigation }: Props) => {
           </TouchableOpacity>
         </View>
 
-        <View style={styles.addContainer}>
+        <View style={styles.inputContainer}>
           <TextInput
             placeholder="Añadir Integrante"
             placeholderTextColor="rgba(255,255,255,0.7)"
-            style={[loginStyles.inputField, styles.inputField]}
+            style={styles.inputField}
             onChangeText={(value) => setEmailUser(value)}
             value={emailUser}
           />
-          <TouchableOpacity onPress={() => buttonAddUser(uniqueCode,emailUser)}>
+          <TouchableOpacity onPress={() => buttonAddUser(uniqueCode, emailUser)}>
             <View style={styles.addButton}>
               <Text style={styles.addButtonText}>Añadir</Text>
             </View>
@@ -219,68 +243,46 @@ const EditTeamsScreen = ({ route, navigation }: Props) => {
           </View>
         </Modal>
       </View>
-    </ImageBackground>
+    </>
   );
 };
 
 const styles = StyleSheet.create({
-  flatList: {
-    height: "auto",
-    marginBottom: 10,
-  },
-  backButton: {
-    position: "absolute",
-    left: 20,
-    color: "white",
-  },
-  background: {
-    flex: 1,
-    alignItems: "center",
-  },
   container: {
     flex: 1,
     alignItems: "center",
+    marginTop: 50,
   },
-  label: {
-    color: "white",
-  },
-  inputField: {
-    color: "white",
-  },
-  addContainer: {
+  inputContainer: {
     flexDirection: "row",
     alignItems: "center",
-    marginTop: 10,
+    marginBottom: 20,
+    marginTop: 15,
+    width:"80%"
+  },
+  inputField: {
+    flex: 1,
+    color: "white",
+    borderBottomWidth: 1,
+    borderBottomColor: "white",
   },
   addButton: {
-    backgroundColor: "green",
+    backgroundColor:"#5566ff",
     paddingVertical: 10,
     paddingHorizontal: 15,
     borderRadius: 5,
     marginLeft: 10,
+    width:100
+    
   },
   addButtonText: {
     color: "white",
+    textAlign: "center",
   },
-  submitButton: {
-    backgroundColor: "blue",
-    paddingVertical: 15,
-    paddingHorizontal: 30,
-    borderRadius: 5,
-    marginTop: 20,
-  },
-  submitButtonText: {
-    color: "white",
-  },
-  roleOption: {
-    backgroundColor: "white",
-    paddingVertical: 10,
-    paddingHorizontal: 15,
-    marginVertical: 5,
-    borderRadius: 5,
-  },
-  roleOptionText: {
-    color: "black",
+  flatList: {
+    height: "auto",
+    marginBottom: 10,
+    marginTop: 30,
   },
   modalContainer: {
     flex: 1,
@@ -304,6 +306,34 @@ const styles = StyleSheet.create({
     marginTop: 10,
     textAlign: "center",
     fontSize: 16,
+  },
+  deleteButton: {
+    position: "absolute",
+    top: 20,
+    right: 20,
+    zIndex: 1,
+  },
+  backButton: {
+    position: "absolute",
+    top: 20,
+    left: 20,
+    zIndex: 1,
+  },
+  roleOption: {
+    backgroundColor: "white",
+    paddingVertical: 10,
+    paddingHorizontal: 15,
+    marginVertical: 5,
+    borderRadius: 5,
+  },
+  roleOptionText: {
+    color: "black",
+  },
+   listItem: {
+    width: "90%",  // Ajusta el ancho del contenedor de la lista según sea necesario
+    borderBottomWidth: 1,
+    alignSelf: "center",
+    // ... (Otros estilos de las listas pueden mantenerse sin cambios)
   },
 });
 

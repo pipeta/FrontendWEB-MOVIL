@@ -1,14 +1,28 @@
+// En CreateTask.tsx
 import React, { useContext } from "react";
-import { Text, View, TouchableOpacity, TextInput, KeyboardAvoidingView, Platform } from "react-native";
+import {
+  Text,
+  View,
+  TouchableOpacity,
+  TextInput,
+  KeyboardAvoidingView,
+  Platform,
+  StyleSheet
+} from "react-native";
 import { Background } from "../components/Background";
 import { loginStyles } from "../theme/loginTheme";
 import { useForm } from "../hooks/useForm";
 import { ProyectContext } from "../context/ProyectContext";
+import { FAB } from "@rneui/themed";
+import { Divider } from "@rneui/base";
+import { FontAwesome } from "@expo/vector-icons";
 
-interface CreateTaskProps {}
+interface CreateTaskProps {
+  navigation: any;
+}
 
-export const CreateTask: React.FC<CreateTaskProps> = () => {
-//   const { createTask } = useContext(ProyectContext);
+export const CreateTask: React.FC<CreateTaskProps> = ({ navigation }) => {
+  // const { createTask } = useContext(ProyectContext);
 
   const {
     name,
@@ -22,19 +36,19 @@ export const CreateTask: React.FC<CreateTaskProps> = () => {
     name: "",
     description: "",
     responsible: "",
-    startDate: "", 
+    startDate: "",
     endDate: "",
     project: "",
   });
 
   const newTask = () => {
-  
     if (!isValidDate(startDate) || !isValidDate(endDate)) {
       alert("Ingresa fechas válidas en el formato YYYY-MM-DD.");
       return;
     }
 
-    
+    // Agrega lógica para crear la tarea
+    // createTask({ name, description, responsible, startDate, endDate, project });
   };
 
   const isValidDate = (dateString: string): boolean => {
@@ -45,7 +59,12 @@ export const CreateTask: React.FC<CreateTaskProps> = () => {
   return (
     <>
       <Background />
-
+      <TouchableOpacity
+        onPress={() => navigation.goBack()}
+        style={styles.backButton}
+      >
+        <FontAwesome name="arrow-left" size={24} color="white" />
+      </TouchableOpacity>
       <KeyboardAvoidingView
         style={{ flex: 1 }}
         behavior={Platform.OS === "ios" ? "padding" : "height"}
@@ -53,9 +72,7 @@ export const CreateTask: React.FC<CreateTaskProps> = () => {
         <View style={loginStyles.formContainer}>
           <Text style={loginStyles.title}>Crear tarea</Text>
 
-        
           <View>
-            
             <TextInput
               style={loginStyles.inputField}
               placeholder="Nombre de la tarea"
@@ -67,9 +84,7 @@ export const CreateTask: React.FC<CreateTaskProps> = () => {
             />
           </View>
 
-        
           <View>
-            
             <TextInput
               style={loginStyles.inputField}
               placeholder="Descripción de la tarea"
@@ -81,9 +96,7 @@ export const CreateTask: React.FC<CreateTaskProps> = () => {
             />
           </View>
 
-        
           <View>
-           
             <TextInput
               style={loginStyles.inputField}
               placeholder="Nombre del responsable"
@@ -96,7 +109,6 @@ export const CreateTask: React.FC<CreateTaskProps> = () => {
           </View>
 
           <View>
-          
             <TextInput
               style={loginStyles.inputField}
               placeholder="YYYY-MM-DD"
@@ -108,9 +120,7 @@ export const CreateTask: React.FC<CreateTaskProps> = () => {
             />
           </View>
 
-        
           <View>
-          
             <TextInput
               style={loginStyles.inputField}
               placeholder="YYYY-MM-DD"
@@ -122,9 +132,7 @@ export const CreateTask: React.FC<CreateTaskProps> = () => {
             />
           </View>
 
-      
           <View>
-          
             <TextInput
               style={loginStyles.inputField}
               placeholder="Nombre del proyecto"
@@ -136,7 +144,6 @@ export const CreateTask: React.FC<CreateTaskProps> = () => {
             />
           </View>
 
-     
           <View style={loginStyles.buttonContainer}>
             <TouchableOpacity
               activeOpacity={0.8}
@@ -151,3 +158,12 @@ export const CreateTask: React.FC<CreateTaskProps> = () => {
     </>
   );
 };
+
+const styles = StyleSheet.create({
+  backButton: {
+    position: "absolute",
+    top: 20,
+    left: 20,
+    zIndex: 1,
+  },
+});

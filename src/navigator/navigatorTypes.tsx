@@ -1,7 +1,6 @@
 // navigatorTypes.ts
 type Team = {
   _id: string;
-
   name: string;
   autor: string;
   uniqueCode: string;
@@ -16,6 +15,7 @@ type Team2 = {
 
 
 };
+
 enum TaskState {
   TODO = 'to_do',
   IN_PROGRESS = 'in_progress',
@@ -48,8 +48,14 @@ type TeamsStackParams = {
   EditTestScreen: Team; 
   PantallaPrueba: Project;
   SearchScreen: { _id: string }; 
-  EditTeamsScreen: Team;
+  EditTeamsScreen:  {
+    _id: string;
+    name: string;
+    autor: string;
+    uniqueCode: string;
+  };
   AddTeamsScreen: Team2;
+  
   TaskDetailScreen: {
     description: string;
     emailCreator: string;
@@ -62,6 +68,8 @@ type TeamsStackParams = {
     state: TaskState;
   };
   Task: Task;
+  CreateTask:undefined
+
 };
 
 type DrawerParams = {
@@ -70,6 +78,7 @@ type DrawerParams = {
   "Editar perfil": undefined;
   "Editar equipo": undefined;
   Testing2Screen: undefined;
+  
 };
 
 export { TeamsStackParams, DrawerParams };

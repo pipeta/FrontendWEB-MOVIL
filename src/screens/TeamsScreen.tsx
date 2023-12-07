@@ -9,17 +9,22 @@ import {
 } from "react-native";
 import { PricingCard, lightColors } from "@rneui/themed";
 import { Button } from "react-native";
-import { useFocusEffect } from "@react-navigation/native";
+import { RouteProp, useFocusEffect, useNavigation } from "@react-navigation/native";
 import { StackScreenProps } from "@react-navigation/stack";
 import { Team } from "../interfaces/teamInterfaces";
 import { Background } from "../components/Background";
+import { TeamsStackParams } from "../navigator/navigatorTypes";
 
-interface Props extends StackScreenProps<any, any> {}
+interface Props extends StackScreenProps<TeamsStackParams, "EditTeamsScreen"> {
+  route: RouteProp<TeamsStackParams, "EditTeamsScreen">;
+ 
+}
 
-export const TeamsScreen = ({ navigation }: Props) => {
+
+export const TeamsScreen = () => {
   const { fetchTeams, removeTeam } = useContext(TeamContext);
   const [teams, setTeams] = useState<Team[]>([]);
-
+  const navigation = useNavigation<StackScreenProps<TeamsStackParams, "EditTeamsScreen">["navigation"]>();
   const fetchData = async () => {
     try {
       const data: Team[] = await fetchTeams();
@@ -43,10 +48,15 @@ export const TeamsScreen = ({ navigation }: Props) => {
     fetchData();
   };
 
-  const handleEditTeam = async (uniqueCode: string, _id: string) => {
+  const handleEditTeam = async (team:Team) => {
+    console.log('---')
+    console.log(team)
+    console.log('---')
     navigation.navigate("EditTeamsScreen", {
-      uniqueCode: uniqueCode,
-      _id: _id,
+      _id: team._id,
+      name: team.name,
+      autor: team.autor,
+      uniqueCode: team.uniqueCode,
     });
   };
 
@@ -85,7 +95,8 @@ export const TeamsScreen = ({ navigation }: Props) => {
                     color="#5566ff"
           
                     title="Editar Equipo"
-                    onPress={() => handleEditTeam(team.uniqueCode, team._id)}
+                    // onPress={() => handleEditTeam(team.uniqueCode, team._id)}
+                    onPress={() => handleEditTeam(team)}
                   />
                   <Button
                     color="red"

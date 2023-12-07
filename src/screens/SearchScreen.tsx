@@ -5,10 +5,12 @@ import { StackScreenProps } from "@react-navigation/stack";
 import { TeamsStackParams } from "../navigator/navigatorTypes";
 import { RouteProp, useFocusEffect } from "@react-navigation/native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-
+import { FontAwesome } from "@expo/vector-icons";
 import { Background } from "../components/Background";
 import { Tasks } from "../components/Tasks";
 import { AuthContext } from "../context/AuthContext";
+import { FAB } from "@rneui/themed";
+import { Divider } from "@rneui/base";
 
 interface Props extends StackScreenProps<TeamsStackParams, "SearchScreen"> {
   route: RouteProp<TeamsStackParams, "SearchScreen">;
@@ -22,6 +24,11 @@ export const SearchScreen = ({ route, navigation }: Props) => {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [searchText, setSearchText] = useState<string>("");
   const [isButtonDisabled, setIsButtonDisabled] = useState<boolean>(false);
+
+  const handleFABPress = () => {
+    // navigation.navigate("AddTeamsScreen", { _id: _id });
+    navigation.navigate("CreateTask");
+  };
 
   const fetchData = async () => {
     try {
@@ -60,6 +67,12 @@ export const SearchScreen = ({ route, navigation }: Props) => {
   return (
     <>
       <Background />
+      <TouchableOpacity
+        onPress={() => navigation.goBack()}
+        style={styles.backButton}
+      >
+        <FontAwesome name="arrow-left" size={24} color="white" />
+      </TouchableOpacity>
       <View style={{ paddingTop: top, paddingHorizontal: 30 }}>
         <View style={styles.formContainer}>
           <Text style={styles.title}>Buscar por nombre de tarea</Text>
@@ -87,6 +100,20 @@ export const SearchScreen = ({ route, navigation }: Props) => {
       <View style={{ flex: 1, paddingHorizontal: 20 }}>
       <Tasks route={route} navigation={navigation} tasks={tasks} />
       </View>
+      <Divider></Divider>
+      <FAB
+        style={{
+          position: "absolute",
+          bottom: 20,
+          right: 20,
+          // backgroundColor: "#007bff",
+        }}
+        
+        color="green"
+        title={"+"}
+        size="large"
+        onPress={handleFABPress}
+      />
     </>
   );
 };
@@ -128,5 +155,11 @@ const styles = StyleSheet.create({
   filterButtonText: {
     color: "white",
     fontSize: 16,
+  },
+  backButton: {
+    position: "absolute",
+    top: 20,
+    left: 20,
+    zIndex: 1,
   },
 });

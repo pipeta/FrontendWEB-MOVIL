@@ -13,7 +13,6 @@ import ManageTeam from "../screens/ManageTeam";
 import Home from "../screens/Home";
 import TeamsScreen from "../screens/TeamsScreen";
 
-
 // import { TeamsNavigator } from "./TeamsNavigator";
 
 import { EditTestScreen } from "../screens/EditTestScreen";
@@ -36,9 +35,6 @@ import { Tasks } from "../components/Tasks";
 import { SearchScreen } from "../screens/SearchScreen";
 // import { ViewTasks } from "../screens/ViewTasksScreen";
 
-
-
-
 const Stack = createStackNavigator<TeamsStackParams>();
 const Drawer = createDrawerNavigator();
 
@@ -55,38 +51,20 @@ const Sidebar = () => {
         },
       }}
     >
-      {/* <Drawer.Screen name="AddTeamsScreen" component={AddTeamsScreen} /> */}
-     
-
-      {/* <Drawer.Screen name="Ver Tarea" component={ViewTasks} /> */}
-      
-
       <Drawer.Screen name="Eliminar Tarea" component={DeleteTaskScreen} />
-      <Drawer.Screen name="Crear Equipo" component={CreateTeamScreen} />
-
-
       <Drawer.Screen name="Editar Tarea" component={UpdateTask} />
 
-      <Drawer.Screen name="Crear Tarea" component={CreateTask} />
-
-      
+      <Drawer.Screen name="Crear Equipo" component={CreateTeamScreen} />
       <Drawer.Screen name="Ver Equipos" component={TeamsScreen} />
-      
-      {/* <Drawer.Screen name="Informacion Proyecto" component={PantallaPrueba} /> */}
+
       <Drawer.Screen name="Crear Proyecto" component={CreateProjectScreen} />
       <Drawer.Screen name="Ver Proyectos" component={ProjectsScreen} />
-     
+
       <Drawer.Screen name="Home" component={Home}></Drawer.Screen>
       <Drawer.Screen name="Editar perfil" component={SettingsScreen} />
-      
-
-      {/* <Drawer.Screen name="Editar Equipo" component={PantallaPrueba2} /> */}
-
     </Drawer.Navigator>
   );
 };
-
-
 
 export const Navigator = () => {
   const { status } = useContext(AuthContext);
@@ -95,13 +73,13 @@ export const Navigator = () => {
   // if (status === "checking") return <Sidebar />;
   return (
     <Stack.Navigator
-    screenOptions={{
-      headerShown: false,
+      screenOptions={{
+        headerShown: false,
         cardStyle: {
           backgroundColor: "white",
         },
       }}
-      >
+    >
       {status !== "authenticated" ? (
         <>
           <Stack.Screen name="LoginScreen" component={LoginScreen} />
@@ -123,26 +101,20 @@ export const Navigator = () => {
               },
               headerStyle: {
                 backgroundColor: "#1f1f1f",
-              }, 
+              },
             }}
           />
           <Stack.Screen name="Ver Proyectos" component={ProjectsScreen} />
-          <Stack.Screen
-            name="EditTestScreen"
-          
-            component={EditTestScreen}
-          />
-          
-          <Stack.Screen name="PantallaPrueba" component={PantallaPrueba} />
-        
+          <Stack.Screen name="EditTestScreen" component={EditTestScreen} />
           <Stack.Screen name="EditTeamsScreen" component={EditTeamsScreen} />
+          <Stack.Screen name="PantallaPrueba" component={PantallaPrueba} />
+         
+          
           <Stack.Screen name="AddTeamsScreen" component={AddTeamsScreen} />
           <Stack.Screen name="SearchScreen" component={SearchScreen} />
-          
 
+          <Stack.Screen name="CreateTask" component={CreateTask} />
           <Stack.Screen name="TaskDetailScreen" component={TaskDetailScreen} />
-
-
         </>
       )}
     </Stack.Navigator>

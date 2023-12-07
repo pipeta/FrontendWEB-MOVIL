@@ -5,41 +5,70 @@ import {
   TouchableOpacity,
   StyleSheet,
   Dimensions,
-  ImageBackground,
   ScrollView,
 } from "react-native";
-import { useNavigation } from "@react-navigation/native"; // Importa useNavigation
+import { RouteProp, useNavigation } from "@react-navigation/native";
 import { TeamContext } from "../context/TeamContext";
 import { useFocusEffect } from "@react-navigation/native";
 import { StackScreenProps } from "@react-navigation/stack";
 import { ProyectContext } from "../context/ProyectContext";
-// import { TeamsStackParams } from "../navigator/TeamsNavigator";
+import { TeamsStackParams } from "../navigator/navigatorTypes";
+import { Team } from "../interfaces/teamInterfaces";
+
+
 const windowWidth = Dimensions.get("window").width;
 
-interface TeamData {
-  _id: string;
-  name: string;
-  autor: string;
-  uniqueCode: string;
-  listUser: {
-    userName: string;
-    email: string;
+// interface TeamData {
+//   _id: string;
+//   name: string;
+//   autor: string;
+//   uniqueCode: string;
+//   listUser: {
+//     userName: string;
+//     email: string;
+//     _id: string;
+//   }[];
+// }
+
+
+
+type RouteParams = {
+  EditTeamsScreen: {
     _id: string;
-  }[];
+    name: string;
+    autor: string;
+    uniqueCode: string;
+  };
+};
+
+interface Props extends StackScreenProps<TeamsStackParams, "EditTeamsScreen"> {
+  route: RouteProp<TeamsStackParams, "EditTeamsScreen">;
+  navigation: StackScreenProps<TeamsStackParams, "EditTeamsScreen">["navigation"];
 }
+
+
 
 export const Equipos = ({ proyectId }: { proyectId: string }) => {
   const { getTeamsByProyect } = useContext(ProyectContext);
-  const [teams, setTeams] = useState<TeamData[]>([]);
+  const { fetchMemberTeam } = useContext(TeamContext);
+  const [teams, setTeams] = useState<Team[]>();
+  const [teams2, setTeams2] = useState<Team[]>();
+  const navigation = useNavigation<StackScreenProps<TeamsStackParams, "EditTeamsScreen">["navigation"]>();
+  
+
+
+  const { fetchTeams, removeTeam } = useContext(TeamContext);
+  
 
   const fetchData = async () => {
     try {
-      const data: TeamData[] = await getTeamsByProyect(proyectId);
+      const data: Team[] = await getTeamsByProyect(proyectId);
       setTeams(data);
     } catch (error) {
       console.error(error);
     }
   };
+  
 
   useFocusEffect(
     React.useCallback(() => {
@@ -51,19 +80,33 @@ export const Equipos = ({ proyectId }: { proyectId: string }) => {
     }, [proyectId])
   );
 
-  const handleTeamPress = (selectedTeam: TeamData) => {
-    // navigation.navigate('EditTestScreen', {
-    //   id: selectedTeam._id,
-    //   name: selectedTeam.name,
-    //   autor: selectedTeam.autor,
-    //   uniqueCode: selectedTeam.uniqueCode,
-    // });
-  };
+ 
 
+  const handleTeamPress = async (selectedTeam: Team) => {
+    const data2: Team[] = await fetchTeams();
+  
+    // Buscar el equipo en data2 por el nombre
+    const matchingTeam = data2.find(team => team.name === selectedTeam.name);
+    console.log('----')
+    console.log(matchingTeam)
+    console.log('----')
+    if (matchingTeam) {
+      navigation.navigate("EditTeamsScreen", {
+        _id: matchingTeam._id,
+        name: matchingTeam.name,
+        autor: matchingTeam.autor,
+        uniqueCode: matchingTeam.uniqueCode,
+      });
+    } else {
+      console.log("No se encontró el equipo en data2");
+    }
+  };
+  
+  
   return (
     <ScrollView style={styles.background}>
       <View style={styles.container}>
-        {teams.length > 0 ? (
+        {teams && teams.length > 0 ? (
           teams.map((team, index) => (
             <TouchableOpacity
               key={team._id}
@@ -90,6 +133,9 @@ export const Equipos = ({ proyectId }: { proyectId: string }) => {
     </ScrollView>
   );
 };
+
+
+
 
 const styles = StyleSheet.create({
   background: {

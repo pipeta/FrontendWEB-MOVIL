@@ -104,9 +104,12 @@ export const TasksProvider = ({ children }:any) => {
           Authorization: `Bearer ${accessToken}`,
         },
       };
-
+      console.log('updateTask recibió taskId en el contexto:', id_task);
+      console.log(task)
       const resp = await APIproyect.patch(`/task/${id_task}`, task, config);
+      console.log('--------')
       console.log(resp);
+      console.log('--------')
 
       setTasks((prevTasks) =>
         prevTasks.map((t) => (t.id_proyect === id_task ? { ...t, ...task } : t))
@@ -127,8 +130,9 @@ export const TasksProvider = ({ children }:any) => {
       };
       console.log('deleteTask recibió taskId en el contexto:', id_task);
       const resp = await APIproyect.delete(`/task/${id_task}`, config);
+      console.log('--------')
       console.log(resp);
-
+      console.log('--------')
       setTasks((prevTasks) => prevTasks.filter((t) => t.id_proyect !== id_task));
     } catch (error) {
       console.error(error);
