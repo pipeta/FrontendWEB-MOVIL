@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -6,15 +6,14 @@ import {
   TextInput,
   TouchableOpacity,
   Alert,
-  Platform,
-  ImageBackground,
   Keyboard,
 } from "react-native";
 import { loginStyles } from "../theme/loginTheme";
 import { AuthContext } from "../context/AuthContext";
 import { useForm } from "../hooks/useForm";
-import { PricingCard, lightColors } from "@rneui/themed";
 import { Background } from "../components/Background";
+import { LoadingScreen } from "../screens/LoadingScreen";
+
 export const SettingsScreen = () => {
   const { user, update } = useContext(AuthContext);
   const { email, password, userName, onChange } = useForm({
@@ -22,18 +21,26 @@ export const SettingsScreen = () => {
     password: "",
     userName: user?.userName || "",
   });
+  const [isLoading, setIsLoading] = useState(false);
 
-  const onSaveChanges = () => {
+  const onSaveChanges = async () => {
     Keyboard.dismiss();
 
     if (password.trim() === "") {
       Alert.alert("Error", "La contraseña no puede estar vacía");
     } else {
-      update({
-        email,
-        password,
-        userName,
-      });
+      try {
+        setIsLoading(true);
+        await update({
+          email,
+          password,
+          userName,
+        });
+      } catch (error) {
+        console.error("Error updating profile:", error);
+      } finally {
+        setIsLoading(false);
+      }
     }
   };
 
@@ -93,6 +100,8 @@ export const SettingsScreen = () => {
             Editar
           </Text>
         </TouchableOpacity>
+
+        {isLoading && <LoadingScreen />}
       </View>
     </>
   );

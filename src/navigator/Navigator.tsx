@@ -15,7 +15,7 @@ import TeamsScreen from "../screens/TeamsScreen";
 
 // import { TeamsNavigator } from "./TeamsNavigator";
 
-import { EditTestScreen } from "../screens/EditTestScreen";
+
 import { TeamsStackParams } from "./navigatorTypes";
 import { PantallaPrueba } from "../screens/PantallaPrueba";
 import PantallaPrueba2 from "../components/PantallaPrueba2";
@@ -33,6 +33,7 @@ import { CreateTeamScreen } from "../screens/CreateTeamScreen";
 import TaskDetailScreen from "../screens/TasksDetailScreen";
 import { Tasks } from "../components/Tasks";
 import { SearchScreen } from "../screens/SearchScreen";
+import EditTestScreen from "../screens/EditTestScreen";
 // import { ViewTasks } from "../screens/ViewTasksScreen";
 
 const Stack = createStackNavigator<TeamsStackParams>();

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import {
   Text,
   View,
@@ -13,6 +13,9 @@ import { Divider } from "@rneui/base";
 import { RouteProp } from "@react-navigation/native";
 import { StackScreenProps } from "@react-navigation/stack";
 import { TeamsStackParams } from "../navigator/navigatorTypes";
+import { Team } from "../interfaces/teamInterfaces";
+import { LoadingScreen } from "../screens/LoadingScreen";
+import { ProyectContext } from "../context/ProyectContext";
 
 interface Props extends StackScreenProps<TeamsStackParams, "PantallaPrueba"> {
   route: RouteProp<TeamsStackParams, "PantallaPrueba">;
@@ -23,7 +26,9 @@ export const PantallaPrueba = ({ route, navigation }: Props) => {
   const { _id, name, description, owner } = route.params;
   const [descriptionLines, setDescriptionLines] = useState(2);
   const [ownerLines, setOwnerLines] = useState(2);
-
+  const [isLoading, setIsLoading] = useState(true);
+  const [teams, setTeams] = useState<Team[]>([]);
+  const { getTeamsByProyect } = useContext(ProyectContext);
   const handleFABPress = () => {
     navigation.navigate("AddTeamsScreen", { _id: _id });
   };
@@ -31,6 +36,24 @@ export const PantallaPrueba = ({ route, navigation }: Props) => {
     navigation.navigate("SearchScreen", { _id: _id });
   };
 
+  const fetchData = async () => {
+    try {
+      setIsLoading(true);
+      const data: Team[] = await getTeamsByProyect(_id);
+      setTeams(data);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+    return () => {
+      setTeams([]);
+    };
+  }, [_id]);
 
   return (
     <View style={{ flex: 1, backgroundColor: "#FFFFF0" }}>
@@ -99,7 +122,13 @@ export const PantallaPrueba = ({ route, navigation }: Props) => {
         <Text style={styles.Title}>{"Equipos"}</Text>
       </View>
       <View style={{ flex: 1, paddingHorizontal: 10, paddingBottom: 10 }}>
-        <Equipos proyectId={_id} />
+        {isLoading ? (
+          <LoadingScreen />
+        ) : teams.length === 0 ? (
+          <Text style={styles.noTeamsText}>No hay equipos disponibles.</Text>
+        ) : (
+          <Equipos proyectId={_id} />
+        )}
       </View>
       <Divider></Divider>
       <FAB
@@ -173,5 +202,11 @@ const styles = StyleSheet.create({
     color: "white",
     fontSize: 16,
     fontWeight: "bold",
+  },
+  noTeamsText: {
+    fontSize: 18,
+    color: "black", // Puedes cambiar el color según tus preferencias
+    textAlign: "center",
+    marginTop: 20,
   },
 });

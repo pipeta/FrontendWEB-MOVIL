@@ -6,6 +6,7 @@ import {
   StyleSheet,
   Dimensions,
   ScrollView,
+  ActivityIndicator,
 } from "react-native";
 import { RouteProp, useNavigation } from "@react-navigation/native";
 import { TeamContext } from "../context/TeamContext";
@@ -14,23 +15,9 @@ import { StackScreenProps } from "@react-navigation/stack";
 import { ProyectContext } from "../context/ProyectContext";
 import { TeamsStackParams } from "../navigator/navigatorTypes";
 import { Team } from "../interfaces/teamInterfaces";
-
+import { LoadingScreen } from "../screens/LoadingScreen";
 
 const windowWidth = Dimensions.get("window").width;
-
-// interface TeamData {
-//   _id: string;
-//   name: string;
-//   autor: string;
-//   uniqueCode: string;
-//   listUser: {
-//     userName: string;
-//     email: string;
-//     _id: string;
-//   }[];
-// }
-
-
 
 type RouteParams = {
   EditTeamsScreen: {
@@ -46,50 +33,42 @@ interface Props extends StackScreenProps<TeamsStackParams, "EditTeamsScreen"> {
   navigation: StackScreenProps<TeamsStackParams, "EditTeamsScreen">["navigation"];
 }
 
-
-
 export const Equipos = ({ proyectId }: { proyectId: string }) => {
   const { getTeamsByProyect } = useContext(ProyectContext);
   const { fetchMemberTeam } = useContext(TeamContext);
   const [teams, setTeams] = useState<Team[]>();
-  const [teams2, setTeams2] = useState<Team[]>();
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   const navigation = useNavigation<StackScreenProps<TeamsStackParams, "EditTeamsScreen">["navigation"]>();
-  
-
 
   const { fetchTeams, removeTeam } = useContext(TeamContext);
-  
 
   const fetchData = async () => {
     try {
+      setIsLoading(true);
       const data: Team[] = await getTeamsByProyect(proyectId);
       setTeams(data);
     } catch (error) {
       console.error(error);
+    } finally {
+      setIsLoading(false);
     }
   };
-  
 
   useFocusEffect(
     React.useCallback(() => {
       fetchData();
-
       return () => {
         setTeams([]);
       };
     }, [proyectId])
   );
 
- 
-
   const handleTeamPress = async (selectedTeam: Team) => {
     const data2: Team[] = await fetchTeams();
-  
+
     // Buscar el equipo en data2 por el nombre
-    const matchingTeam = data2.find(team => team.name === selectedTeam.name);
-    console.log('----')
-    console.log(matchingTeam)
-    console.log('----')
+    const matchingTeam = data2.find((team) => team.name === selectedTeam.name);
+
     if (matchingTeam) {
       navigation.navigate("EditTeamsScreen", {
         _id: matchingTeam._id,
@@ -101,12 +80,15 @@ export const Equipos = ({ proyectId }: { proyectId: string }) => {
       console.log("No se encontró el equipo en data2");
     }
   };
-  
-  
+
   return (
     <ScrollView style={styles.background}>
       <View style={styles.container}>
-        {teams && teams.length > 0 ? (
+        {isLoading ? (
+          <View style={styles.centeredContainer}>
+            <LoadingScreen />
+          </View>
+        ) : teams && teams.length > 0 ? (
           teams.map((team, index) => (
             <TouchableOpacity
               key={team._id}
@@ -127,20 +109,18 @@ export const Equipos = ({ proyectId }: { proyectId: string }) => {
             </TouchableOpacity>
           ))
         ) : (
-          <Text style={styles.noTeamsText}>No hay equipos disponibles.</Text>
+          <View style={styles.centeredContainer}>
+            <Text style={styles.noTeamsText}>No hay equipos disponibles.</Text>
+          </View>
         )}
       </View>
     </ScrollView>
   );
 };
 
-
-
-
 const styles = StyleSheet.create({
   background: {
     flex: 1,
-    
   },
   container: {
     flexDirection: "row",
@@ -180,5 +160,10 @@ const styles = StyleSheet.create({
     color: "white",
     textAlign: "center",
     marginTop: 20,
+  },
+  centeredContainer: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
   },
 });

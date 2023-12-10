@@ -29,6 +29,7 @@ import { Member } from "../interfaces/teamInterfaces";
 import { TeamContext } from "../context/TeamContext";
 import { RolContext } from "../context/RolContext";
 import { Background } from "../components/Background";
+import { ProyectContext } from "../context/ProyectContext";
 
 
 
@@ -62,12 +63,15 @@ const EditTeamsScreen = ({ route, navigation }: Props) => {
   console.log('estoy en el editteamsscreen')
   const { getAllRoles } = useContext(RolContext);
   const { fetchMemberTeam, addUser, removeUser, updateTeam,removeTeam } = useContext(TeamContext);
-
+  const {deleteTeamFromProyect}=useContext(ProyectContext)
   const fetchData = async (id_team: string) => {
     try {
       console.log('estoy en el fechdata1')
       console.log(id_team)
       console.log('estoy en el fechdata2')
+      console.log('test')
+      console.log(_id)
+      console.log('tes2')
       const data: Member[] = await fetchMemberTeam(id_team);
       console.log(data)
       setMembers(data);
@@ -98,11 +102,12 @@ const EditTeamsScreen = ({ route, navigation }: Props) => {
   
   const handleDeleteTeam = async () => {
     try {
-      // Lógica para eliminar el equipo usando el contexto
-      await removeTeam(uniqueCode);
-
-      // Redirigir a la pantalla anterior o realizar alguna otra acción
-      navigation.goBack();
+      
+      await deleteTeamFromProyect(_id);
+      console.log('asddasdasdasd')
+      console.log(navigation.goBack())
+      console.log('asddasdasdasd')
+       navigation.goBack();
     } catch (error) {
       console.error(error);
     }

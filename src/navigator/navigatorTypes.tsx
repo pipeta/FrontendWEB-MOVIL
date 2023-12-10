@@ -45,7 +45,12 @@ type Project = {
 type TeamsStackParams = {
   Sidebar: undefined;
   Testing2Screen: undefined;
-  EditTestScreen: Team; 
+  EditTestScreen:  {
+    _id: string;
+    name: string;
+    autor: string;
+    uniqueCode: string;
+  };
   PantallaPrueba: Project;
   SearchScreen: { _id: string }; 
   EditTeamsScreen:  {
@@ -54,6 +59,7 @@ type TeamsStackParams = {
     autor: string;
     uniqueCode: string;
   };
+  
   AddTeamsScreen: Team2;
   
   TaskDetailScreen: {
@@ -78,6 +84,8 @@ type DrawerParams = {
   "Editar perfil": undefined;
   "Editar equipo": undefined;
   Testing2Screen: undefined;
+  "Ver Equipos": undefined;
+  
   
 };
 

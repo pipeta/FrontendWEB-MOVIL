@@ -5,11 +5,15 @@ import {
   FlatList,
   Text,
   StyleSheet,
-  ImageBackground,
+  Button,
+  ActivityIndicator,
 } from "react-native";
-import { PricingCard, lightColors } from "@rneui/themed";
-import { Button } from "react-native";
-import { RouteProp, useFocusEffect, useNavigation } from "@react-navigation/native";
+import { PricingCard } from "@rneui/themed";
+import {
+  RouteProp,
+  useFocusEffect,
+  useNavigation,
+} from "@react-navigation/native";
 import { StackScreenProps } from "@react-navigation/stack";
 import { Team } from "../interfaces/teamInterfaces";
 import { Background } from "../components/Background";
@@ -17,20 +21,23 @@ import { TeamsStackParams } from "../navigator/navigatorTypes";
 
 interface Props extends StackScreenProps<TeamsStackParams, "EditTeamsScreen"> {
   route: RouteProp<TeamsStackParams, "EditTeamsScreen">;
- 
 }
-
 
 export const TeamsScreen = () => {
   const { fetchTeams, removeTeam } = useContext(TeamContext);
   const [teams, setTeams] = useState<Team[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   const navigation = useNavigation<StackScreenProps<TeamsStackParams, "EditTeamsScreen">["navigation"]>();
+
   const fetchData = async () => {
     try {
+      setIsLoading(true);
       const data: Team[] = await fetchTeams();
       setTeams(data);
     } catch (error) {
       console.error(error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -48,10 +55,7 @@ export const TeamsScreen = () => {
     fetchData();
   };
 
-  const handleEditTeam = async (team:Team) => {
-    console.log('---')
-    console.log(team)
-    console.log('---')
+  const handleEditTeam = async (team: Team) => {
     navigation.navigate("EditTeamsScreen", {
       _id: team._id,
       name: team.name,
@@ -64,50 +68,43 @@ export const TeamsScreen = () => {
     <>
       <Background />
       <View style={styles.container}>
-        <FlatList
-          data={teams}
-          keyExtractor={(team) => team._id}
-          renderItem={({ item: team }) => (
-            <PricingCard
-              color={"white"}
-              containerStyle={{
-                backgroundColor: "#474747",
-                borderRadius: 10,
-                borderWidth: 0,
-                borderColor: "transparent",
-                shadowColor: "#000",
-                shadowOffset: {
-                  width: 0,
-                  height: 20,
-                },
-                shadowOpacity: 1, // Ajusta este valor según tu preferencia
-                shadowRadius: 10, // Ajusta este valor según tu preferencia
-                elevation: 10,
-              }}
-              price={team.name}
-              pricingStyle={{ color: "white" }}
-              title={`Autor: ${team.autor}`}
-              info={[`Código Único: ${team.uniqueCode}`]}
-              infoStyle={{ color: "white" }}
-              button={
-                <View style={styles.buttonContainer}>
-                  <Button
-                    color="#5566ff"
-          
-                    title="Editar Equipo"
-                    // onPress={() => handleEditTeam(team.uniqueCode, team._id)}
-                    onPress={() => handleEditTeam(team)}
-                  />
-                  <Button
-                    color="red"
-                    title="Eliminar Equipo"
-                    onPress={() => handleRemoveTeam(team.uniqueCode)}
-                  />
-                </View>
-              }
-            />
-          )}
-        />
+        {isLoading ? (
+          <View style={styles.loadingContainer}>
+            <ActivityIndicator size="large" color="#0000ff" />
+          </View>
+        ) : teams.length === 0 ? (
+          <Text style={styles.message}>No hay equipos disponibles</Text>
+        ) : (
+          <FlatList
+            data={teams}
+            keyExtractor={(team) => team._id}
+            renderItem={({ item: team }) => (
+              <PricingCard
+                color={"white"}
+                containerStyle={styles.cardContainer}
+                price={team.name}
+                pricingStyle={{ color: "white" }}
+                title={`Autor: ${team.autor}`}
+                info={[`Código Único: ${team.uniqueCode}`]}
+                infoStyle={{ color: "white" }}
+                button={
+                  <View style={styles.buttonContainer}>
+                    <Button
+                      color="#5566ff"
+                      title="Editar Equipo"
+                      onPress={() => handleEditTeam(team)}
+                    />
+                    <Button
+                      color="red"
+                      title="Eliminar Equipo"
+                      onPress={() => handleRemoveTeam(team.uniqueCode)}
+                    />
+                  </View>
+                }
+              />
+            )}
+          />
+        )}
       </View>
     </>
   );
@@ -118,16 +115,30 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 16,
   },
-  heading: {
-    fontSize: 24,
-    fontWeight: "bold",
-    marginBottom: 16,
-    color: "white",
-  },
-  background: {
+  loadingContainer: {
     flex: 1,
-    resizeMode: "cover",
     justifyContent: "center",
+    alignItems: "center",
+  },
+  message: {
+    fontSize: 18,
+    color: "white",
+    textAlign: "center",
+    marginTop: 20,
+  },
+  cardContainer: {
+    backgroundColor: "#474747",
+    borderRadius: 10,
+    borderWidth: 0,
+    borderColor: "transparent",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 20,
+    },
+    shadowOpacity: 1,
+    elevation: 10,
+    marginBottom: 20,
   },
   buttonContainer: {
     flexDirection: "row",

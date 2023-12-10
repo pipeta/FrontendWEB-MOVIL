@@ -23,21 +23,19 @@ export const SearchScreen = ({ route, navigation }: Props) => {
   const { user } = useContext(AuthContext);
   const [tasks, setTasks] = useState<Task[]>([]);
   const [searchText, setSearchText] = useState<string>("");
-  const [isButtonDisabled, setIsButtonDisabled] = useState<boolean>(false);
+  const [showMyTasks, setShowMyTasks] = useState<boolean>(false);
 
   const handleFABPress = () => {
-    // navigation.navigate("AddTeamsScreen", { _id: _id });
     navigation.navigate("CreateTask");
   };
 
   const fetchData = async () => {
     try {
       if (!user) {
-        setIsButtonDisabled(true);
         return;
       }
 
-      const data: Task[] = await fetchTasks(teamId);
+      let data: Task[] = await fetchTasks(teamId);
 
       const formattedTasks = data.map((task) => ({
         ...task,
@@ -45,11 +43,17 @@ export const SearchScreen = ({ route, navigation }: Props) => {
         endDate: new Date(task.endDate),
       }));
 
-      const filteredTasks = formattedTasks.filter((task) =>
+      if (showMyTasks) {
+        // Si "Solo Mis Tareas" está habilitado, filtramos por el creador de la tarea
+        data = formattedTasks.filter((task) => task.emailCreator === user.email);
+      }
+
+      // Filtrar por nombre (searchText)
+      data = data.filter((task) =>
         task.name.toLowerCase().includes(searchText.toLowerCase())
       );
 
-      setTasks(filteredTasks);
+      setTasks(data);
     } catch (error) {
       console.error(error);
     }
@@ -61,8 +65,13 @@ export const SearchScreen = ({ route, navigation }: Props) => {
       return () => {
         setTasks([]);
       };
-    }, [teamId, searchText, user])
+    }, [teamId, user, showMyTasks])
   );
+
+  // Manejar cambios en searchText
+  useEffect(() => {
+    fetchData();
+  }, [searchText]);
 
   return (
     <>
@@ -84,21 +93,18 @@ export const SearchScreen = ({ route, navigation }: Props) => {
           <TouchableOpacity
             style={[
               styles.filterButton,
-              { backgroundColor: isButtonDisabled ? "gray" : "rgba(255, 255, 255, 0.2)" },
+              { backgroundColor: showMyTasks ? "gray" : "rgba(255, 255, 255, 0.2)" },
             ]}
-            onPress={() => {
-              if (!isButtonDisabled) {
-                setSearchText(user?.email || "");
-              }
-            }}
-            disabled={isButtonDisabled}
+            onPress={() => setShowMyTasks(!showMyTasks)}
           >
-            <Text style={styles.filterButtonText}>Solo Mis Tareas</Text>
+            <Text style={styles.filterButtonText}>
+              {showMyTasks ? "Mostrar Todas las Tareas" : "Solo Mis Tareas"}
+            </Text>
           </TouchableOpacity>
         </View>
       </View>
       <View style={{ flex: 1, paddingHorizontal: 20 }}>
-      <Tasks route={route} navigation={navigation} tasks={tasks} />
+        <Tasks route={route} navigation={navigation} tasks={tasks} />
       </View>
       <Divider></Divider>
       <FAB
@@ -106,9 +112,7 @@ export const SearchScreen = ({ route, navigation }: Props) => {
           position: "absolute",
           bottom: 20,
           right: 20,
-          // backgroundColor: "#007bff",
         }}
-        
         color="green"
         title={"+"}
         size="large"
