@@ -5,8 +5,8 @@ import APIproyect from "../api/nestApiProyect";
 export interface Task {
   name: string;
   description: string;
-  startDate: Date;
-  endDate: Date;
+  startDate: string;
+  endDate: string;
   state: TaskState;
   emailCreator: string;
   nameResponsible: string | null;
