@@ -28,12 +28,30 @@ export const PantallaPrueba = ({ route, navigation }: Props) => {
   const [ownerLines, setOwnerLines] = useState(2);
   const [isLoading, setIsLoading] = useState(true);
   const [teams, setTeams] = useState<Team[]>([]);
+  const [isFABLoading, setIsFABLoading] = useState(false);
+  const [isTaskButtonLoading, setIsTaskButtonLoading] = useState(false);
   const { getTeamsByProyect } = useContext(ProyectContext);
-  const handleFABPress = () => {
-    navigation.navigate("AddTeamsScreen", { _id: _id });
+
+  const handleFABPress = async () => {
+    try {
+      setIsFABLoading(true);
+      await navigation.navigate("AddTeamsScreen", { _id: _id });
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsFABLoading(false);
+    }
   };
-  const handleTaskPress = () => {
-    navigation.navigate("SearchScreen", { _id: _id });
+
+  const handleTaskPress = async () => {
+    try {
+      setIsTaskButtonLoading(true);
+      await navigation.navigate("SearchScreen", { _id: _id });
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsTaskButtonLoading(false);
+    }
   };
 
   const fetchData = async () => {
@@ -106,8 +124,11 @@ export const PantallaPrueba = ({ route, navigation }: Props) => {
             backgroundColor:"#5566ff"
           }}
           onPress={handleTaskPress}
+          disabled={isTaskButtonLoading}
         >
-          <Text style={styles.buttonText}>Ver Tareas</Text>
+          <Text style={styles.buttonText}>
+            {isTaskButtonLoading ? "Cargando..." : "Ver Tareas"}
+          </Text>
         </TouchableOpacity>
       </View>
 
@@ -138,11 +159,11 @@ export const PantallaPrueba = ({ route, navigation }: Props) => {
           right: 20,
           // backgroundColor: "#007bff",
         }}
-        
         color="green"
-        title={"+"}
+        title={isFABLoading ? "Cargando..." : "+"}
         size="large"
         onPress={handleFABPress}
+        disabled={isFABLoading}
       />
     </View>
   );

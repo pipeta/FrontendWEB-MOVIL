@@ -19,8 +19,8 @@ interface Props extends StackScreenProps<TeamsStackParams, "TaskDetailScreen"> {
 }
 
 const TaskDetailScreen: React.FC<Props> = ({ route, navigation }) => {
-  const startDate = route.params.startDate ? new Date(route.params.startDate).toISOString() : '';
-  const endDate = route.params.endDate ? new Date(route.params.endDate).toISOString() : '';
+  const startDate = route.params.startDate;
+  const endDate = route.params.endDate;
 
   const task: Task = {
     ...route.params,

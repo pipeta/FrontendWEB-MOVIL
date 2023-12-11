@@ -65,12 +65,12 @@ type TeamsStackParams = {
   TaskDetailScreen: {
     description: string;
     emailCreator: string;
-    endDate: Date;
+    endDate: string;
     id_proyect: string;
     is_deleted: boolean;
     name: string;
     nameResponsible: string | null;
-    startDate: Date;
+    startDate: string;
     state: TaskState;
   };
   Task: Task;

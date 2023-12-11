@@ -39,8 +39,8 @@ export const SearchScreen = ({ route, navigation }: Props) => {
 
       const formattedTasks = data.map((task) => ({
         ...task,
-        startDate: new Date(task.startDate),
-        endDate: new Date(task.endDate),
+        startDate: task.startDate,
+        endDate: task.endDate,
       }));
 
       if (showMyTasks) {

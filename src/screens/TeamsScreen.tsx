@@ -27,6 +27,7 @@ export const TeamsScreen = () => {
   const { fetchTeams, removeTeam } = useContext(TeamContext);
   const [teams, setTeams] = useState<Team[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [isButtonLoading, setIsButtonLoading] = useState<boolean>(false);
   const navigation = useNavigation<StackScreenProps<TeamsStackParams, "EditTeamsScreen">["navigation"]>();
 
   const fetchData = async () => {
@@ -51,8 +52,15 @@ export const TeamsScreen = () => {
   );
 
   const handleRemoveTeam = async (uniqueCode: string) => {
-    await removeTeam(uniqueCode);
-    fetchData();
+    try {
+      setIsButtonLoading(true);
+      await removeTeam(uniqueCode);
+      fetchData();
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsButtonLoading(false);
+    }
   };
 
   const handleEditTeam = async (team: Team) => {
@@ -91,13 +99,15 @@ export const TeamsScreen = () => {
                   <View style={styles.buttonContainer}>
                     <Button
                       color="#5566ff"
-                      title="Editar Equipo"
+                      title={isButtonLoading ? "Cargando..." : "Editar Equipo"}
                       onPress={() => handleEditTeam(team)}
+                      disabled={isButtonLoading}
                     />
                     <Button
                       color="red"
-                      title="Eliminar Equipo"
+                      title={isButtonLoading ? "Cargando..." : "Eliminar Equipo"}
                       onPress={() => handleRemoveTeam(team.uniqueCode)}
+                      disabled={isButtonLoading}
                     />
                   </View>
                 }
