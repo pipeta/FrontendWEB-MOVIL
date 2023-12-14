@@ -34,6 +34,7 @@ import TaskDetailScreen from "../screens/TasksDetailScreen";
 import { Tasks } from "../components/Tasks";
 import { SearchScreen } from "../screens/SearchScreen";
 import EditTestScreen from "../screens/EditTestScreen";
+import { TaskCommentScreen } from "../screens/TaskCommentScreen";
 // import { ViewTasks } from "../screens/ViewTasksScreen";
 
 const Stack = createStackNavigator<TeamsStackParams>();
@@ -116,6 +117,7 @@ export const Navigator = () => {
 
           <Stack.Screen name="CreateTask" component={CreateTask} />
           <Stack.Screen name="TaskDetailScreen" component={TaskDetailScreen} />
+          <Stack.Screen name="TaskCommentScreen" component={TaskCommentScreen} />
         </>
       )}
     </Stack.Navigator>
