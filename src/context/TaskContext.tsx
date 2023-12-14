@@ -1,24 +1,8 @@
 import { createContext, useContext, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import APIproyect from "../api/nestApiProyect";
+import { Task } from "../interfaces/task.interfaces";
 
-export interface Task {
-  name: string;
-  description: string;
-  startDate: string;
-  endDate: string;
-  state: TaskState;
-  emailCreator: string;
-  nameResponsible: string | null;
-  id_proyect: string;
-  is_deleted: boolean;
-}
-
-export enum TaskState {
-  TODO = 'to_do',
-  IN_PROGRESS = 'in_progress',
-  DONE = 'done',
-}
 
 type TasksContextProps = {
   createTask: (task: Task) => Promise<void>;
@@ -28,7 +12,6 @@ type TasksContextProps = {
   deleteTask: (id_task: string) => Promise<void>;
   initTask: (id_task: string) => Promise<void>;
   finishTask: (id_task: string) => Promise<void>;
-  searchTasks: () => Promise<Task[]>;
 };
 
 export const TasksContext = createContext({} as TasksContextProps);
@@ -68,6 +51,7 @@ export const TasksProvider = ({ children }:any) => {
       console.log(response);
 
       const tasksData: Task[] = response.data;
+      console.log(tasksData);
       setTasks(tasksData);
 
       return tasksData;
@@ -176,28 +160,6 @@ export const TasksProvider = ({ children }:any) => {
     }
   };
 
-  const searchTasks = async (): Promise<Task[]> => {
-    try {
-      const accessToken = await AsyncStorage.getItem("token");
-      const config = {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      };
-
-      const response = await APIproyect.get("/task/search", config);
-      console.log(response);
-
-      const tasksData: Task[] = response.data;
-      setTasks(tasksData);
-
-      return tasksData;
-    } catch (error) {
-      console.error(error);
-      throw error;
-    }
-  };
-
   return (
     <TasksContext.Provider
       value={{
@@ -208,7 +170,6 @@ export const TasksProvider = ({ children }:any) => {
         deleteTask,
         initTask,
         finishTask,
-        searchTasks,
       }}
     >
       {children}

@@ -3,8 +3,8 @@ import { View, Text, FlatList, TouchableOpacity, StyleSheet, Dimensions } from "
 import { FontAwesome } from "@expo/vector-icons";
 import { TeamsStackParams } from "../navigator/navigatorTypes";
 import { StackScreenProps } from "@react-navigation/stack";
-import { Task } from "../context/TaskContext";
 import { RouteProp } from "@react-navigation/native";
+import { Task } from "../interfaces/task.interfaces";
 
 const windowWidth = Dimensions.get("window").width;
 
@@ -17,6 +17,7 @@ interface Props {
 export const Tasks: React.FC<Props> = ({ route, navigation, tasks }: Props) => {
   const handleTaskPress = async (task: Task) => {
     navigation.navigate("TaskDetailScreen", {
+      _id: task._id,
       description: task.description,
       emailCreator: task.emailCreator,
       endDate: task.endDate,
