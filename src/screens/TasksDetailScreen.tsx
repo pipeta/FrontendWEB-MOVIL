@@ -11,8 +11,10 @@ import { TeamsStackParams } from "../navigator/navigatorTypes";
 import { StackScreenProps } from "@react-navigation/stack";
 import { Background } from "../components/Background";
 import { FontAwesome } from "@expo/vector-icons";
-import { Task, TasksContext, TaskState } from "../context/TaskContext";
+import { TasksContext } from "../context/TaskContext";
 import { RouteProp } from "@react-navigation/native";
+import { Task, TaskState } from "../interfaces/task.interfaces";
+import NewCommentForm from "../components/AddComment";
 
 interface Props extends StackScreenProps<TeamsStackParams, "TaskDetailScreen"> {
   route: RouteProp<TeamsStackParams, "TaskDetailScreen">;
@@ -74,6 +76,7 @@ const TaskDetailScreen: React.FC<Props> = ({ route, navigation }) => {
   };
 
   const handleEditPress = () => {
+    console.log(task);
     setIsEditing(!isEditing);
   };
 
@@ -96,7 +99,7 @@ const TaskDetailScreen: React.FC<Props> = ({ route, navigation }) => {
 
   const handleDeleteTask = async () => {
     setDeleteModalVisible(false);
-    await deleteTask(task.id_proyect);
+    await deleteTask(task._id);
     navigation.goBack();
   };
 
@@ -278,6 +281,7 @@ const TaskDetailScreen: React.FC<Props> = ({ route, navigation }) => {
             </View>
           </View>
         </Modal>
+        <NewCommentForm id_task={task._id} />
       </View>
     </>
   );

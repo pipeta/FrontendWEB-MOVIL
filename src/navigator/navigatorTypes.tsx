@@ -63,6 +63,7 @@ type TeamsStackParams = {
   AddTeamsScreen: Team2;
   
   TaskDetailScreen: {
+    _id: string
     description: string;
     emailCreator: string;
     endDate: string;
