@@ -4,3 +4,8 @@ export interface Comment {
   autorEmail: string;
   id_task: string;
 }
+
+export interface CreateCommentDto {
+  description: string;
+  id_task: string;
+}

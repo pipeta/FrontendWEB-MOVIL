@@ -5,7 +5,7 @@ import { CommentContext } from '../context/CommentContext';
 
 const CommentList = ({ id_task }: { id_task: string }) => {
   const [commentList, setCommentList] = useState<Comment[]>([]);
-  const { getComments } = useContext(CommentContext);
+  const { getComments, deleteComment } = useContext(CommentContext);
 
   useEffect(() => {
     const fetchComments = async () => {
@@ -20,10 +20,11 @@ const CommentList = ({ id_task }: { id_task: string }) => {
     fetchComments();
   }, [getComments]);
 
-  const handleDeleteComment = (commentId: string) => {
+  const handleDeleteComment = async (commentId: string) => {
     // Filtra la lista de comentarios para excluir el comentario eliminado
     const updatedList = commentList.filter((comment) => comment._id !== commentId);
     setCommentList(updatedList);
+    await deleteComment(commentId);
     console.log('Comentario eliminado:', commentId);
   };
 

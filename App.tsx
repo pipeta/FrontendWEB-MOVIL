@@ -16,7 +16,9 @@ const AppState = ({ children }: any) => {
       <TeamProvider>
         <ProyectProvider>
           <TasksProvider>
-            <CommentProvider>{children}</CommentProvider>
+            <CommentProvider>
+              <RolProvider>{children}</RolProvider>
+            </CommentProvider>
           </TasksProvider>
         </ProyectProvider>
       </TeamProvider>
