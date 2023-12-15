@@ -3,6 +3,6 @@ export type CreateRolDto = {
 }
 
 export type Rol = {
-    id: string;
+    _id: string;
     name: string;
 }

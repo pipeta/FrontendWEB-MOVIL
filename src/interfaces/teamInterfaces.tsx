@@ -1,5 +1,6 @@
 export type Member = {
   _id: string;
+  rol: string;
   userName: string;
   email: string;
 };

@@ -66,11 +66,11 @@ const EditTeamScreen = ({ route, navigation }: Props) => {
         try {
           await fetchData(_id);
           const roles = await getAllRoles();
-          console.log(roles);
+          console.log("Roles fetched successfully:", roles);
           setAllRoles(roles);
           setNewName(name);
         } catch (error) {
-          console.error(error);
+          console.error("Error fetching roles:", error);
         }
       };
 
@@ -85,8 +85,6 @@ const EditTeamScreen = ({ route, navigation }: Props) => {
   const onMemberPress = async (member: Partial<Member>) => {
     try {
       console.log(`Fetching roles for ${member.userName}...`);
-      console.log(_id);
-      console.log("Roles fetched successfully!");
       setSelectedMember(member);
       setModalVisible(true);
     } catch (error) {
@@ -95,24 +93,27 @@ const EditTeamScreen = ({ route, navigation }: Props) => {
   };
 
   const toggleCheckbox = (role: Rol) => {
-    setSelectedRoleId(role.id); // Almacena el _id del rol seleccionado
+    console.log("Role Toggled:", role);
+    console.log(role._id)
+    setSelectedRoleId(role._id); // Almacena el _id del rol seleccionado
     setCheckedStates((prev) => ({ ...prev, [role.name]: !prev[role.name] }));
   };
 
   const handleAssignRoles = async () => {
     try {
       if (selectedMember && selectedMember.email && selectedRoleId) {
+        console.log("Selected Member:", selectedMember);
+        console.log("Selected Member Email:", selectedMember.email);
+        console.log("Selected Role ID:", selectedRoleId);
+
         const data: AssingRolMemberDto = {
-          id_rol: selectedRoleId, // Utiliza el _id del rol seleccionado
+          id_rol: selectedRoleId,
           emailMember: selectedMember.email,
         };
-        console.log('data')
-        console.log(data)
+        console.log("Data to be assigned:", data);
 
-        console.log('_id team')
-        console.log(_id)
         // Realiza la asignación de roles llamando a la función del contexto
-        await assignRol(_id, data); // Usa el _id del equipo aquí
+        await assignRol(_id, data);
 
         // Cierra el modal después de asignar roles
         setModalVisible(false);
@@ -151,6 +152,7 @@ const EditTeamScreen = ({ route, navigation }: Props) => {
         key={item.userName}
         title={<Text style={{ color: "white" }}>{item.userName}</Text>}
         description={<Text style={{ color: "white" }}>{item.email}</Text>}
+        
         left={() => (
           <GithubOutlined
             style={{ fontSize: 24, color: "white", marginRight: 10 }}
@@ -175,7 +177,7 @@ const EditTeamScreen = ({ route, navigation }: Props) => {
 
   const renderRoleOption = (role: Rol) => (
     <TouchableOpacity
-      key={role.id}
+      key={role._id}
       onPress={() => toggleCheckbox(role)}
       style={styles.roleOption}
     >
@@ -265,6 +267,7 @@ const EditTeamScreen = ({ route, navigation }: Props) => {
     </>
   );
 };
+
 
 const styles = StyleSheet.create({
   container: {
