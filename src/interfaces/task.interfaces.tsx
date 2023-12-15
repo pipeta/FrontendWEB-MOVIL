@@ -8,8 +8,8 @@ export interface Task {
     _id: string
     name: string;
     description: string;
-    startDate: string;
-    endDate: string;
+    startDate: string | null;
+    endDate: string | null;
     state: TaskState;
     emailCreator: string;
     nameResponsible: string | null;
@@ -17,7 +17,7 @@ export interface Task {
     is_deleted: boolean;
 }
 
-export interface Task2 {
+export interface TaskCreate {
     
     name: string;
     description: string;
@@ -29,3 +29,20 @@ export interface Task2 {
     id_proyect: string;
     is_deleted: boolean;
 }
+
+export interface UpdateTaskDto {
+    name?: string;
+
+    description?: string;
+
+    nameResponsible?: string | null;
+
+    startDate?: string | null;
+
+    endDate?: string | null;
+
+    state?: string | null;
+
+    emailCreator?: string | null
+  }
+
