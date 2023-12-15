@@ -4,9 +4,10 @@ import {
   Text,
   StyleSheet,
   TouchableOpacity,
-  Modal,
   TextInput,
 } from "react-native";
+import Modal from "react-native-modal";
+
 import { TeamsStackParams } from "../navigator/navigatorTypes";
 import { StackScreenProps } from "@react-navigation/stack";
 import { Background } from "../components/Background";
@@ -32,24 +33,20 @@ const TaskDetailScreen: React.FC<Props> = ({ route, navigation }) => {
 
   const [isDeleteModalVisible, setDeleteModalVisible] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
-  const [editedName, setEditedName] = useState<string>(task.name || '');
+  const [editedName, setEditedName] = useState<string>(task.name || "");
   const [editedDescription, setEditedDescription] = useState<string>(
-    task.description || ''
+    task.description || ""
   );
   const [editedStartDate, setEditedStartDate] = useState<string>(
-    startDate || ''
+    startDate || ""
   );
-  const [editedEndDate, setEditedEndDate] = useState<string>(
-    endDate || ''
-  );
-  const [editedState, setEditedState] = useState<TaskState>(
-    task.state || ''
-  );
+  const [editedEndDate, setEditedEndDate] = useState<string>(endDate || "");
+  const [editedState, setEditedState] = useState<TaskState>(task.state || "");
   const [editedCreatorEmail, setEditedCreatorEmail] = useState<string>(
-    task.emailCreator || ''
+    task.emailCreator || ""
   );
   const [editedResponsibleName, setEditedResponsibleName] = useState<string>(
-    task.nameResponsible || ''
+    task.nameResponsible || ""
   );
 
   const { updateTask, deleteTask } = useContext(TasksContext);
@@ -58,13 +55,13 @@ const TaskDetailScreen: React.FC<Props> = ({ route, navigation }) => {
     let newState: TaskState;
 
     switch (text) {
-      case 'Todo':
+      case "Todo":
         newState = TaskState.TODO;
         break;
-      case 'InProgress':
+      case "InProgress":
         newState = TaskState.IN_PROGRESS;
         break;
-      case 'Done':
+      case "Done":
         newState = TaskState.DONE;
         break;
       default:
@@ -101,6 +98,8 @@ const TaskDetailScreen: React.FC<Props> = ({ route, navigation }) => {
     setDeleteModalVisible(false);
     await deleteTask(task._id);
     navigation.goBack();
+    navigation.goBack();
+
   };
 
   return (
@@ -112,10 +111,7 @@ const TaskDetailScreen: React.FC<Props> = ({ route, navigation }) => {
       >
         <FontAwesome name="arrow-left" size={24} color="white" />
       </TouchableOpacity>
-      <TouchableOpacity
-        onPress={handleDeletePress}
-        style={styles.deleteButton}
-      >
+      <TouchableOpacity onPress={handleDeletePress} style={styles.deleteButton}>
         <FontAwesome name="trash-o" size={24} color="white" />
       </TouchableOpacity>
       <View style={styles.container}>
@@ -167,7 +163,9 @@ const TaskDetailScreen: React.FC<Props> = ({ route, navigation }) => {
                 onChangeText={(text) => setEditedStartDate(text)}
               />
             ) : (
-              <Text style={styles.value}>{task.startDate.toString()}</Text>
+              <Text style={styles.value}>
+                {task.startDate ? task.startDate.toString() : "No start date"}
+              </Text>
             )}
             <TouchableOpacity onPress={handleEditPress}>
               <FontAwesome name="edit" size={20} color="#007BFF" />
@@ -185,7 +183,9 @@ const TaskDetailScreen: React.FC<Props> = ({ route, navigation }) => {
                 onChangeText={(text) => setEditedEndDate(text)}
               />
             ) : (
-              <Text style={styles.value}>{task.endDate.toString()}</Text>
+              <Text style={styles.value}>
+                {task.endDate ? task.endDate.toString() : "No end date"}
+              </Text>
             )}
             <TouchableOpacity onPress={handleEditPress}>
               <FontAwesome name="edit" size={20} color="#007BFF" />
@@ -254,10 +254,11 @@ const TaskDetailScreen: React.FC<Props> = ({ route, navigation }) => {
         )}
 
         <Modal
-          animationType="slide"
-          transparent={true}
-          visible={isDeleteModalVisible}
-          onRequestClose={() => setDeleteModalVisible(false)}
+          isVisible={isDeleteModalVisible}
+          onBackdropPress={() => setDeleteModalVisible(false)}
+          animationIn="slideInUp"
+          animationOut="slideOutDown"
+          backdropOpacity={0.5}
         >
           <View style={styles.modalContainer}>
             <View style={styles.modalContent}>
@@ -281,7 +282,6 @@ const TaskDetailScreen: React.FC<Props> = ({ route, navigation }) => {
             </View>
           </View>
         </Modal>
-        <NewCommentForm id_task={task._id} />
       </View>
     </>
   );

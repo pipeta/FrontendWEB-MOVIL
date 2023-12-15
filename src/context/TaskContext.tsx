@@ -1,11 +1,11 @@
 import { createContext, useContext, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import APIproyect from "../api/nestApiProyect";
-import { Task } from "../interfaces/task.interfaces";
+import { Task, Task2 } from "../interfaces/task.interfaces";
 
 
 type TasksContextProps = {
-  createTask: (task: Task) => Promise<void>;
+  createTask: (task: Task2) => Promise<void>;
   fetchTasks: (id_project: string) => Promise<Task[]>;
   fetchTaskById: (id_task: string) => Promise<Task>;
   updateTask: (id_task: string, task: Partial<Task>) => Promise<void>;
@@ -17,9 +17,9 @@ type TasksContextProps = {
 export const TasksContext = createContext({} as TasksContextProps);
 
 export const TasksProvider = ({ children }:any) => {
-  const [tasks, setTasks] = useState<Task[]>([]);
+  const [tasks, setTasks] = useState<Task2[]>([]);
 
-  const createTask = async (task: Task) => {
+  const createTask = async (task: Task2) => {
     try {
       const accessToken = await AsyncStorage.getItem("token");
       const config = {
@@ -27,7 +27,9 @@ export const TasksProvider = ({ children }:any) => {
           Authorization: `Bearer ${accessToken}`,
         },
       };
-
+      console.log('aca')
+      console.log(task)
+      console.log('aca')
       const resp = await APIproyect.post("/task", task, config);
       console.log(resp);
 
@@ -176,3 +178,5 @@ export const TasksProvider = ({ children }:any) => {
     </TasksContext.Provider>
   );
 };
+export { Task };
+

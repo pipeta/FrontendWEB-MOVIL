@@ -17,6 +17,7 @@ export const RolProvider = ({ children } : any) => {
     try {
       const accessToken = await AsyncStorage.getItem('token');
       const response = await APIteam.get(`/rol/${id_team}`, { headers: { Authorization: `Bearer ${accessToken}` } });
+      console.log(response.data)
       return response.data;
     } catch (error) {
       console.error(error);

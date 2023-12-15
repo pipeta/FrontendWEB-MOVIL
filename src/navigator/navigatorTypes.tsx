@@ -59,6 +59,11 @@ type TeamsStackParams = {
     autor: string;
     uniqueCode: string;
   };
+  CreateTask:{
+    _id: string;
+   
+  };
+  
   
   AddTeamsScreen: Team2;
   
@@ -74,8 +79,32 @@ type TeamsStackParams = {
     startDate: string;
     state: TaskState;
   };
+  TaskCommentScreen: {
+    _id: string
+    description: string;
+    emailCreator: string;
+    endDate: string;
+    id_proyect: string;
+    is_deleted: boolean;
+    name: string;
+    nameResponsible: string | null;
+    startDate: string;
+    state: TaskState;
+  };
+  NewCommentScreen:{
+    _id: string
+    description: string;
+    emailCreator: string;
+    endDate: string;
+    id_proyect: string;
+    is_deleted: boolean;
+    name: string;
+    nameResponsible: string | null;
+    startDate: string;
+    state: TaskState;
+  }
   Task: Task;
-  CreateTask:undefined
+  
 
 };
 

@@ -1,21 +1,30 @@
-import React from "react";
+import React, { useContext, useState } from "react";
 import { Text, View, StyleSheet, TouchableOpacity } from "react-native";
-import { ArrowLeftOutlined } from "@ant-design/icons";
 import { FontAwesome } from "@expo/vector-icons";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { Divider } from "@rneui/base";
+import { Divider, FAB } from "@rneui/base";
 import { TeamsStackParams } from "../navigator/navigatorTypes";
 import { StackScreenProps } from "@react-navigation/stack";
-import { RouteProp } from "@react-navigation/native";
+import { RouteProp, useFocusEffect } from "@react-navigation/native";
+import NewCommentForm from "../components/AddComment";
+import CommentList from "../components/Comment";
+import { CommentContext } from "../context/CommentContext";
 
-interface Props
-  extends StackScreenProps<TeamsStackParams, "TaskCommentScreen"> {
+interface Props extends StackScreenProps<TeamsStackParams, "TaskCommentScreen"> {
   route: RouteProp<TeamsStackParams, "TaskCommentScreen">;
+}
+
+export interface Comment {
+  _id: string;
+  description: string;
+  autorEmail: string;
+  id_task: string;
 }
 
 export const TaskCommentScreen = ({ route, navigation }: Props) => {
   const { top } = useSafeAreaInsets();
   const {
+    _id,
     description,
     emailCreator,
     endDate,
@@ -26,10 +35,12 @@ export const TaskCommentScreen = ({ route, navigation }: Props) => {
     startDate,
     state,
   } = route.params;
+  const [isFABLoading, setIsFABLoading] = useState(false);
+  const { getComments, deleteComment } = useContext(CommentContext);
 
   const handleNavigatePress = () => {
-    // Navegar a la pantalla 'TaskDetailScreen'
     navigation.navigate("TaskDetailScreen", {
+      _id: _id,
       description: description,
       emailCreator: emailCreator,
       endDate: endDate,
@@ -40,6 +51,28 @@ export const TaskCommentScreen = ({ route, navigation }: Props) => {
       startDate: startDate,
       state: state,
     });
+  };
+
+  const handleFABPress = async () => {
+    try {
+      setIsFABLoading(true);
+      await navigation.navigate("NewCommentScreen", {
+        _id: _id,
+        description: description,
+        emailCreator: emailCreator,
+        endDate: endDate,
+        id_proyect: id_proyect,
+        is_deleted: is_deleted,
+        name: name,
+        nameResponsible: nameResponsible,
+        startDate: startDate,
+        state: state,
+      });
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsFABLoading(false);
+    }
   };
 
   return (
@@ -54,7 +87,6 @@ export const TaskCommentScreen = ({ route, navigation }: Props) => {
         </TouchableOpacity>
         <Divider></Divider>
 
-        {/* Reemplaza el botón "Next" con el icono de edición */}
         <TouchableOpacity
           onPress={handleNavigatePress}
           style={{ ...styles.editButton, top: top + 15, right: 20 }}
@@ -86,16 +118,24 @@ export const TaskCommentScreen = ({ route, navigation }: Props) => {
         </View>
       </View>
 
-      <View
-        style={{
-          alignItems: "center",
-          paddingHorizontal: 10,
-          paddingBottom: 10,
-          paddingTop: 10,
-        }}
-      >
+      <View style={{ flex: 1, marginBottom: 60 }}>
         <Text style={styles.Title}>{"Comentarios de Tarea"}</Text>
+        <CommentList id_task={_id} />
       </View>
+
+      <FAB
+        style={{
+          position: "absolute",
+          bottom: 20,
+          right: 20,
+          elevation: 5,
+        }}
+        color="green"
+        title={isFABLoading ? "Cargando..." : "+"}
+        size="large"
+        onPress={handleFABPress}
+        disabled={isFABLoading}
+      />
     </View>
   );
 };

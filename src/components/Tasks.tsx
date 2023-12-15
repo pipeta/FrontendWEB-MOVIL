@@ -16,7 +16,7 @@ interface Props {
 
 export const Tasks: React.FC<Props> = ({ route, navigation, tasks }: Props) => {
   const handleTaskPress = async (task: Task) => {
-    navigation.navigate("TaskDetailScreen", {
+    navigation.navigate("TaskCommentScreen", {
       _id: task._id,
       description: task.description,
       emailCreator: task.emailCreator,
@@ -27,7 +27,7 @@ export const Tasks: React.FC<Props> = ({ route, navigation, tasks }: Props) => {
       nameResponsible: task.nameResponsible,
       startDate: task.startDate,
       state: task.state,
-    });
+    },);
   };
 
   const keyExtractor = (task: Task) => task.id_proyect;

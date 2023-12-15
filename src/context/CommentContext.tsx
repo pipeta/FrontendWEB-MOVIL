@@ -41,6 +41,7 @@ export const CommentProvider = ({ children }: any) => {
 
       const resp = await APIproyect.post('/comment', createCommentDto, config);
       const newComment: Comment = resp.data;
+      
       return newComment;
     } catch (error) {
       console.error(error);

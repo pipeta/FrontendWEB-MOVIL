@@ -26,7 +26,7 @@ export const SearchScreen = ({ route, navigation }: Props) => {
   const [showMyTasks, setShowMyTasks] = useState<boolean>(false);
 
   const handleFABPress = () => {
-    navigation.navigate("CreateTask");
+    navigation.navigate("CreateTask", { _id: teamId });
   };
 
   const fetchData = async () => {

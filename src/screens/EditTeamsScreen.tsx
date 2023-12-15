@@ -3,24 +3,13 @@ import {
   View,
   Text,
   StyleSheet,
-  TextInput,
-  ImageBackground,
-  FlatList,
   TouchableOpacity,
+  FlatList,
   Modal,
+  TextInput,
 } from "react-native";
-import { FontAwesome } from "@expo/vector-icons";
-import { loginStyles } from "../theme/loginTheme";
-import { AuthContext } from "../context/AuthContext";
-import { useForm } from "../hooks/useForm";
-import { Divider, List } from "react-native-paper";
-import {
-  GithubOutlined,
-  DeleteOutlined,
-  EditFilled,
-  ArrowLeftOutlined,
-} from "@ant-design/icons";
-import { PricingCard, lightColors } from "@rneui/themed";
+import { FontAwesome, AntDesign } from "@expo/vector-icons";
+import { List } from "react-native-paper";
 import { StackScreenProps } from "@react-navigation/stack";
 import { RouteProp, useFocusEffect } from "@react-navigation/native";
 import { TeamsStackParams } from "../navigator/navigatorTypes";
@@ -29,55 +18,37 @@ import { Member } from "../interfaces/teamInterfaces";
 import { TeamContext } from "../context/TeamContext";
 import { RolContext } from "../context/RolContext";
 import { Background } from "../components/Background";
-import { ProyectContext } from "../context/ProyectContext";
-
-
-
-
-
-
-
-
+import { GithubOutlined } from "@ant-design/icons";
 
 interface Props extends StackScreenProps<TeamsStackParams, "EditTeamsScreen"> {
   route: RouteProp<TeamsStackParams, "EditTeamsScreen">;
 }
-const EditTeamsScreen = ({ route, navigation }: Props) => {
 
-  const [members, setMembers] = useState<Partial<Member>[]>([]);
-
+const EditTeamScreen = ({ route, navigation }: Props) => {
   const { top } = useSafeAreaInsets();
   const { uniqueCode, _id, name } = route.params;
-  const { user, update } = useContext(AuthContext);
-  const { email, onChange } = useForm({
-    email: user?.email || "",
-  });
+
+  const { fetchMemberTeam, addUser, removeUser, updateTeam, removeTeam } =
+    useContext(TeamContext);
+  const { getAllRoles } = useContext(RolContext);
 
   const [newName, setNewName] = useState("");
   const [emailUser, setEmailUser] = useState("");
   const [modalVisible, setModalVisible] = useState(false);
-
+  const [members, setMembers] = useState<Partial<Member>[]>([]);
+  const [selectedMember, setSelectedMember] = useState<Partial<Member> | null>(
+    null
+  );
   const [checkedStates, setCheckedStates] = useState<{
     [key: string]: boolean;
   }>({});
-  console.log('estoy en el editteamsscreen')
-  const { getAllRoles } = useContext(RolContext);
-  const { fetchMemberTeam, addUser, removeUser, updateTeam,removeTeam } = useContext(TeamContext);
-  const {deleteTeamFromProyect}=useContext(ProyectContext)
+
   const fetchData = async (id_team: string) => {
     try {
-      console.log('estoy en el fechdata1')
-      console.log(id_team)
-      console.log('estoy en el fechdata2')
-      console.log('test')
-      console.log(_id)
-      console.log('tes2')
       const data: Member[] = await fetchMemberTeam(id_team);
-      console.log(data)
       setMembers(data);
     } catch (error) {
       console.error(error);
-      console.log('estoy en el fechdata error')
     }
   };
 
@@ -91,105 +62,100 @@ const EditTeamsScreen = ({ route, navigation }: Props) => {
           console.error(error);
         }
       };
-  
+
       fetchDataAndSetState();
-  
+
       return () => {
         setMembers([]);
       };
     }, [fetchMemberTeam, _id, name])
   );
-  
-  const handleDeleteTeam = async () => {
+
+  const onMemberPress = async (member: Partial<Member>) => {
     try {
-      
-      await deleteTeamFromProyect(_id);
-      console.log('asddasdasdasd')
-      console.log(navigation.goBack())
-      console.log('asddasdasdasd')
-       navigation.goBack();
+      console.log(`Fetching roles for ${member.userName}...`);
+      console.log(_id)
+      await getAllRoles(_id);
+      console.log("Roles fetched successfully!");
+      setSelectedMember(member);
+      setModalVisible(true);
     } catch (error) {
-      console.error(error);
+      console.error("Error while getting roles:", error);
     }
   };
 
-  const buttonRol = () => {
-    setModalVisible(true)
-  }
-
-
-  const toggleCheckbox = (name: string) => {
-    setCheckedStates((prevState) => ({
-      ...prevState,
-      [name]: !prevState[name],
-    }));
+  const toggleCheckbox = (role: string) => {
+    setCheckedStates((prev) => ({ ...prev, [role]: !prev[role] }));
   };
 
-  const buttonDeleteUser = async (uniqueCode: string, email: string | undefined) => {
-    if(email !== undefined){
-      await removeUser({uniqueCode: uniqueCode, email: email });
+  const buttonDeleteUser = async (
+    uniqueCode: string,
+    email: string | undefined
+  ) => {
+    if (email !== undefined) {
+      await removeUser({ uniqueCode, email });
     }
     fetchData(_id);
   };
 
-  const buttonSetNameTeam = async (id_team: string,name: string) => {
-    await updateTeam(id_team,name);
+  const buttonSetNameTeam = async (id_team: string, name: string) => {
+    await updateTeam(id_team, name);
     setNewName("");
   };
 
   const buttonAddUser = async (uniqueCode: string, email: string) => {
-    await addUser({uniqueCode: uniqueCode, email: email });
+    await addUser({ uniqueCode, email });
     fetchData(_id);
     setEmailUser("");
   };
 
-  const renderRoleOption = (role: string) => (
-    <TouchableOpacity key={role} style={styles.roleOption}>
-      <Text style={styles.roleOptionText}>{role}</Text>
+  const renderMemberItem = ({ item }: { item: Partial<Member> }) => (
+    <TouchableOpacity onPress={() => onMemberPress(item)}>
+      <List.Item
+        key={item.userName}
+        title={<Text style={{ color: "white" }}>{item.userName}</Text>}
+        description={<Text style={{ color: "white" }}>{item.email}</Text>}
+        left={() => (
+          <GithubOutlined
+            style={{ fontSize: 24, color: "white", marginRight: 10 }}
+          />
+        )}
+        right={() => (
+          <View style={{ flexDirection: "row", marginLeft: 10 }}>
+            <TouchableOpacity
+              onPress={() => buttonDeleteUser(uniqueCode, item.email)}
+            >
+              <FontAwesome
+                name="trash"
+                style={{ fontSize: 24, color: "red" }}
+              />
+            </TouchableOpacity>
+          </View>
+        )}
+        style={styles.listItem}
+      />
     </TouchableOpacity>
   );
 
-  const renderItem = ({ item }: { item: Partial<Member> }) => (
-    <List.Item
-      key={item.userName}
-      title={<Text style={{ color: "white" }}>{item.userName}</Text>}
-      description={<Text style={{ color: "white" }}>{item.email}</Text>}
-      left={() => (
-        <GithubOutlined
-          style={{ fontSize: 24, color: "white", marginRight: 10 }}
-        />
-      )}
-      right={() => (
-        <View style={{ flexDirection: "row",marginLeft: 10, }}>
-          <TouchableOpacity onPress={() => buttonRol}>
-            <EditFilled
-              style={{
-                fontSize: 24,
-                color: "green",
-                marginRight: 10,
-                marginLeft: 5,
-              }}
-            />
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => buttonDeleteUser(uniqueCode, item.email)}>
-            <DeleteOutlined style={{ fontSize: 24, color: "red" }} />
-          </TouchableOpacity>
-        </View>
-      )}
-      style={styles.listItem}  // Nuevo estilo para controlar el ancho de las listas
-    />
+  const renderRoleOption = (role: string) => (
+    <TouchableOpacity
+      key={role}
+      onPress={() => toggleCheckbox(role)}
+      style={styles.roleOption}
+    >
+      <FontAwesome
+        name={checkedStates[role] ? "check-square-o" : "square-o"}
+        style={{ fontSize: 20, color: "black", marginRight: 10 }}
+      />
+      <Text style={styles.roleOptionText}>{role}</Text>
+    </TouchableOpacity>
   );
-
 
   return (
     <>
       <Background />
       <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
         <FontAwesome name="arrow-left" size={24} color="white" />
-      </TouchableOpacity>
-
-      <TouchableOpacity onPress={handleDeleteTeam} style={styles.deleteButton}>
-        <FontAwesome name="trash-o" size={24} color="white" />
       </TouchableOpacity>
 
       <View style={styles.container}>
@@ -216,7 +182,9 @@ const EditTeamsScreen = ({ route, navigation }: Props) => {
             onChangeText={(value) => setEmailUser(value)}
             value={emailUser}
           />
-          <TouchableOpacity onPress={() => buttonAddUser(uniqueCode, emailUser)}>
+          <TouchableOpacity
+            onPress={() => buttonAddUser(uniqueCode, emailUser)}
+          >
             <View style={styles.addButton}>
               <Text style={styles.addButtonText}>Añadir</Text>
             </View>
@@ -226,8 +194,10 @@ const EditTeamsScreen = ({ route, navigation }: Props) => {
         <FlatList
           ListHeaderComponent={<View />}
           data={members}
-          renderItem={renderItem}
-          keyExtractor={(item) => (item.userName ? item.userName.toString() : "")}
+          renderItem={renderMemberItem}
+          keyExtractor={(item) =>
+            item.userName ? item.userName.toString() : ""
+          }
           style={styles.flatList}
         />
 
@@ -239,7 +209,9 @@ const EditTeamsScreen = ({ route, navigation }: Props) => {
         >
           <View style={styles.modalContainer}>
             <View style={styles.modalContent}>
-              <Text style={styles.modalTitle}>Seleccionar Rol:</Text>
+              <Text style={styles.modalTitle}>
+                Seleccionar Roles para {selectedMember?.userName}:
+              </Text>
               {["Rol1", "Rol2", "Rol3"].map((role) => renderRoleOption(role))}
               <TouchableOpacity onPress={() => setModalVisible(!modalVisible)}>
                 <Text style={styles.closeButton}>Cerrar</Text>
@@ -263,7 +235,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginBottom: 20,
     marginTop: 15,
-    width:"80%"
+    width: "80%",
   },
   inputField: {
     flex: 1,
@@ -272,13 +244,12 @@ const styles = StyleSheet.create({
     borderBottomColor: "white",
   },
   addButton: {
-    backgroundColor:"#5566ff",
+    backgroundColor: "#5566ff",
     paddingVertical: 10,
     paddingHorizontal: 15,
     borderRadius: 5,
     marginLeft: 10,
-    width:100
-    
+    width: 100,
   },
   addButtonText: {
     color: "white",
@@ -312,19 +283,9 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontSize: 16,
   },
-  deleteButton: {
-    position: "absolute",
-    top: 20,
-    right: 20,
-    zIndex: 1,
-  },
-  backButton: {
-    position: "absolute",
-    top: 20,
-    left: 20,
-    zIndex: 1,
-  },
   roleOption: {
+    flexDirection: "row",
+    alignItems: "center",
     backgroundColor: "white",
     paddingVertical: 10,
     paddingHorizontal: 15,
@@ -333,13 +294,19 @@ const styles = StyleSheet.create({
   },
   roleOptionText: {
     color: "black",
+    marginLeft: 10,
   },
-   listItem: {
-    width: "90%",  // Ajusta el ancho del contenedor de la lista según sea necesario
+  listItem: {
+    width: "90%",
     borderBottomWidth: 1,
     alignSelf: "center",
-    // ... (Otros estilos de las listas pueden mantenerse sin cambios)
+  },
+  backButton: {
+    position: "absolute",
+    top: 20,
+    left: 20,
+    zIndex: 1,
   },
 });
 
-export default EditTeamsScreen;
+export default EditTeamScreen;

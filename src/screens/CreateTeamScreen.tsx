@@ -7,13 +7,15 @@ import {
   Text,
   TextInput,
   View,
+  TouchableOpacity,
 } from "react-native";
 import { Background } from "../components/Background";
 import { loginStyles } from "../theme/loginTheme";
-import { TouchableOpacity } from "react-native-gesture-handler";
-import { useForm } from "../hooks/useForm";
 import { StackScreenProps } from "@react-navigation/stack";
 import { TeamContext } from "../context/TeamContext";
+
+import { useForm } from "../hooks/useForm";
+import { LoadingScreen } from "./LoadingScreen";
 
 export const CreateTeamScreen = () => {
   const { createTeam } = useContext(TeamContext);
@@ -21,12 +23,24 @@ export const CreateTeamScreen = () => {
   const { name, onChange, resetForm } = useForm({
     name: "",
   });
-  const [selectedLanguage, setSelectedLanguage] = useState();
+  const [isLoading, setIsLoading] = useState(false);
+  const [isButtonDisabled, setIsButtonDisabled] = useState(false);
 
-  const newProyect = () => {
+  const newProyect = async () => {
     Keyboard.dismiss();
-    createTeam(name);
-    resetForm();
+    setIsButtonDisabled(true);
+    setIsLoading(true);
+
+    try {
+      await createTeam(name);
+      resetForm();
+    } catch (error) {
+      // Manejar errores si es necesario
+      Alert.alert("Error", "Hubo un error al crear el equipo");
+    } finally {
+      setIsLoading(false);
+      setIsButtonDisabled(false);
+    }
   };
 
   return (
@@ -59,10 +73,18 @@ export const CreateTeamScreen = () => {
           <View style={loginStyles.buttonContainer}>
             <TouchableOpacity
               activeOpacity={0.8}
-              style={loginStyles.button}
+              style={[
+                loginStyles.button,
+                // isButtonDisabled && loginStyles.disabledButton,
+              ]}
               onPress={newProyect}
+              disabled={isButtonDisabled}
             >
-              <Text style={loginStyles.buttonText}>Crear</Text>
+              {isLoading ? (
+                <LoadingScreen />
+              ) : (
+                <Text style={loginStyles.buttonText}>Crear</Text>
+              )}
             </TouchableOpacity>
           </View>
         </View>

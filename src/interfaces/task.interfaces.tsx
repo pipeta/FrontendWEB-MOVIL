@@ -16,3 +16,16 @@ export interface Task {
     id_proyect: string;
     is_deleted: boolean;
 }
+
+export interface Task2 {
+    
+    name: string;
+    description: string;
+    startDate: string| null;
+    endDate: string | null;
+    state: TaskState;
+    emailCreator: string;
+    nameResponsible: string | null;
+    id_proyect: string;
+    is_deleted: boolean;
+}
