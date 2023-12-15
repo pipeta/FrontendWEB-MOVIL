@@ -1,14 +1,14 @@
 import { createContext, useContext, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import APIproyect from "../api/nestApiProyect";
-import { Task, Task2 } from "../interfaces/task.interfaces";
+import { Task, TaskCreate, UpdateTaskDto } from "../interfaces/task.interfaces";
 
 
 type TasksContextProps = {
-  createTask: (task: Task2) => Promise<void>;
+  createTask: (task: TaskCreate) => Promise<void>;
   fetchTasks: (id_project: string) => Promise<Task[]>;
   fetchTaskById: (id_task: string) => Promise<Task>;
-  updateTask: (id_task: string, task: Partial<Task>) => Promise<void>;
+  updateTask: (id_task: string, task: Partial<UpdateTaskDto>) => Promise<void>;
   deleteTask: (id_task: string) => Promise<void>;
   initTask: (id_task: string) => Promise<void>;
   finishTask: (id_task: string) => Promise<void>;
@@ -17,9 +17,8 @@ type TasksContextProps = {
 export const TasksContext = createContext({} as TasksContextProps);
 
 export const TasksProvider = ({ children }:any) => {
-  const [tasks, setTasks] = useState<Task2[]>([]);
 
-  const createTask = async (task: Task2) => {
+  const createTask = async (task: TaskCreate) => {
     try {
       const accessToken = await AsyncStorage.getItem("token");
       const config = {
@@ -32,8 +31,6 @@ export const TasksProvider = ({ children }:any) => {
       console.log('aca')
       const resp = await APIproyect.post("/task", task, config);
       console.log(resp);
-
-      setTasks((prevTasks) => [...prevTasks, task]);
     } catch (error) {
       console.error(error);
       throw error;
@@ -54,7 +51,6 @@ export const TasksProvider = ({ children }:any) => {
 
       const tasksData: Task[] = response.data;
       console.log(tasksData);
-      setTasks(tasksData);
 
       return tasksData;
     } catch (error) {
@@ -82,7 +78,7 @@ export const TasksProvider = ({ children }:any) => {
     }
   };
 
-  const updateTask = async (id_task: string, task: Partial<Task>): Promise<void> => {
+  const updateTask = async (id_task: string, task: Partial<UpdateTaskDto>): Promise<void> => {
     try {
       const accessToken = await AsyncStorage.getItem("token");
       const config = {
@@ -97,9 +93,8 @@ export const TasksProvider = ({ children }:any) => {
       console.log(resp);
       console.log('--------')
 
-      setTasks((prevTasks) =>
-        prevTasks.map((t) => (t.id_proyect === id_task ? { ...t, ...task } : t))
-      );
+
+
     } catch (error) {
       console.error(error);
       throw error;
@@ -119,7 +114,6 @@ export const TasksProvider = ({ children }:any) => {
       console.log('--------')
       console.log(resp);
       console.log('--------')
-      setTasks((prevTasks) => prevTasks.filter((t) => t.id_proyect !== id_task));
     } catch (error) {
       console.error(error);
       throw error;

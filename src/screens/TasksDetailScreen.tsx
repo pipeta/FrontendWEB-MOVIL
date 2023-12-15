@@ -83,7 +83,7 @@ const TaskDetailScreen: React.FC<Props> = ({ route, navigation }) => {
   };
 
   const handleSavePress = async () => {
-    await updateTask(task.id_proyect, {
+    await updateTask(task._id, {
       name: editedName,
       description: editedDescription,
       startDate: editedStartDate,
@@ -93,6 +93,8 @@ const TaskDetailScreen: React.FC<Props> = ({ route, navigation }) => {
       nameResponsible: editedResponsibleName,
     });
     setIsEditing(false);
+    navigation.goBack();
+    navigation.goBack();
   };
 
   const handleDeleteTask = async () => {
