@@ -79,8 +79,9 @@ const EditTeamScreen = ({ route, navigation }: Props) => {
       return () => {
         setMembers([]);
       };
-    }, [fetchMemberTeam, _id, name, getAllRoles])
+    }, [fetchMemberTeam, _id, name, getAllRoles,selectedMember])
   );
+  
 
   const onMemberPress = async (member: Partial<Member>) => {
     try {
@@ -151,7 +152,12 @@ const EditTeamScreen = ({ route, navigation }: Props) => {
       <List.Item
         key={item.userName}
         title={<Text style={{ color: "white" }}>{item.userName}</Text>}
-        description={<Text style={{ color: "white" }}>{item.email}</Text>}
+        description={
+          <View>
+            <Text style={{ color: "white" }}>{item.email}</Text>
+            <Text style={{ color: "lightgray" }}>{item.rol}</Text>
+          </View>
+        }
         
         left={() => (
           <GithubOutlined
