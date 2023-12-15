@@ -56,16 +56,13 @@ const Sidebar = () => {
         },
       }}
     >
-      <Drawer.Screen name="Eliminar Tarea" component={DeleteTaskScreen} />
-      <Drawer.Screen name="Editar Tarea" component={UpdateTask} />
-
+      <Drawer.Screen name="Home" component={Home}></Drawer.Screen>
       <Drawer.Screen name="Crear Equipo" component={CreateTeamScreen} />
       <Drawer.Screen name="Ver Equipos" component={TeamsScreen} />
 
       <Drawer.Screen name="Crear Proyecto" component={CreateProjectScreen} />
       <Drawer.Screen name="Ver Proyectos" component={ProjectsScreen} />
 
-      <Drawer.Screen name="Home" component={Home}></Drawer.Screen>
       <Drawer.Screen name="Editar perfil" component={SettingsScreen} />
     </Drawer.Navigator>
   );

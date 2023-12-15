@@ -28,9 +28,9 @@ type RouteParams = {
   };
 };
 
-interface Props extends StackScreenProps<TeamsStackParams, "EditTeamsScreen"> {
-  route: RouteProp<TeamsStackParams, "EditTeamsScreen">;
-  navigation: StackScreenProps<TeamsStackParams, "EditTeamsScreen">["navigation"];
+interface Props extends StackScreenProps<TeamsStackParams, "EditTestScreen"> {
+  route: RouteProp<TeamsStackParams, "EditTestScreen">;
+  navigation: StackScreenProps<TeamsStackParams, "EditTestScreen">["navigation"];
 }
 
 export const Equipos = ({ proyectId }: { proyectId: string }) => {
@@ -38,7 +38,7 @@ export const Equipos = ({ proyectId }: { proyectId: string }) => {
   const { fetchMemberTeam } = useContext(TeamContext);
   const [teams, setTeams] = useState<Team[]>();
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const navigation = useNavigation<StackScreenProps<TeamsStackParams, "EditTeamsScreen">["navigation"]>();
+  const navigation = useNavigation<StackScreenProps<TeamsStackParams, "EditTestScreen">["navigation"]>();
 
   const { fetchTeams, removeTeam } = useContext(TeamContext);
 
@@ -70,7 +70,7 @@ export const Equipos = ({ proyectId }: { proyectId: string }) => {
     const matchingTeam = data2.find((team) => team.name === selectedTeam.name);
 
     if (matchingTeam) {
-      navigation.navigate("EditTeamsScreen", {
+      navigation.navigate("EditTestScreen", {
         _id: matchingTeam._id,
         name: matchingTeam.name,
         autor: matchingTeam.autor,

@@ -118,6 +118,7 @@ const EditTeamScreen = ({ route, navigation }: Props) => {
 
         // Cierra el modal después de asignar roles
         setModalVisible(false);
+        navigation.goBack()
       } else {
         console.error("Invalid member selected or role id not found");
       }
