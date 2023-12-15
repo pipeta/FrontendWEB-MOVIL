@@ -14,11 +14,12 @@ import { StackScreenProps } from "@react-navigation/stack";
 import { RouteProp, useFocusEffect } from "@react-navigation/native";
 import { TeamsStackParams } from "../navigator/navigatorTypes";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { Member } from "../interfaces/teamInterfaces";
+import { AssingRolMemberDto, Member } from "../interfaces/teamInterfaces";
 import { TeamContext } from "../context/TeamContext";
 import { RolContext } from "../context/RolContext";
 import { Background } from "../components/Background";
 import { GithubOutlined } from "@ant-design/icons";
+import { Rol } from "../interfaces/rolInterfaces";
 
 interface Props extends StackScreenProps<TeamsStackParams, "EditTeamsScreen"> {
   route: RouteProp<TeamsStackParams, "EditTeamsScreen">;
@@ -28,10 +29,16 @@ const EditTeamScreen = ({ route, navigation }: Props) => {
   const { top } = useSafeAreaInsets();
   const { uniqueCode, _id, name } = route.params;
 
-  const { fetchMemberTeam, addUser, removeUser, updateTeam, removeTeam } =
-    useContext(TeamContext);
+  const {
+    fetchMemberTeam,
+    addUser,
+    removeUser,
+    updateTeam,
+    removeTeam,
+    assignRol,
+  } = useContext(TeamContext);
   const { getAllRoles } = useContext(RolContext);
-
+  const [allRoles, setAllRoles] = useState<Rol[]>([]);
   const [newName, setNewName] = useState("");
   const [emailUser, setEmailUser] = useState("");
   const [modalVisible, setModalVisible] = useState(false);
@@ -39,6 +46,7 @@ const EditTeamScreen = ({ route, navigation }: Props) => {
   const [selectedMember, setSelectedMember] = useState<Partial<Member> | null>(
     null
   );
+  const [selectedRoleId, setSelectedRoleId] = useState<string | null>(null);
   const [checkedStates, setCheckedStates] = useState<{
     [key: string]: boolean;
   }>({});
@@ -57,7 +65,9 @@ const EditTeamScreen = ({ route, navigation }: Props) => {
       const fetchDataAndSetState = async () => {
         try {
           await fetchData(_id);
-          console.log(await getAllRoles());
+          const roles = await getAllRoles();
+          console.log(roles);
+          setAllRoles(roles);
           setNewName(name);
         } catch (error) {
           console.error(error);
@@ -69,13 +79,13 @@ const EditTeamScreen = ({ route, navigation }: Props) => {
       return () => {
         setMembers([]);
       };
-    }, [fetchMemberTeam, _id, name])
+    }, [fetchMemberTeam, _id, name, getAllRoles])
   );
 
   const onMemberPress = async (member: Partial<Member>) => {
     try {
       console.log(`Fetching roles for ${member.userName}...`);
-      console.log(_id)
+      console.log(_id);
       console.log("Roles fetched successfully!");
       setSelectedMember(member);
       setModalVisible(true);
@@ -84,8 +94,34 @@ const EditTeamScreen = ({ route, navigation }: Props) => {
     }
   };
 
-  const toggleCheckbox = (role: string) => {
-    setCheckedStates((prev) => ({ ...prev, [role]: !prev[role] }));
+  const toggleCheckbox = (role: Rol) => {
+    setSelectedRoleId(role.id); // Almacena el _id del rol seleccionado
+    setCheckedStates((prev) => ({ ...prev, [role.name]: !prev[role.name] }));
+  };
+
+  const handleAssignRoles = async () => {
+    try {
+      if (selectedMember && selectedMember.email && selectedRoleId) {
+        const data: AssingRolMemberDto = {
+          id_rol: selectedRoleId, // Utiliza el _id del rol seleccionado
+          emailMember: selectedMember.email,
+        };
+        console.log('data')
+        console.log(data)
+
+        console.log('_id team')
+        console.log(_id)
+        // Realiza la asignación de roles llamando a la función del contexto
+        await assignRol(_id, data); // Usa el _id del equipo aquí
+
+        // Cierra el modal después de asignar roles
+        setModalVisible(false);
+      } else {
+        console.error("Invalid member selected or role id not found");
+      }
+    } catch (error) {
+      console.error("Error assigning roles:", error);
+    }
   };
 
   const buttonDeleteUser = async (
@@ -137,24 +173,27 @@ const EditTeamScreen = ({ route, navigation }: Props) => {
     </TouchableOpacity>
   );
 
-  const renderRoleOption = (role: string) => (
+  const renderRoleOption = (role: Rol) => (
     <TouchableOpacity
-      key={role}
+      key={role.id}
       onPress={() => toggleCheckbox(role)}
       style={styles.roleOption}
     >
       <FontAwesome
-        name={checkedStates[role] ? "check-square-o" : "square-o"}
+        name={checkedStates[role.name] ? "check-square-o" : "square-o"}
         style={{ fontSize: 20, color: "black", marginRight: 10 }}
       />
-      <Text style={styles.roleOptionText}>{role}</Text>
+      <Text style={styles.roleOptionText}>{role.name}</Text>
     </TouchableOpacity>
   );
 
   return (
     <>
       <Background />
-      <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
+      <TouchableOpacity
+        onPress={() => navigation.goBack()}
+        style={styles.backButton}
+      >
         <FontAwesome name="arrow-left" size={24} color="white" />
       </TouchableOpacity>
 
@@ -212,7 +251,10 @@ const EditTeamScreen = ({ route, navigation }: Props) => {
               <Text style={styles.modalTitle}>
                 Seleccionar Roles para {selectedMember?.userName}:
               </Text>
-              {["Rol1", "Rol2", "Rol3"].map((role) => renderRoleOption(role))}
+              {allRoles.map((role) => renderRoleOption(role))}
+              <TouchableOpacity onPress={handleAssignRoles}>
+                <Text style={styles.acceptButton}>Aceptar</Text>
+              </TouchableOpacity>
               <TouchableOpacity onPress={() => setModalVisible(!modalVisible)}>
                 <Text style={styles.closeButton}>Cerrar</Text>
               </TouchableOpacity>
@@ -276,6 +318,12 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "bold",
     marginBottom: 10,
+  },
+  acceptButton: {
+    color: "blue",
+    marginTop: 10,
+    textAlign: "center",
+    fontSize: 16,
   },
   closeButton: {
     color: "blue",
