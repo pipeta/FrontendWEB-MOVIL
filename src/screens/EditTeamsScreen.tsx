@@ -57,6 +57,7 @@ const EditTeamScreen = ({ route, navigation }: Props) => {
       const fetchDataAndSetState = async () => {
         try {
           await fetchData(_id);
+          console.log(await getAllRoles());
           setNewName(name);
         } catch (error) {
           console.error(error);
@@ -75,7 +76,6 @@ const EditTeamScreen = ({ route, navigation }: Props) => {
     try {
       console.log(`Fetching roles for ${member.userName}...`);
       console.log(_id)
-      await getAllRoles(_id);
       console.log("Roles fetched successfully!");
       setSelectedMember(member);
       setModalVisible(true);

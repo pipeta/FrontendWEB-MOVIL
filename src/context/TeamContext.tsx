@@ -14,7 +14,7 @@ import {
   Usuario,
 } from "../interfaces/appInterfaces";
 import APIteam from "../api/nestApiTeam";
-import { CreateMemberReques, CreateTeamDto, DeleteMemberDto, Member, Team } from "../interfaces/teamInterfaces";
+import { AssingRolMemberDto, CreateMemberReques, CreateTeamDto, DeleteMemberDto, Member, Team } from "../interfaces/teamInterfaces";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 type TeamsContextProps = {
@@ -28,6 +28,7 @@ type TeamsContextProps = {
   fetchMemberTeam: (id_team: string) => Promise<Member[]>;
   addUser: (data: CreateMemberReques) => Promise<void>;
   removeUser: (data: DeleteMemberDto) => Promise<void>;
+  assignRol: (id_team: string, data: AssingRolMemberDto)=> Promise<void>;
 };
 
 
@@ -178,6 +179,19 @@ export const TeamProvider = ({ children }: any) => {
     }
   };
 
+  const assignRol = async (id_team: string, data: AssingRolMemberDto): Promise<void> => {
+    try {
+      const accessToken = await AsyncStorage.getItem("token");
+
+
+      await APIteam.post(`/team/member/assingrol/${id_team}`, data, { headers: { Authorization: `Bearer ${accessToken}` } });
+
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  }
+
   return (
     <TeamContext.Provider
       value={{
@@ -191,6 +205,7 @@ export const TeamProvider = ({ children }: any) => {
         fetchMemberTeam,
         addUser,
         removeUser,
+        assignRol
       }}
     >
       {children}

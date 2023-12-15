@@ -25,3 +25,8 @@ export type DeleteMemberDto = {
   uniqueCode: string;
   email: string
 }
+
+export type AssingRolMemberDto = {
+  id_rol: string;
+  emailMember: string;    
+}
