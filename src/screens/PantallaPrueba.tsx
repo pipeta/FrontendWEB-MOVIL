@@ -1,17 +1,23 @@
 import React, { useState, useEffect, useContext } from "react";
-import { Text, View, StyleSheet, TouchableOpacity } from "react-native";
+import {
+  Text,
+  View,
+  StyleSheet,
+  TouchableOpacity,
+} from "react-native";
 import { FAB } from "@rneui/themed";
 import { ArrowLeftOutlined } from "@ant-design/icons";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Equipos } from "../components/Equipos";
 import { Divider } from "@rneui/base";
-import { RouteProp, useFocusEffect } from "@react-navigation/native";
+import { RouteProp } from "@react-navigation/native";
 import { StackScreenProps } from "@react-navigation/stack";
 import { TeamsStackParams } from "../navigator/navigatorTypes";
 import { Team } from "../interfaces/teamInterfaces";
 import { LoadingScreen } from "../screens/LoadingScreen";
 import { ProyectContext } from "../context/ProyectContext";
-import { FontAwesome } from "@expo/vector-icons";
+import Icon from "react-native-vector-icons/FontAwesome";
+import FontAwesome from "react-native-vector-icons/FontAwesome";
 interface Props extends StackScreenProps<TeamsStackParams, "PantallaPrueba"> {
   route: RouteProp<TeamsStackParams, "PantallaPrueba">;
 }
@@ -49,17 +55,6 @@ export const PantallaPrueba = ({ route, navigation }: Props) => {
     }
   };
 
-  const fetchData = async () => {
-    try {
-      setIsLoading(true);
-      const data: Team[] = await getTeamsByProyect(_id);
-      setTeams(data);
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
   const handleNavigatePress = () => {
     navigation.navigate("UpdateProyectScreen", {
       _id: _id,
@@ -73,59 +68,52 @@ export const PantallaPrueba = ({ route, navigation }: Props) => {
     navigation.goBack();
   };
 
+  const fetchData = async () => {
+    try {
+      setIsLoading(true);
+      const data: Team[] = await getTeamsByProyect(_id);
+      setTeams(data);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   useEffect(() => {
     fetchData();
     return () => {
       setTeams([]);
     };
   }, [_id]);
-  // useFocusEffect(
-  //   React.useCallback(() => {
-  //     fetchData();
-
-  //     return () => {
-  //       setTeams([]);
-  //     };
-  //   }, [_id])
-  // );
 
   return (
     <View style={{ flex: 1, backgroundColor: "#FFFFF0" }}>
       <View style={{ ...styles.headerContainer }}>
-
         <TouchableOpacity
-          onPress={handleGoBack}
-          activeOpacity={0.8}
-          style={{ ...styles.backButton, top: top + 15 }}
-        >
-          <FontAwesome name="arrow-left" size={28} color="white" />
-        </TouchableOpacity>
+        onPress={() => navigation.goBack()}
+        style={styles.backButton}
+      >
+        <FontAwesome name="arrow-left" size={24} color="white" />
+      </TouchableOpacity>
+      
         <TouchableOpacity
-          onPress={handleNavigatePress}
-          style={{ ...styles.editButton, top: top + 15, right: 20 }}
-        >
-          <FontAwesome name="edit" size={30} color="white" />
-        </TouchableOpacity>
+        activeOpacity={0.8}
+        style={{
+          position: "absolute",
+          top: top + 5,
+          right: 20,
+        }}
+        onPress={handleNavigatePress}
+      >
+        <Icon name="edit" size={24} color="white" />
+      </TouchableOpacity>
         <Divider></Divider>
 
-        {/* <View style={{ ...styles.infoContainer, marginTop: top + 70 }}>
-          
-        </View> */}
-        {/* <Text style={{ ...styles.Name, top: top + 40 }}>{`Name: ${name}`}</Text> */}
 
-        <View style={{ width: "100%", paddingHorizontal: 10,paddingTop:15 }}>
-        <Text
-            style={{
-              ...styles.subName,
-              top: top + 60,
-            }}
-            numberOfLines={descriptionLines}
-            onTextLayout={(e) =>
-              setDescriptionLines(e.nativeEvent.lines.length)
-            }
-          >
-            {`Nombre: ${name}`}
-          </Text>
+        <Text style={{ ...styles.Name, top: top + 40 }}>{`Name: ${name}`}</Text>
+
+        <View style={{ width: '100%', paddingHorizontal: 10 }}>
           <Text
             style={{
               ...styles.subName,
@@ -144,7 +132,9 @@ export const PantallaPrueba = ({ route, navigation }: Props) => {
               top: top + 60,
             }}
             numberOfLines={ownerLines}
-            onTextLayout={(e) => setOwnerLines(e.nativeEvent.lines.length)}
+            onTextLayout={(e) =>
+              setOwnerLines(e.nativeEvent.lines.length)
+            }
           >
             {`Creador: ${owner}`}
           </Text>
@@ -156,8 +146,8 @@ export const PantallaPrueba = ({ route, navigation }: Props) => {
             ...styles.button,
             top: top + 100,
             alignSelf: "flex-start",
-            left: 10,
-            backgroundColor: "#5566ff",
+            left: 30,
+            backgroundColor:"#5566ff"
           }}
           onPress={handleTaskPress}
           disabled={isTaskButtonLoading}
@@ -225,31 +215,26 @@ const styles = StyleSheet.create({
     elevation: 10,
   },
   backButton: {
- 
+    flex: 1,
     position: "absolute",
     left: 20,
     color: "white",
-    
-    
+    alignItems: "flex-start",
   },
   Name: {
     color: "white",
-    fontSize: 70,
+    fontSize: 40,
     fontWeight: "bold",
     alignSelf: "flex-start",
     left: 20,
   },
   subName: {
-    // color: "white",
-    // fontSize: 20,
-    // fontWeight: "bold",
-    // marginTop: 10,
-    // alignSelf: "flex-start",
-    // left: 20,
     color: "white",
     fontSize: 20,
     fontWeight: "bold",
     marginTop: 10,
+    alignSelf: "flex-start",
+    left: 20,
   },
   Title: {
     fontSize: 40,
@@ -267,31 +252,8 @@ const styles = StyleSheet.create({
   },
   noTeamsText: {
     fontSize: 18,
-    color: "black", 
+    color: "black", // Puedes cambiar el color según tus preferencias
     textAlign: "center",
     marginTop: 20,
-  },
-  editButton: {
-    position: "absolute",
-    top: 15,
-    right: 20,
-    zIndex: 1,
-  }, 
-  infoContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginBottom: 10,
- 
-  },
-  label: {
-    color: "white",
-    fontSize: 20,
-    fontWeight: "bold",
-  },
-  info: {
-    color: "white",
-    fontSize: 27,
-    fontWeight: "bold",
-    marginLeft: 10,
   },
 });
