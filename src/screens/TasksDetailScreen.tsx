@@ -16,6 +16,7 @@ import { TasksContext } from "../context/TaskContext";
 import { RouteProp } from "@react-navigation/native";
 import { Task, TaskState } from "../interfaces/task.interfaces";
 import NewCommentForm from "../components/AddComment";
+import { Picker } from "@react-native-picker/picker";
 
 interface Props extends StackScreenProps<TeamsStackParams, "TaskDetailScreen"> {
   route: RouteProp<TeamsStackParams, "TaskDetailScreen">;
@@ -115,10 +116,10 @@ const TaskDetailScreen: React.FC<Props> = ({ route, navigation }) => {
         <FontAwesome name="trash-o" size={24} color="white" />
       </TouchableOpacity>
       <View style={styles.container}>
-        <Text style={styles.title}>Task Details</Text>
+        <Text style={styles.title}>Detalles tareas</Text>
 
         <View style={styles.detailContainer}>
-          <Text style={styles.label}>Name:</Text>
+          <Text style={styles.label}>Nombre:</Text>
           <View style={styles.infoContainer}>
             {isEditing ? (
               <TextInput
@@ -136,7 +137,7 @@ const TaskDetailScreen: React.FC<Props> = ({ route, navigation }) => {
         </View>
 
         <View style={styles.detailContainer}>
-          <Text style={styles.label}>Description:</Text>
+          <Text style={styles.label}>Descripcion:</Text>
           <View style={styles.infoContainer}>
             {isEditing ? (
               <TextInput
@@ -154,7 +155,7 @@ const TaskDetailScreen: React.FC<Props> = ({ route, navigation }) => {
         </View>
 
         <View style={styles.detailContainer}>
-          <Text style={styles.label}>Start Date:</Text>
+          <Text style={styles.label}>Fecha de inicio:</Text>
           <View style={styles.infoContainer}>
             {isEditing ? (
               <TextInput
@@ -164,7 +165,7 @@ const TaskDetailScreen: React.FC<Props> = ({ route, navigation }) => {
               />
             ) : (
               <Text style={styles.value}>
-                {task.startDate ? task.startDate.toString() : "No start date"}
+                {task.startDate ? task.startDate.toString() : "No fecha de inicio"}
               </Text>
             )}
             <TouchableOpacity onPress={handleEditPress}>
@@ -174,7 +175,7 @@ const TaskDetailScreen: React.FC<Props> = ({ route, navigation }) => {
         </View>
 
         <View style={styles.detailContainer}>
-          <Text style={styles.label}>End Date:</Text>
+          <Text style={styles.label}>Fecha Fin:</Text>
           <View style={styles.infoContainer}>
             {isEditing ? (
               <TextInput
@@ -184,7 +185,7 @@ const TaskDetailScreen: React.FC<Props> = ({ route, navigation }) => {
               />
             ) : (
               <Text style={styles.value}>
-                {task.endDate ? task.endDate.toString() : "No end date"}
+                {task.endDate ? task.endDate.toString() : "No fecha final"}
               </Text>
             )}
             <TouchableOpacity onPress={handleEditPress}>
@@ -194,14 +195,18 @@ const TaskDetailScreen: React.FC<Props> = ({ route, navigation }) => {
         </View>
 
         <View style={styles.detailContainer}>
-          <Text style={styles.label}>State:</Text>
+          <Text style={styles.label}>Estado:</Text>
           <View style={styles.infoContainer}>
             {isEditing ? (
-              <TextInput
+              <Picker
                 style={styles.editableValue}
-                value={editedState}
-                onChangeText={handleStateChange}
-              />
+                selectedValue={editedState}
+                onValueChange={(value) => setEditedState(value)}
+              >
+               <Picker.Item label="Todo" value="to_do" />
+              <Picker.Item label="InProgress" value="in_progress" />
+              <Picker.Item label="Done" value="done" />
+              </Picker>
             ) : (
               <Text style={styles.value}>{task.state}</Text>
             )}
@@ -212,7 +217,7 @@ const TaskDetailScreen: React.FC<Props> = ({ route, navigation }) => {
         </View>
 
         <View style={styles.detailContainer}>
-          <Text style={styles.label}>Creator Email:</Text>
+          <Text style={styles.label}>Email creador:</Text>
           <View style={styles.infoContainer}>
             {isEditing ? (
               <TextInput
@@ -230,7 +235,7 @@ const TaskDetailScreen: React.FC<Props> = ({ route, navigation }) => {
         </View>
 
         <View style={styles.detailContainer}>
-          <Text style={styles.label}>Responsible Name:</Text>
+          <Text style={styles.label}>Nombre Responsable:</Text>
           <View style={styles.infoContainer}>
             {isEditing ? (
               <TextInput
@@ -248,9 +253,11 @@ const TaskDetailScreen: React.FC<Props> = ({ route, navigation }) => {
         </View>
 
         {isEditing && (
-          <TouchableOpacity style={styles.saveButton} onPress={handleSavePress}>
-            <Text style={styles.saveButtonText}>Guardar</Text>
-          </TouchableOpacity>
+          <View style={styles.saveButtonContainer}>
+            <TouchableOpacity style={styles.saveButton} onPress={handleSavePress}>
+              <Text style={styles.saveButtonText}>Guardar</Text>
+            </TouchableOpacity>
+          </View>
         )}
 
         <Modal
@@ -337,7 +344,7 @@ const styles = StyleSheet.create({
   },
   backButton: {
     position: "absolute",
-    top: 20,
+    top: 20,  
     left: 20,
     zIndex: 1,
   },
@@ -347,8 +354,12 @@ const styles = StyleSheet.create({
     right: 20,
     zIndex: 1,
   },
+  saveButtonContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
   saveButton: {
-    marginTop: 10,
     backgroundColor: "#007BFF",
     padding: 10,
     borderRadius: 5,
