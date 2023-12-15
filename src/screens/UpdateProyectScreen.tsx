@@ -15,25 +15,18 @@ import { Background } from "../components/Background";
 import { loginStyles } from "../theme/loginTheme";
 import { useForm } from "../hooks/useForm";
 import { FontAwesome } from "@expo/vector-icons";
-import { TasksContext } from "../context/TaskContext";
-import { AuthContext } from "../context/AuthContext";
 import { TeamsStackParams } from "../navigator/navigatorTypes";
 import { RouteProp } from "@react-navigation/native";
 import { StackScreenProps } from "@react-navigation/stack";
+import { LoadingScreen } from "../screens/LoadingScreen";
+import { ProyectContext } from "../context/ProyectContext";
 
-enum TaskState {
-  TODO = "to_do",
-  IN_PROGRESS = "in_progress",
-  DONE = "done",
+interface Props extends StackScreenProps<TeamsStackParams, "UpdateProyectScreen"> {
+  route: RouteProp<TeamsStackParams, "UpdateProyectScreen">;
 }
 
-interface Props extends StackScreenProps<TeamsStackParams, "CreateTask"> {
-  route: RouteProp<TeamsStackParams, "CreateTask">;
-}
-
-export const CreateTask = ({ route, navigation }: Props) => {
-  const { createTask } = useContext(TasksContext);
-  const { user } = useContext(AuthContext);
+export const UpdateProyectScreen = ({ route, navigation }: Props) => {
+  const { updateProyect } = useContext(ProyectContext);
   const [loading, setLoading] = useState(false);
   const [errorModalVisible, setErrorModalVisible] = useState(false);
   const [successModalVisible, setSuccessModalVisible] = useState(false);
@@ -53,58 +46,27 @@ export const CreateTask = ({ route, navigation }: Props) => {
     setSuccessModalVisible(false);
   };
 
-  const { name, description, startDate, endDate, onChange, resetForm } = useForm({
-    name: "",
+  const { name, description, onChange, resetForm } = useForm({
+    name:"",
     description: "",
-    startDate: "",
-    endDate: "",
   });
 
-  const newTask = async () => {
+  const updateProject = async () => {
     try {
       setLoading(true);
 
-      // Date format validation
-      const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
-      if (!startDate.match(dateRegex) || !endDate.match(dateRegex)) {
-        showErrorModal(
-          "Invalid date format. Please use YYYY-MM-DD format for dates."
-        );
-        return;
-      }
-      if (!name.trim()) {
-        showErrorModal("Name is required.");
-        return;
-      }
-
-      if (!description.trim()) {
-        showErrorModal("Description is required.");
-        return;
-      }
-
-      if (/\d/.test(name) || /\d/.test(description)) {
-        showErrorModal("Name and description cannot contain numbers.");
-        return;
-      }
-      const taskData = {
+      const updatedData = {
         name,
         description,
-        startDate: startDate ? startDate : null,
-        endDate: endDate ? endDate : null,
-        state: TaskState.TODO,
-        emailCreator: user?.email || "",
-        nameResponsible: null,
-        id_proyect: route.params._id,
-        is_deleted: false,
       };
 
-      await createTask(taskData);
+      await updateProyect(route.params._id, updatedData);
 
       showSuccessModal();
       resetForm();
     } catch (error) {
-      console.error("Error al crear la tarea:", error);
-      showErrorModal("Error creating task. Please try again.");
+      console.error("Error actualizando el proyecto:", error);
+      showErrorModal("Error actualizando el proyecto. Intente de nuevo.");
     } finally {
       setLoading(false);
     }
@@ -112,6 +74,7 @@ export const CreateTask = ({ route, navigation }: Props) => {
 
   const handleAcceptButtonPress = () => {
     closeModal();
+    navigation.goBack();
     navigation.goBack();
   };
 
@@ -129,58 +92,41 @@ export const CreateTask = ({ route, navigation }: Props) => {
         behavior={Platform.OS === "ios" ? "padding" : "height"}
       >
         <View style={loginStyles.formContainer}>
-          <Text style={loginStyles.title}>Crear tarea</Text>
+          <Text style={loginStyles.title}>Actualizar Proyecto</Text>
 
           <TextInput
             style={loginStyles.inputField}
-            placeholder="Nombre de la tarea"
+            placeholder="Nombre del Proyecto"
             placeholderTextColor="rgba(255,255,255,0.4)"
             onChangeText={(value) => onChange(value, "name")}
             value={name}
-            autoCapitalize="none"
+            autoCapitalize="words"
             autoCorrect={false}
           />
 
           <TextInput
             style={loginStyles.inputField}
-            placeholder="Descripción de la tarea"
+            placeholder="Descripción"
             placeholderTextColor="rgba(255,255,255,0.4)"
             onChangeText={(value) => onChange(value, "description")}
             value={description}
             autoCapitalize="none"
             autoCorrect={false}
           />
-          <TextInput
-            style={loginStyles.inputField}
-            placeholder="Fecha de inicio"
-            placeholderTextColor="rgba(255,255,255,0.4)"
-            onChangeText={(value) => onChange(value, "startDate")}
-            value={startDate}
-            autoCapitalize="none"
-            autoCorrect={false}
-          />
-
-          <TextInput
-            style={loginStyles.inputField}
-            placeholder="Fecha de fin"
-            placeholderTextColor="rgba(255,255,255,0.4)"
-            onChangeText={(value) => onChange(value, "endDate")}
-            value={endDate}
-            autoCapitalize="none"
-            autoCorrect={false}
-          />
 
           {loading ? (
-            <ActivityIndicator size="large" color="white" />
+            <View style={styles.loadingContainer}>
+              <LoadingScreen />
+            </View>
           ) : (
             <View style={loginStyles.buttonContainer}>
               <TouchableOpacity
                 activeOpacity={0.8}
                 style={loginStyles.button}
-                onPress={newTask}
-                disabled={loading}
+                onPress={updateProject}
+                disabled={loading || !name.trim() || !description.trim()}
               >
-                <Text style={loginStyles.buttonText}>Crear</Text>
+                <Text style={loginStyles.buttonText}>Actualizar</Text>
               </TouchableOpacity>
             </View>
           )}
@@ -196,7 +142,9 @@ export const CreateTask = ({ route, navigation }: Props) => {
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
             <Text style={styles.modalText}>
-              {errorModalVisible ? errorMessage : "Task created successfully!"}
+              {errorModalVisible
+                ? errorMessage
+                : "¡Proyecto actualizado correctamente!"}
             </Text>
             {successModalVisible && (
               <TouchableHighlight
@@ -245,4 +193,10 @@ const styles = StyleSheet.create({
     color: "white",
     textAlign: "center",
   },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
 });
+

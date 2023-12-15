@@ -36,6 +36,7 @@ import { SearchScreen } from "../screens/SearchScreen";
 import EditTestScreen from "../screens/EditTestScreen";
 import { TaskCommentScreen } from "../screens/TaskCommentScreen";
 import NewCommentScreen from "../screens/NewCommentScreen";
+import { UpdateProyectScreen } from "../screens/UpdateProyectScreen";
 
 // import { ViewTasks } from "../screens/ViewTasksScreen";
 
@@ -112,7 +113,7 @@ export const Navigator = () => {
           <Stack.Screen name="EditTestScreen" component={EditTestScreen} />
           <Stack.Screen name="EditTeamsScreen" component={EditTeamsScreen} />
           <Stack.Screen name="PantallaPrueba" component={PantallaPrueba} />
-         
+          <Stack.Screen name="UpdateProyectScreen" component={UpdateProyectScreen} />
           
           <Stack.Screen name="AddTeamsScreen" component={AddTeamsScreen} />
           <Stack.Screen name="SearchScreen" component={SearchScreen} />

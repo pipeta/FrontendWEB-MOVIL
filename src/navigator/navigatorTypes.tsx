@@ -63,7 +63,11 @@ type TeamsStackParams = {
     _id: string;
    
   };
-  
+  UpdateProyectScreen: {
+    _id: string;
+    name: string;
+    description: string;
+  }
   
   AddTeamsScreen: Team2;
   
